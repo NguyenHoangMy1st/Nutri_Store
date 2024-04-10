@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
-import { FaTwitter, FaFacebookF } from 'react-icons/fa'
+import { FaFacebookF } from 'react-icons/fa'
 import { IoLogoGoogle } from 'react-icons/io'
 import { PiInstagramLogoBold } from 'react-icons/pi'
-import { IoLogoYoutube } from 'react-icons/io5'
+// import { IoLogoYoutube } from 'react-icons/io5'
 import logo1 from 'src/assets/images/logo1.png'
 export default function Footer() {
   return (

@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
 import logo1 from 'src/assets/images/logo1.png'
-const MAX_PURCHASES = 5
+import NavHeader from '../NavHeader'
+// const MAX_PURCHASES = 5
 export default function Header() {
   return (
     <div className='pb-5 pt-2 bg-gradient-to-b from-[#1CA7EC] to-[#4ADEDE] text-white '>
       <div className='container mx-6'>
+        <NavHeader />
         <div className='grid grid-cols-11 gap-3 mt-4 items-center'>
           <Link to='/' className='col-span-3 mr-5 ml-4'>
             <div className='flex text-4xl items-center justify-items-center font-extrabold'>
