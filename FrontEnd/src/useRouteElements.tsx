@@ -5,6 +5,8 @@ import Login from './pages/Login'
 import ProductList from './pages/ProductList'
 import Register from './pages/Register'
 import MainLayout from './layouts/MainLayout'
+import ProductCategory from './pages/ProductList/ProductCategory'
+import ProductDetail from './pages/ProductDetail'
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
@@ -31,7 +33,27 @@ export default function useRouteElements() {
           <ProductList />
         </MainLayout>
       )
+    },
+    {
+      path: path.productCategory,
+      element: (
+        <MainLayout>
+          <ProductCategory />
+        </MainLayout>
+      )
+    },
+    {
+      path: path.productDetail,
+      element: (
+        <MainLayout>
+          <ProductDetail />
+        </MainLayout>
+      )
     }
+    // {
+    //   path: path.productSearch,
+    //   element: <MainLayout>{/* <ProductSearch /> */}</MainLayout>
+    // }
   ])
   return routeElements
 }

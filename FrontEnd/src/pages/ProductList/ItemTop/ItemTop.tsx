@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination } from 'swiper'
 
-import 'swiper/css'
-import 'swiper/css/pagination'
-import 'swiper/css/navigation'
+import 'swiper/swiper-bundle.css'
 
 import { Product } from 'src/types/product.type'
 import SwiperItemTop from '../SwiperItemTop'
@@ -14,6 +12,7 @@ interface Props {
   product?: Product
 }
 function ItemTop({ data }: Props) {
+  // SwiperCore.use([Navigation, Pagination])
   const [listItem, setListItem] = useState([])
   const fectchBannerItem = async () => {
     if (data) {
@@ -30,6 +29,11 @@ function ItemTop({ data }: Props) {
       freeMode={true}
       spaceBetween={30}
       navigation={true}
+      mousewheel={true}
+      keyboard={true}
+      pagination={{
+        clickable: true
+      }}
       modules={[Pagination, Navigation]}
       className='h-full w-full'
     >
@@ -37,7 +41,7 @@ function ItemTop({ data }: Props) {
         listItem?.slice(10, 18)?.map((product, index) => (
           <SwiperSlide
             key={index}
-            className=' flex flex-col items-center border justify-center px-2 shadow-none hover:shadow-lg w-full relative '
+            className='mx-10 flex flex-col items-center border justify-center px-2 shadow-none hover:shadow-lg w-full relative '
           >
             <SwiperItemTop product={product}></SwiperItemTop>
           </SwiperSlide>

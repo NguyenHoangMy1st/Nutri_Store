@@ -21,7 +21,7 @@ export default function SwiperItemTop({ product }: Props) {
         </div>
 
         <div className='w-full'>
-          <p className='truncate max-w-40 line-clamp-3 overflow-hidden'>{product?.name}</p>
+          <p className='max-w-40 line-clamp-3 overflow-hidden'>{product?.name}</p>
           {/* <p className='truncate ...'>{products.name}</p> */}
         </div>
       </Link>
