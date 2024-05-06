@@ -38,7 +38,7 @@ function ItemTop({ data }: Props) {
       className='h-full w-full'
     >
       {listItem?.length > 0 &&
-        listItem?.slice(10, 18)?.map((product, index) => (
+        listItem?.slice(0, 18)?.map((product, index) => (
           <SwiperSlide
             key={index}
             className='mx-10 flex flex-col items-center border justify-center px-2 shadow-none hover:shadow-lg w-full relative '

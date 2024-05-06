@@ -1,24 +1,21 @@
 export interface Product {
   _id: string
   name: string
-  description: string
-  category: {
-    _id: string
-    name: string
-  }
-  images: string[]
   image: string
+  images: string[]
+  description: string
+  category: string[]
+  brand: string[]
+  rating: number
   price: number
   price_before_discount: number
   quantity: number
-  sold: number
-  view: number
-  rating: number
-  potentialSideEffects: string[] // Thông tin về các tác dụng phụ có thể xảy ra
-  storageInstructions: string // Hướng dẫn bảo quản
+  stockQuantity: number
   nutrients: Nutrient[]
-  createdAt: string
-  updatedAt: string
+  madeIn: string
+  view: number
+  sold: number
+  status?: string
 }
 export interface Nutrient {
   name: string // Tên của thành phần dinh dưỡng
@@ -45,4 +42,5 @@ export interface ProductListConfig {
   price_min?: number | string
   name?: string
   category?: string
+  brand?: string
 }

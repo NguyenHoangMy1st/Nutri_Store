@@ -1,9 +1,9 @@
-// import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
-// import authApi from 'src/apis/auth.api'
+import authApi from 'src/apis/auth.api'
 import path from 'src/constants/path'
-// import { purchasesStatus } from 'src/constants/purchase'
+import { purchasesStatus } from 'src/constants/purchase'
 import { AppContext } from 'src/contexts/app.context'
 import Popover from '../Popover'
 import { FaFacebook, FaInstagramSquare } from 'react-icons/fa'
@@ -14,38 +14,38 @@ import { getAvatarUrl } from 'src/utils/utils'
 export default function NavHeader() {
   // const { t } = useTranslation(['login'])
   const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
-  // const queryClient = useQueryClient()
-  // const logoutMutation = useMutation({
-  // mutationFn: authApi.logout,
-  // onSuccess: () => {
-  //   setIsAuthenticated(false)
-  //   setProfile(null)
-  // queryClient.removeQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
-  //   }
-  // })
+  const queryClient = useQueryClient()
+  const logoutMutation = useMutation({
+    mutationFn: authApi.logout,
+    onSuccess: () => {
+      setIsAuthenticated(false)
+      setProfile(null)
+      queryClient.removeQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
+    }
+  })
   // const { i18n } = useTranslation()
   // const currentLanguage = locales[i18n.language as keyof typeof locales]
 
-  // const handleLogout = () => {
-  //   logoutMutation.mutate()
-  // }
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
   // const changeLanguage = (lng: 'en' | 'vi') => {
   //   i18n.changeLanguage(lng)
   // }
   return (
     <div className='flex justify-between text-sm pr-12 pl-4'>
       <div className='flex justify-start gap-1 divide-x-2 divide-slate-300/20'>
-        {/* {profile?.roles.includes('Admin') ? ( */}
-        <div className='flex items-center py-1 hover:text-gray-200 cursor-pointer'>
-          <Link to={path.accounts}>
+        {profile?.roles.includes('Admin') ? (
+          <div className='flex items-center py-1 hover:text-gray-200 cursor-pointer'>
+            <Link to={path.accounts}>
+              <span className='px-3'>Manage</span>
+            </Link>
+          </div>
+        ) : (
+          <div className='flex items-center py-1 text-gray-200 opacity-70'>
             <span className='px-3'>Manage</span>
-          </Link>
-        </div>
-        {/* ) : ( */}
-        {/* <div className='flex items-center py-1 text-gray-200 opacity-70'>
-          <span className='px-3'>Manage</span>
-        </div> */}
-        {/* )} */}
+          </div>
+        )}
 
         <div className='flex items-center py-1 hover:text-gray-200 cursor-pointer'>
           <span className=' px-3 '>Load</span>
@@ -54,7 +54,7 @@ export default function NavHeader() {
           <span className='px-3 '>Connect</span>
           <div className='flex gap-3 items-cente'>
             <a
-              href='https://www.facebook.com/profile.php?id=100011247827310'
+              href='https://www.facebook.com/hoangmy.1st'
               className='hover:text-gray-200 cursor-pointer'
               rel='noopener noreferrer'
               target='_blank'
@@ -62,7 +62,7 @@ export default function NavHeader() {
               <FaFacebook className='w-4 h-5' />
             </a>
             <a
-              href='https://www.instagram.com/zynn_1202/'
+              href='https://www.instagram.com/n.h.my2002/'
               className='hover:text-gray-200 cursor-pointer'
               rel='noopener noreferrer'
               target='_blank'
@@ -147,7 +147,7 @@ export default function NavHeader() {
                   Purchase
                 </Link>
                 <button
-                  // onClick={handleLogout}
+                  onClick={handleLogout}
                   className='block py-3 px-6 hover:bg-slate-100 bg-white hover:text-cyan-500 w-full text-left'
                 >
                   Logout
@@ -162,7 +162,7 @@ export default function NavHeader() {
                 className='h-full w-full rounded-full object-cover '
               />
             </div>
-            {/* <div>{profile?.email}</div> */}
+            <div>{profile?.email}</div>
           </Popover>
         )}
         {!isAuthenticated && (

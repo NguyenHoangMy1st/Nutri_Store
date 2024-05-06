@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import authController from '../../controllers/auth.controller'
+import googleLoginController from '../../controllers/google.controller'
 import authMiddleware from '../../middleware/auth.middleware'
 import helpersMiddleware from '../../middleware/helpers.middleware'
 import { wrapAsync } from '../../utils/response'
@@ -11,6 +12,13 @@ commonAuthRouter.post(
   authMiddleware.loginRules(),
   helpersMiddleware.entityValidator,
   wrapAsync(authController.loginController)
+)
+
+commonAuthRouter.post(
+  '/login/google',
+  authMiddleware.loginRules(),
+  helpersMiddleware.entityValidator,
+  wrapAsync(googleLoginController)
 )
 
 commonAuthRouter.post(

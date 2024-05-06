@@ -1,4 +1,19 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { schema, Schema } from 'src/utils/rules'
+import Input from 'src/components/Input'
+import { useMutation } from 'react-query'
+
+import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
+import { ErrorResponse } from 'src/types/utils.type'
+import { useContext } from 'react'
+import authApi from 'src/apis/auth.api'
+import { toast } from 'react-toastify'
+import { AppContext } from 'src/contexts/app.context'
+
+type FormData = Pick<Schema, 'email' | 'password'>
+const loginSchema = schema.pick(['email', 'password'])
 
 export default function Login() {
   const getGoogleAuthUrl = () => {
@@ -18,27 +33,88 @@ export default function Login() {
     const queryString = new URLSearchParams(query).toString()
     return `${url}?${queryString}`
   }
-  const googleOAuthUrl = getGoogleAuthUrl()
+  const loginWithGoogle = async () => {
+    try {
+      // Gọi API login với Google bằng phương thức POST và truyền dữ liệu rỗng
+      const response = await authApi.loginGoogle()
+
+      // Xử lý kết quả trả về từ API
+      console.log(response.data) // In ra dữ liệu trả về từ API
+    } catch (error) {
+      // Xử lý lỗi nếu có
+      console.error('Error:', error)
+    }
+  }
+
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const navigate = useNavigate()
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors }
+  } = useForm<FormData>({ resolver: yupResolver(loginSchema) })
+  const loginMutation = useMutation({
+    mutationFn: (body: FormData) => authApi.login(body)
+  })
+  const onSubmit = handleSubmit((data) => {
+    loginMutation.mutate(data, {
+      onSuccess: (data) => {
+        setIsAuthenticated(true)
+        setProfile(data.data.data.user)
+        toast.success('Đăng nhập thành công!', {
+          autoClose: 1300 // Tự động đóng thông báo sau 2 giây
+        })
+        navigate('/')
+      },
+      onError: (error) => {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
+          const formError = error.response?.data.data
+          if (formError) {
+            Object.keys(formError).forEach((key) => {
+              setError(key as keyof FormData, {
+                message: formError[key as keyof FormData],
+                type: 'Server'
+              })
+            })
+          }
+        }
+        toast.error('Đăng nhập thất bại!', {
+          autoClose: 1300 // Tự động đóng thông báo sau 2 giây
+        })
+      }
+    })
+  })
+
   return (
     <div className='bg-whiteblue bg-cover bg-center min-h-screen flex items-center justify-center'>
       <div className=' max-w-md mx-auto px-4 lg:w-1/3'>
-        <form className='bg-[#fdfdfd] p-10  bg-transparent shadow-md border border-gray-300 rounded-lg basis-1/2'>
+        <form
+          className='bg-[#fdfdfd] p-10  bg-transparent shadow-md border border-gray-300 rounded-lg basis-1/2'
+          onSubmit={onSubmit}
+          noValidate
+        >
           <div className='text-2xl'>Đăng nhập</div>
           <div className='mt-8'>
-            <input
+            <Input
               type='email'
+              register={register}
               name='email'
-              className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+              className=' outline-none  focus:border-gray-500 rounded-sm focus:shadow-sm'
               placeholder='Email'
+              errorMessage={errors.email?.message}
             />
             <div className='mt-1 text-red-600 min-h-[1rem] text-sm'></div>
           </div>
           <div className='mt-3'>
-            <input
+            <Input
               type='password'
+              register={register}
               name='password'
-              className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+              className=' focus:border-gray-500 rounded-sm focus:shadow-sm relative'
               placeholder='Password'
+              errorMessage={errors.email?.message}
             />
             <div className='mt-1 text-red-600 min-h-[1rem] text-sm'></div>
           </div>
@@ -65,7 +141,7 @@ export default function Login() {
             </a>
             <a
               className='flex  gap-x-2 items-center justify-center p-3 border border-gray-300 rounded-lg basis-1/2 shadow-md hover:scale-105'
-              href={googleOAuthUrl}
+              onClick={loginWithGoogle}
             >
               <div>
                 <svg xmlns='http://www.w3.org/2000/svg' height='25' width='25' viewBox='-0.5 0 48 48' version='1.1'>
