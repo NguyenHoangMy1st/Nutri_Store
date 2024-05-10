@@ -46,14 +46,20 @@ export default function Cart() {
   const totalCheckedPurchasePrice = useMemo(
     () =>
       checkedPurchases.reduce((result, current) => {
-        return result + current.product.price * current.buy_count
+        const totalPrice = current.order.reduce((total, orderItem) => {
+          return total + orderItem.product.price * orderItem.buy_count
+        }, 0)
+        return result + totalPrice
       }, 0),
     [checkedPurchases]
   )
   const totalCheckedPurchaseSavingPrice = useMemo(
     () =>
       checkedPurchases.reduce((result, current) => {
-        return result + (current.product.price_before_discount - current.product.price) * current.buy_count
+        const totalSaving = current.order.reduce((saving, orderItem) => {
+          return saving + (orderItem.product.price_before_discount - orderItem.product.price) * orderItem.buy_count
+        }, 0)
+        return result + totalSaving
       }, 0),
     [checkedPurchases]
   )
@@ -97,12 +103,14 @@ export default function Cart() {
     )
   }
 
-  const handleTypeQuantity = (purchaseIndex: number) => (value: number) => {
-    setExtendedPurchases(
-      produce((draft) => {
-        draft[purchaseIndex].buy_count = value
-      })
-    )
+  const handleTypeQuantity = (purchaseIndex: number, orderItemIndex: number) => {
+    return (value: number) => {
+      setExtendedPurchases(
+        produce((draft) => {
+          draft[purchaseIndex].order[orderItemIndex].buy_count = value
+        })
+      )
+    }
   }
 
   const handleQuantity = (purchaseIndex: number, value: number, enable: boolean) => {
@@ -113,7 +121,7 @@ export default function Cart() {
           draft[purchaseIndex].disabled = true
         })
       )
-      updatePurchaseMutation.mutate({ product_id: purchase.product._id, buy_count: value })
+      updatePurchaseMutation.mutate({ product_id: purchase.order[0].product._id, buy_count: value })
     }
   }
 
@@ -122,8 +130,8 @@ export default function Cart() {
     deletePurchasesMutation.mutate([purchaseId])
   }
 
-  console.log(purchasesInCartData)
   console.log(extendedPurchases)
+  console.log(purchasesInCart)
   return (
     <section className='flex flex-col my-4 mx-16 font '>
       <Breadcrumb
@@ -156,77 +164,95 @@ export default function Cart() {
                   <th className='ml-3  px-0 w-[11%] text-center'>Remaining</th>
                 </tr>
               </thead>
-              {extendedPurchases.map((purchase, index) => (
-                <tbody key={purchase._id}>
-                  <tr>
-                    <td className='p-0 text-center'>
-                      <input type='checkbox' checked={purchase.checked} onChange={handleCheck(index)}></input>
-                    </td>
-                    <td className='w-[40%] pr-0'>
-                      <div className='flex flex-row items-center gap-x-[10px]'>
-                        <div className='relative'>
-                          <img
-                            src={purchase.product.image}
-                            alt=''
-                            width={200}
-                            height={200}
-                            className='item-img max-w-[80px] object-cover'
-                          />
-                          <button className='absolute top-[-10px] right-[-6px] z-40' onClick={handleDelete(index)}>
-                            <i className='fa fa-times' aria-hidden='true'></i>
-                          </button>
-                        </div>
-                        <Link
-                          to={`${path.home}${generateNameId({
-                            name: purchase.product.name,
-                            id: purchase.product._id
-                          })}`}
-                        >
-                          <span className='pr-0 w-[full%]'>{purchase.product.name}</span>
-                        </Link>
-                      </div>
-                    </td>
-                    <td className='p-0 pl-6 '>
-                      <div className='flex items-center gap-x-[10px]'>
-                        <span className='line-through text-gray-400 '>
-                          {formatCurrency(purchase.product.price_before_discount)}
-                        </span>
-                        <span className='bg-clip-text text-transparent bg-gradient-to-b from-[#1CA7EC] to-[#4ADEDE] font-semibold'>
-                          {formatCurrency(purchase.product.price)}
-                        </span>
-                      </div>
-                    </td>
-                    {/* <td className="text-center price-amount amount">
-              </td> */}
-                    <td className='pl-[15px] quantity'>
-                      <QuantityController
-                        max={purchase.product.quantity}
-                        value={purchase.buy_count}
-                        onIncrease={(value) => handleQuantity(index, value, value <= purchase.product.quantity)}
-                        onDecrease={(value) => handleQuantity(index, value, value >= 1)}
-                        onType={handleTypeQuantity(index)}
-                        onFocusOut={(value) =>
-                          handleQuantity(
-                            index,
-                            value,
-                            value >= 1 &&
-                              value <= purchase.product.quantity &&
-                              value !== (purchasesInCart as Purchase[])[index].buy_count
-                          )
-                        }
-                        disabled={purchase.disabled}
-                        classNameWrapper='w-[30px] h-[30px]'
-                      />
-                    </td>
-                    <td className='p-0 pl-8'>
-                      <span className=''>{formatCurrency(purchase.product.price * purchase.buy_count)} vnd</span>
-                    </td>
-                    <td className='pr-12'>
-                      <span className='text-black'>{purchase.product.stockQuantity}</span>
-                    </td>
-                  </tr>
-                </tbody>
-              ))}
+              <tbody>
+                {extendedPurchases.map((purchase, index) => (
+                  <>
+                    {purchase.order.map((orderItem) => (
+                      <>
+                        <tr>
+                          <td className='p-0 text-center'>
+                            <input type='checkbox' checked={purchase.checked} onChange={handleCheck(index)}></input>
+                          </td>
+
+                          <td className='w-[40%] pr-0'>
+                            <div className='flex flex-row items-center gap-x-[10px]'>
+                              <div className='relative'>
+                                <img
+                                  src={orderItem.product.image}
+                                  alt=''
+                                  width={200}
+                                  height={200}
+                                  className='item-img max-w-[80px] object-cover'
+                                />
+                                <button
+                                  className='absolute top-[-10px] right-[-6px] z-40'
+                                  onClick={handleDelete(index)}
+                                >
+                                  <i className='fa fa-times' aria-hidden='true'></i>
+                                </button>
+                              </div>
+                              <Link
+                                to={`${path.home}${generateNameId({
+                                  name: orderItem.product.name,
+                                  id: orderItem.product._id
+                                })}`}
+                              >
+                                <span className='pr-0 w-[full%]'>{orderItem.product.name}</span>
+                              </Link>
+                            </div>
+                          </td>
+
+                          <td className='p-0 pl-6 '>
+                            <div className='flex items-center gap-x-[10px]'>
+                              <span className='line-through text-gray-400 '>
+                                {formatCurrency(orderItem.product.price_before_discount)}
+                              </span>
+                              <span className='bg-clip-text text-transparent bg-gradient-to-b from-[#1CA7EC] to-[#4ADEDE] font-semibold'>
+                                {formatCurrency(orderItem.product.price)}
+                              </span>
+                            </div>
+                          </td>
+
+                          {/* <td className="text-center price-amount amount">
+                          </td> */}
+                          <td className='pl-[15px] quantity'>
+                            <QuantityController
+                              max={orderItem.product.quantity}
+                              value={orderItem.buy_count}
+                              onIncrease={(value) => handleQuantity(index, value, value <= orderItem.product.quantity)}
+                              onDecrease={(value) => handleQuantity(index, value, value >= 1)}
+                              onType={handleTypeQuantity(index, orderItem.buy_count)}
+                              onFocusOut={(value) => {
+                                const isValidQuantity =
+                                  value >= 1 &&
+                                  value <= orderItem.product.quantity &&
+                                  value !== (purchasesInCart as Purchase[])[index].order[orderItem.buy_count].buy_count
+
+                                if (isValidQuantity) {
+                                  handleQuantity(index, value, true)
+                                } else {
+                                  // Xử lý khi số lượng không hợp lệ, ví dụ hiển thị thông báo lỗi
+                                  console.log('Số lượng không hợp lệ')
+                                }
+                              }}
+                              disabled={purchase.disabled}
+                              classNameWrapper='w-[30px] h-[30px]'
+                            />
+                          </td>
+                          <td className='p-0 pl-8'>
+                            <span className=''>
+                              {formatCurrency(orderItem.product.price * orderItem.buy_count)} vnd
+                            </span>
+                          </td>
+                          <td className='pr-12'>
+                            <span className='text-black'>{orderItem.product.stockQuantity}</span>
+                          </td>
+                        </tr>
+                      </>
+                    ))}
+                  </>
+                ))}
+              </tbody>
             </table>
           </div>
         </div>

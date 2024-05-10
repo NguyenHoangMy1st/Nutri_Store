@@ -17,7 +17,7 @@ userPurchaseRouter.post(
 
 userPurchaseRouter.post(
   '/add-to-cart',
-  purchaseMiddleware.addToCartRules(),
+  // purchaseMiddleware.addToCartRules(),
   helpersMiddleware.entityValidator,
   authMiddleware.verifyAccessToken,
   wrapAsync(purchaseController.addToCart)

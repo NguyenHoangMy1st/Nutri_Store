@@ -7,7 +7,6 @@ import { useMutation } from 'react-query'
 import { omit } from 'lodash'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
-import styles from 'src/Styles/Login.module.scss'
 import { useContext } from 'react'
 import authApi from 'src/apis/auth.api'
 import { toast } from 'react-toastify'
@@ -66,38 +65,33 @@ export default function Register() {
           noValidate
         >
           <div className='text-2xl'>Đăng ký</div>
-          <div className='mt-8'>
-            <Input
-              type='email'
-              register={register}
-              name='email'
-              className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
-              placeholder='Email'
-              errorMessage={errors.email?.message}
-            />
-            <div className='mt-1 text-red-600 min-h-[1rem] text-sm'></div>
-          </div>
-          <div className='mt-3'>
-            <Input
-              type='password'
-              name='password'
-              className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
-              placeholder='Password'
-              errorMessage={errors.email?.message}
-            />
-            <div className='mt-1 text-red-600 min-h-[1rem] text-sm'></div>
-          </div>
-          <div className='mt-3'>
-            <Input
-              type='password'
-              name='confirm_password'
-              register={register}
-              className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
-              placeholder='Confirm Password'
-              errorMessage={errors.email?.message}
-            />
-            <div className='mt-1 text-red-600 min-h-[1rem] text-sm'></div>
-          </div>
+          <Input
+            name='email'
+            register={register}
+            type='email'
+            className='mt-8'
+            errorMessage={errors.email?.message}
+            placeholder='Email'
+          />
+          <Input
+            name='password'
+            register={register}
+            type='password'
+            className='mt-2 relative'
+            errorMessage={errors.password?.message}
+            placeholder='Password'
+            autoComplete='on'
+          />
+
+          <Input
+            name='confirm_password'
+            register={register}
+            type='password'
+            className='mt-2 relative'
+            errorMessage={errors.confirm_password?.message}
+            placeholder='Confirm Password'
+            autoComplete='on'
+          />
           <div className='mt-3'>
             <button className='w-full text-center py-4 px-2 uppercase bg-[#1CA7EC] text-white text-sm hover:bg-[#4ADEDE]'>
               Đăng ký

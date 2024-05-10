@@ -94,11 +94,11 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                   }).toString()
                 }}
                 className={classNames('relative px-2', {
-                  'font-semibold text-rose-400': isActive
+                  'font-semibold text-blue': isActive
                 })}
               >
                 {isActive && (
-                  <svg viewBox='0 0 4 7' className='absolute top-1 left-[-10px] h-2 w-2 fill-rose-400'>
+                  <svg viewBox='0 0 4 7' className='absolute top-1 left-[-10px] h-2 w-2 fill-blue'>
                     <polygon points='4 3.5 0 0 0 7' />
                   </svg>
                 )}
@@ -181,7 +181,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
             />
           </div>
           <div className='mt-1 min-h-[1.25rem] text-center text-sm text-red-600'>{errors.price_min?.message}</div>
-          <Button className='w-full p-2 uppercase bg-gradient-to-b from-[#4ADEDE] to-rose-400 text-white text-sm hover:opacity-70 flex justify-center items-center'>
+          <Button className='w-full p-2 uppercase bg-gradient-to-b from-[#4ADEDE] to-blue text-white text-sm hover:opacity-70 flex justify-center items-center'>
             {/* {t('Apply')} */}
             Áp dụng
           </Button>

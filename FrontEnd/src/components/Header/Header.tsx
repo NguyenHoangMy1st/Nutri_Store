@@ -1,9 +1,49 @@
 import { Link } from 'react-router-dom'
 import logo1 from 'src/assets/images/logo1.png'
+import { AppContext } from 'src/contexts/app.context'
 import NavHeader from '../NavHeader'
 import Popover from '../Popover'
-// const MAX_PURCHASES = 5
+import { useContext } from 'react'
+import { useMutation, useQuery } from 'react-query'
+import authApi from 'src/apis/auth.api'
+import { purchasesStatus } from 'src/constants/purchase'
+import purchaseApi from 'src/apis/purchase.api'
+import { formatCurrency } from 'src/utils/utils'
+const MAX_PURCHASES = 5
 export default function Header() {
+  const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
+  const logoutMutation = useMutation({
+    mutationFn: authApi.logout,
+    onSuccess: () => {
+      setIsAuthenticated(false)
+      setProfile(null)
+    }
+  })
+
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`)
+  }
+  const myTheme = {
+    components: {
+      Select: {
+        colorPrimaryHover: '#fa913c',
+        colorPrimary: '#fa913c',
+        colorBorder: '#e07925',
+        optionSelectedBg: '#ff8e8eaa',
+        colorText: '#939292'
+      }
+    }
+  }
+  const { data: purchasesInCartData } = useQuery({
+    queryKey: ['purchases', { status: purchasesStatus.inCart }],
+    queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart }),
+    enabled: isAuthenticated
+  })
+  console.log(purchasesInCartData)
+  const purchasesInCart = purchasesInCartData?.data.data
   return (
     <div className='pb-5 pt-2 bg-gradient-to-b from-[#1CA7EC] to-[#4ADEDE] text-white '>
       <div className='mx-6'>
@@ -45,37 +85,51 @@ export default function Header() {
             <Popover
               renderPopover={
                 <div className='relative max-w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
-                  <div className='p-2'>
-                    <div className='capitalize text-gray-400'>New</div>
-                    <div className='mt-5'>
-                      <div className='mt-2 flex py-2 hover:bg-gray-100'>
-                        <div className='flex-shrink-0'>
-                          <img className='h-11 w-11 object-cover' />
+                  {purchasesInCart && purchasesInCart.length > 0 ? (
+                    <div className='p-2'>
+                      <div className='capitalize text-gray-400'>New</div>
+                      <div className='mt-5'>
+                        {purchasesInCart.slice(0, MAX_PURCHASES).map((purchase) => (
+                          <div className='mt-2 flex py-2 hover:bg-gray-100' key={purchase._id}>
+                            {purchase.order?.map((orderItem) => (
+                              <div>
+                                <div className='flex-shrink-0'>
+                                  <img
+                                    src={orderItem.product.image}
+                                    // alt={orderItem.product.name}
+                                    className='h-11 w-11 object-cover'
+                                  />
+                                </div>
+                                <div className='ml-2 flex-grow overflow-hidden'>
+                                  <div className='truncate'>{orderItem.product.name} </div>
+                                </div>
+                                <div className='ml-2 flex-shrink-0'>
+                                  <span className='text-[#1CA7EC]'>{formatCurrency(orderItem.product.price)}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                      <div className='mt-6 flex items-center justify-between'>
+                        <div className='text-xs capitalize text-gray-500'>
+                          {purchasesInCart.length > MAX_PURCHASES ? purchasesInCart.length - MAX_PURCHASES : ''} Thêm
+                          hàng vào giỏ
                         </div>
-                        <div className='ml-2 flex-grow overflow-hidden'>
-                          <div className='truncate'></div>
-                        </div>
-                        <div className='ml-2 flex-shrink-0'>
-                          <span className='text-[#1CA7EC]'>100đ</span>
-                        </div>
+                        <Link
+                          to='/cart'
+                          className='rounded-sm bg-[#1CA7EC] px-4 py-2 capitalize text-white hover:bg-opacity-90'
+                        >
+                          Xem giỏ hàng
+                        </Link>
                       </div>
                     </div>
-                    <div className='mt-6 flex items-center justify-between'>
-                      <div className='text-xs capitalize text-gray-500'>add</div>
-                      <Link
-                        to='/'
-                        className='rounded-sm bg-[#1CA7EC] px-4 py-2 capitalize text-white hover:bg-opacity-90'
-                      >
-                        View
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* <div className='flex h-[300px] w-[300px] flex-col  items-center justify-center p-2'>
-                      <img  alt='no purchase' className='h-24 w-24 ' />
+                  ) : (
+                    <div className='flex h-[300px] w-[300px] flex-col  items-center justify-center p-2'>
+                      <img src='empty_cart.png' alt='' className='h-24 w-24 ' />
                       <div className='mt-3 capitalize'> No Product</div>
                     </div>
-                  */}
+                  )}
                 </div>
               }
             >
@@ -95,9 +149,11 @@ export default function Header() {
                   />
                 </svg>
 
-                {/* <span className='absolute top-[-5px] left-[17px] rounded-full bg-white px-[9px] py-[1px] text-xs text-rose-500 '>
-                Purchase in cart
-              </span> */}
+                {purchasesInCart && purchasesInCart.length > 0 && (
+                  <span className='absolute top-[-5px] left-[17px] rounded-full bg-white px-[9px] py-[1px] text-xs text-rose-500 '>
+                    {purchasesInCart?.length}
+                  </span>
+                )}
               </Link>
             </Popover>
           </div>

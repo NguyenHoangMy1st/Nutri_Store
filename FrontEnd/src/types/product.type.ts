@@ -11,16 +11,16 @@ export interface Product {
   price_before_discount: number
   quantity: number
   stockQuantity: number
-  nutrients: Nutrient[]
+  ingredient: Ingredient[]
   madeIn: string
   view: number
   sold: number
   status?: string
 }
-export interface Nutrient {
-  name: string // Tên của thành phần dinh dưỡng
-  amountPerServing: string // Lượng dinh dưỡng mỗi lần sử dụng
-  percentDailyValue: string // Phần trăm giá trị dinh dưỡng hàng ngày
+export interface Ingredient {
+  name: string
+  amount: number // Lượng của thành phần dinh dưỡng, có thể là số lượng hoặc tỉ lệ phần trăm
+  unit: string // Đơn vị đo lường của lượng thành phần (ví dụ: mg, g, IU, %DV)
 }
 export interface ProductList {
   products: Product[]

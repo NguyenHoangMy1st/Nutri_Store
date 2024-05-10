@@ -57,7 +57,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
           </div>
           <button
             className={classNames('h-8 px-4 text-center text-sm capitalize ', {
-              ' bg-gradient-to-b from-[#4ADEDE] to-rose-400 text-white hover:opacity-70': isActiveSortBy(sortBy.view),
+              ' bg-gradient-to-b from-[#4ADEDE] to-blue text-white hover:opacity-70': isActiveSortBy(sortBy.view),
               'bg-white text-black hover:bg-slate-100': !isActiveSortBy(sortBy.view)
             })}
             onClick={() => handleSort(sortBy.view)}
@@ -67,9 +67,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
           </button>
           <button
             className={classNames('h-8 px-4 text-center text-sm capitalize ', {
-              ' bg-gradient-to-b from-[#4ADEDE] to-rose-400 text-white hover:opacity-70': isActiveSortBy(
-                sortBy.createdAt
-              ),
+              ' bg-gradient-to-b from-[#4ADEDE] to-blue text-white hover:opacity-70': isActiveSortBy(sortBy.createdAt),
               'bg-white text-black hover:bg-slate-100': !isActiveSortBy(sortBy.createdAt)
             })}
             onClick={() => handleSort(sortBy.createdAt)}
@@ -79,7 +77,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
           </button>
           <button
             className={classNames('h-8 px-4 text-center text-sm capitalize ', {
-              ' bg-gradient-to-b from-[#4ADEDE] to-rose-400 text-white hover:opacity-70': isActiveSortBy(sortBy.sold),
+              ' bg-gradient-to-b from-[#4ADEDE] to-blue text-white hover:opacity-70': isActiveSortBy(sortBy.sold),
               'bg-white text-black hover:bg-slate-100': !isActiveSortBy(sortBy.sold)
             })}
             onClick={() => handleSort(sortBy.sold)}
@@ -112,7 +110,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
 
         <div className='flex items-center'>
           <div>
-            <span className='text-rose-400'>{page}</span>
+            <span className='text-blue'>{page}</span>
             <span>/{pageSize}</span>
           </div>
           <div className='ml-2 flex'>

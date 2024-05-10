@@ -33,6 +33,8 @@ export default function Login() {
     const queryString = new URLSearchParams(query).toString()
     return `${url}?${queryString}`
   }
+
+  const googleOAuthUrl = getGoogleAuthUrl()
   const loginWithGoogle = async () => {
     try {
       // Gọi API login với Google bằng phương thức POST và truyền dữ liệu rỗng
@@ -141,7 +143,8 @@ export default function Login() {
             </a>
             <a
               className='flex  gap-x-2 items-center justify-center p-3 border border-gray-300 rounded-lg basis-1/2 shadow-md hover:scale-105'
-              onClick={loginWithGoogle}
+              // onClick={loginWithGoogle}
+              href={googleOAuthUrl}
             >
               <div>
                 <svg xmlns='http://www.w3.org/2000/svg' height='25' width='25' viewBox='-0.5 0 48 48' version='1.1'>

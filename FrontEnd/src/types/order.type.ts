@@ -3,17 +3,20 @@ import { User } from './user.type'
 
 export interface Order {
   _id: string
-  buy_count: number
+  order: [{ buy_count: number; product: Product }]
   price: number
   price_before_discount: number
   status: number
   user: User[]
-  product: Product
-  shippingAddress: Address[]
-}
-interface Address {
-  street: string
-  city: string
-  postalCode: string
-  phone: string
+  shippingAddress: [
+    {
+      street: string
+      city: string
+      postalCode: string
+      phone: string
+      paymentMethod: string
+    }
+  ]
+  createdAt: string
+  updatedAt: string
 }

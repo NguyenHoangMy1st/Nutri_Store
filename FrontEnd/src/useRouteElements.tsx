@@ -14,6 +14,12 @@ import ProductCategory from './pages/ProductList/ProductCategory'
 import UserLayout from './layouts/UserLayout'
 import Profile from './pages/User/Profile'
 import ChangePassword from './pages/User/ChangePassword'
+import LayoutAdmin from './pages/Admin/layouts/LayoutAdmin'
+import Dashboard from './pages/Admin/pages/Dashboard'
+import Accounts from './pages/Admin/pages/Accounts'
+import Products from './pages/Admin/pages/Products'
+import Orders from './pages/Admin/pages/Orders'
+import AdminLayout from './layouts/AdminLayout/AdminLayout'
 
 // import FormAccountEdit from './pages/Admin/component/FormAccountEdit'
 
@@ -130,6 +136,42 @@ export default function UseRouterElement() {
     {
       path: path.payment,
       element: <MainLayout>{/* <Payment /> */}</MainLayout>
+    },
+    {
+      path: '',
+      element: <AdminProtectedRoute />,
+      children: [
+        {
+          path: path.admin,
+          element: (
+            <AdminLayout>
+              <LayoutAdmin />
+            </AdminLayout>
+          ),
+          children: [
+            {
+              path: path.dashboard,
+              element: <Dashboard />
+            },
+            // {
+            //   path: path.formAccountEdit,
+            //   element: <FormAccountEdit />
+            // },
+            {
+              path: path.accounts,
+              element: <Accounts />
+            },
+            {
+              path: path.products,
+              element: <Products />
+            },
+            {
+              path: path.orders,
+              element: <Orders />
+            }
+          ]
+        }
+      ]
     }
 
     // {

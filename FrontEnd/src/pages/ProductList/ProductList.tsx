@@ -20,6 +20,8 @@ import ItemTop from './ItemTop'
 import './ProductList.scss'
 import { VscArrowRight } from 'react-icons/vsc'
 import ItemWelcome from './ItemWelcome'
+import Pagination from 'src/components/Pagination'
+import Brand from 'src/components/Brand'
 
 export default function ProductList() {
   const queryConfig = useQueryConfig()
@@ -41,8 +43,8 @@ export default function ProductList() {
   // })
 
   return (
-    <div className='bg-neutral-100 h-full flex flex-col '>
-      <div className='bg-[#E1F4FB] min-h-[680px]'>
+    <div className='h-full flex flex-col '>
+      <div className='min-h-[680px]'>
         <div className='my-10 mx-32  relative pt-8 flex items-start justify-center'>
           <img src='unnamed.webp' alt='' className='z-0' />
           <div className='absolute top-[50%] transform-translate-xy-50 flex  items-center justify-center w-full'>
@@ -71,31 +73,21 @@ export default function ProductList() {
         </div>
       </div>
       <ItemWelcome></ItemWelcome>
-      <div className='bg-white  my-10 mx-32'>
-        <div className='text-gray-400 uppercase pt-7 px-5 '>{/* {t('category')} */}category</div>
-        <div className=' grid grid-cols-7 py-5 '>
+      <div className=' my-6 mx-32'>
+        <div className='text-gray-400 uppercase pt-7 px-5 text-[25px] '>{/* {t('category')} */}danh mục nổi bật</div>
+        <div className=' grid grid-cols-6 py-5 '>
           <Link
             to={{
               pathname: path.productCategory,
               search: createSearchParams({
                 // ...queryConfig,
-                category: '60aba4e24efcc70f8892e1c6'
+                category: '65ef3bb004766a6306cc63b6'
               }).toString()
             }}
           >
-            <ItemCategory img='tpcn.png' name='Thực phẩm chức năng'></ItemCategory>
+            <ItemCategory img='sua.png' name='Sữa'></ItemCategory>
           </Link>
-          <Link
-            to={{
-              pathname: path.productCategory,
-              search: createSearchParams({
-                // ...queryConfig,
-                category: '60afafe76ef5b902180aacb5'
-              }).toString()
-            }}
-          >
-            <ItemCategory img='tpgcx.png' name='Trái cây'></ItemCategory>
-          </Link>
+
           <Link
             to={{
               pathname: path.productCategory,
@@ -105,8 +97,9 @@ export default function ProductList() {
               }).toString()
             }}
           >
-            <ItemCategory img='yen.png' name='Yến sào'></ItemCategory>
+            <ItemCategory img='yensao.png' name='Yến sào'></ItemCategory>
           </Link>
+
           <Link
             to={{
               pathname: path.productCategory,
@@ -127,43 +120,43 @@ export default function ProductList() {
               }).toString()
             }}
           >
-            <ItemCategory img='hat.png' name='Các loại hạt'></ItemCategory>
+            <ItemCategory img='suachua.png' name='Sữa chua'></ItemCategory>
+          </Link>
+
+          <Link
+            to={{
+              pathname: path.productCategory,
+              search: createSearchParams({
+                // ...queryConfig,
+                category: '60afafe76ef5b902180aacb5'
+              }).toString()
+            }}
+          >
+            <ItemCategory img='banh.png' name='Đồ ăn vặt'></ItemCategory>
           </Link>
           <Link
             to={{
               pathname: path.productCategory,
               search: createSearchParams({
                 // ...queryConfig,
-                category: '65ef3bb004766a6306cc63b6'
+                category: '60aba4e24efcc70f8892e1c6'
               }).toString()
             }}
           >
-            <ItemCategory img='sua.png' name='Sản phẩm từ sữa'></ItemCategory>
-          </Link>
-          <Link
-            to={{
-              pathname: path.productCategory,
-              search: createSearchParams({
-                // ...queryConfig,
-                category: '65ef3bde04766a6306cc63b9'
-              }).toString()
-            }}
-          >
-            <ItemCategory img='orther.png' name='Khác'></ItemCategory>
+            <ItemCategory
+              img='https://vacca.webmau68.com/wp-content/uploads/2021/08/hairburst-biotin-chewable-hair-vitamins-300x300.jpg'
+              name='Thực phẩm chức năng'
+            ></ItemCategory>
           </Link>
         </div>
       </div>
-      {/* <div className='flex items-center  justify-center  mx-32'>
-        <div>
-          <Link to='/'>
-            <img src='quancao.jpg' alt='' className='rounded-md cursor-pointer' />
-          </Link>
-        </div>
-      </div> */}
-      <div className='min-h-80 bg-white  my-10 mx-32 '>
+
+      <div className='min-h-80 my-6 mx-32 border-2 border-gray-100 p-3 rounded-md  bg-[#fafafa] '>
         <div className='py-4 px-5 flex justify-between border-b-2 border-gray-100'>
-          <div className=' text-[#00a7fa] flex flex-row gap-1 '>
-            <div className='text-[#1CA7EC] uppercase text-lg '>{/* {t('look')} */}TÌM KIẾM HÀNG ĐẦU</div>
+          <div className=' text-[#e57a44] flex flex-row gap-1 '>
+            <div className='text-gray-400 uppercase text-[23px] '>
+              {/* {t('category')} */}Top những sản phẩm bán chạy
+            </div>
             <FaFireAlt className='text-2xl' />
           </div>
           <div className='flex flex-row gap-1 text-gray-400 items-center hover:text-gray-300 '>
@@ -188,34 +181,63 @@ export default function ProductList() {
           </div>
         )}
       </div>
-
-      <div className='flex bg-white   mx-32 p-5 uppercase text-[#1CA7EC] font-bold border-b-4 border-rose-400 items-center justify-center'>
-        {/* {t('suggest')} */}GỢI Ý HÔM NAY
+      <div className=' my-6 mx-32 py-3 rounded-lg  py-4flex flex-col '>
+        <div className='text-gray-400 uppercase text-[20px] '>{/* {t('category')} */}Các thương hiệu nổi bật</div>
+        <Brand></Brand>
       </div>
-      <div className='bg-white  my-2 mx-32 py-7 mb-10'>
-        <div className='container'>
-          {productsData && (
-            <div className='grid grid-cols-12 gap-6'>
-              <div className='col-span-3'>
-                {/* <AsideFilter queryConfig={queryConfig} categories={categoriesData?.data.data || []} /> */}
-              </div>
-              <div className='col-span-9'>
-                {/* <SortProductList queryConfig={queryConfig} pageSize={productsData.data.data.pagination.page_size} /> */}
-                <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-                  {productsData.data.data.products.map((product) => (
-                    <div className='col-span-1' key={product._id}>
-                      <Product product={product} />
-                    </div>
-                  ))}
-                </div>
-                {/* <Pagination
-                  queryConfig={queryConfig}
-                  pageSize={productsData.data.data.pagination.page_size}
-                  namePath='home'
-                /> */}
-              </div>
+      <div className='min-h-80 my-6 mx-32 border-2 border-gray-100 p-3 rounded-lg  bg-[#fafafa]'>
+        <div className='py-4 px-5 flex justify-between border-b-2 border-gray-100'>
+          <div className=' text-[#e57a44] flex flex-row gap-1 '>
+            <div className='text-gray-400 uppercase text-[23px] '>{/* {t('category')} */}Top những sản phẩm mới</div>
+          </div>
+          <div className='flex flex-row gap-1 text-gray-400 items-center hover:text-gray-300 '>
+            <Link
+              to={{
+                pathname: path.productCategory,
+                search: createSearchParams({
+                  // ...queryConfig
+                }).toString()
+              }}
+            >
+              {/* {t('all')} */}Xem tất cả sản phẩm
+            </Link>
+            <BsChevronRight />
+          </div>
+        </div>
+        {productsData && (
+          <div className='flex flex-row gap-5 items-center justify-center px-1 mt-1 min-h-96 '>
+            <div className='flex h-80 w-full items-start'>
+              <ItemTop data={productsData.data.data.products}></ItemTop>
             </div>
-          )}
+          </div>
+        )}
+      </div>
+      <div className='flex flex-col border-2 border-gray-100 p-3 rounded-lg mx-32 mb-10 bg-[#fafafa] mt-6'>
+        {' '}
+        <div className='flex p-5 uppercase text-[#1CA7EC] font-bold border-b-4 border-cyan-200 items-center justify-center text-[22px]'>
+          {/* {t('suggest')} */}GỢI Ý HÔM NAY
+        </div>
+        <div className='  my-2  py-7  mx-4'>
+          <div className='container'>
+            {productsData && (
+              <div className='grid grid-cols-12 gap-6'>
+                <div className='col-span-12'>
+                  <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+                    {productsData.data.data.products.map((product) => (
+                      <div className='col-span-1' key={product._id}>
+                        <Product product={product} />
+                      </div>
+                    ))}
+                  </div>
+                  <Pagination
+                    queryConfig={queryConfig}
+                    pageSize={productsData.data.data.pagination.page_size}
+                    namePath='home'
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

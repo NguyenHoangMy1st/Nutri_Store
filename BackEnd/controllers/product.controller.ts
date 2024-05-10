@@ -58,7 +58,6 @@ const addProduct = async (req: Request, res: Response) => {
       status,
       madeIn,
     } = form
-
     const product = {
       name,
       description,
@@ -87,9 +86,10 @@ const addProduct = async (req: Request, res: Response) => {
         },
       }),
     }
-
+    console.log(response)
     return responseSuccess(res, response)
   } catch (error) {
+    console.log(error)
     return responseError(res, 'Không thể tạo sản phẩm')
   }
 }

@@ -7,8 +7,9 @@ const HealthFormSchema = new Schema(
       ref: 'users',
       required: true,
     },
+    sex: { type: String },
     height: { type: Number }, // Chiều cao của người dùng
-    age: {type: String},
+    age: { type: String },
     weight: { type: Number }, // Cân nặng của người dùng
     blood_pressure: { type: String }, // Huyết áp của người dùng
     medical_history: [{ type: String }], // Lịch sử bệnh lý của người dùng (mảng với nhiều lịch sử)

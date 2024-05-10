@@ -272,7 +272,7 @@ const ProductDetail: React.FC = () => {
                 </button>
                 <button
                   onClick={buyNow}
-                  className='fkex ml-4 h-12 min-w-[5rem] items-center justify-center rounded-sm bg-[#1CA7EC] px-5 capitalize text-white shadow-sm outline-none hover:bg-rose-400/90'
+                  className='fkex ml-4 h-12 min-w-[5rem] items-center justify-center rounded-sm bg-[#1CA7EC] px-5 capitalize text-white shadow-sm outline-none hover:bg-blue/90'
                 >
                   Mua ngay
                 </button>

@@ -93,7 +93,7 @@ export default function UserSideNav() {
               AI
             </div>
           </div>
-          Hỗ trợ chu trình skincare
+          Hỗ trợ cung cấp sản phẩm mong muốn
         </NavLink>
       </div>
     </div>
