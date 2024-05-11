@@ -9,4 +9,5 @@ interface User {
   employeeCode?: string
   avatar?: string
   [key: string]: any
+  type: number
 }

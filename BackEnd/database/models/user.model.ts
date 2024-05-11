@@ -11,7 +11,6 @@ const UserSchema = new Schema(
     phone: { type: String, maxlength: 20 },
     roles: { type: [String], required: true, default: [ROLE.USER] },
     avatar: { type: String, maxlength: 1000 },
-    employeeCode: { type: String, maxlength: 20 },
     type: { type: Number, default: 0 },
     // 0: web, 1: google
   },
