@@ -8,8 +8,8 @@ const authApi = {
   login(body: { email: string; password: string }) {
     return http.post<AuthResponse>('/login', body)
   },
-  loginGoogle() {
-    return http.post<AuthResponse>('/login/google')
+  loginGoogle(body: { email: string; name: string }) {
+    return http.post<AuthResponse>('/login/google', body)
   },
   logout() {
     return http.post('/logout')

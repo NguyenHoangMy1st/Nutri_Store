@@ -111,9 +111,6 @@ const loginRules = () => {
       .withMessage('Email không đúng định dạng')
       .isLength({ min: 5, max: 160 })
       .withMessage('Email phải từ 5-160 kí tự'),
-    body('password')
-      .isLength({ min: 6, max: 160 })
-      .withMessage('Mật khẩu phải từ 6-160 kí tự'),
   ]
 }
 const getTokenFrom = (request: Request): string | null => {

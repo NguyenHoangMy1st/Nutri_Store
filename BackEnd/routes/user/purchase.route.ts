@@ -9,7 +9,7 @@ export const userPurchaseRouter = Router()
 
 userPurchaseRouter.post(
   '/buy-products',
-  purchaseMiddleware.buyProductsRules(),
+  // purchaseMiddleware.buyProductsRules(),
   helpersMiddleware.entityValidator,
   authMiddleware.verifyAccessToken,
   wrapAsync(purchaseController.buyProducts)
@@ -33,7 +33,7 @@ userPurchaseRouter.put(
 
 userPurchaseRouter.delete(
   '',
-  purchaseMiddleware.deletePurchasesRules(),
+  // purchaseMiddleware.deletePurchasesRules(),
   helpersMiddleware.entityValidator,
   authMiddleware.verifyAccessToken,
   wrapAsync(purchaseController.deletePurchases)

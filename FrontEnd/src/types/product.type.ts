@@ -10,7 +10,6 @@ export interface Product {
   price: number
   price_before_discount: number
   quantity: number
-  stockQuantity: number
   ingredient: Ingredient[]
   madeIn: string
   view: number

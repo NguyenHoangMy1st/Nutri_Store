@@ -11,43 +11,14 @@ import { useContext } from 'react'
 import authApi from 'src/apis/auth.api'
 import { toast } from 'react-toastify'
 import { AppContext } from 'src/contexts/app.context'
+import { useGoogleLogin } from '@react-oauth/google'
+import { setAccessTokenToLS, setProfileToLS } from 'src/utils/auth'
+import axios from 'axios'
 
 type FormData = Pick<Schema, 'email' | 'password'>
 const loginSchema = schema.pick(['email', 'password'])
 
 export default function Login() {
-  const getGoogleAuthUrl = () => {
-    const { VITE_GOOGLE_CLIENT_ID, VITE_GOOGLE_REDIRECT_URI } = import.meta.env
-    const url = `https://accounts.google.com/o/oauth2/v2/auth`
-    const query = {
-      client_id: VITE_GOOGLE_CLIENT_ID,
-      redirect_uri: VITE_GOOGLE_REDIRECT_URI,
-      response_type: 'code',
-      scope: [
-        'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email'
-      ].join(' '),
-      prompt: 'consent',
-      access_type: 'offline'
-    }
-    const queryString = new URLSearchParams(query).toString()
-    return `${url}?${queryString}`
-  }
-
-  const googleOAuthUrl = getGoogleAuthUrl()
-  const loginWithGoogle = async () => {
-    try {
-      // Gọi API login với Google bằng phương thức POST và truyền dữ liệu rỗng
-      const response = await authApi.loginGoogle()
-
-      // Xử lý kết quả trả về từ API
-      console.log(response.data) // In ra dữ liệu trả về từ API
-    } catch (error) {
-      // Xử lý lỗi nếu có
-      console.error('Error:', error)
-    }
-  }
-
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
 
@@ -87,6 +58,31 @@ export default function Login() {
         })
       }
     })
+  })
+
+  const handleLoginGoogle = useGoogleLogin({
+    onSuccess: async (data) => {
+      const res = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${data.access_token}`, {
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+          Accept: 'application/json'
+        }
+      })
+
+      const result = await authApi.loginGoogle({
+        email: res?.data?.email,
+        name: res?.data?.name
+      })
+      console.log(result)
+      setAccessTokenToLS(result.data.data.access_token)
+      setProfileToLS(result.data.data.user)
+
+      toast.success('Đăng nhập thành công!', {
+        autoClose: 1300 // Tự động đóng thông báo sau 2 giây
+      })
+      navigate('/')
+      window.location.reload()
+    }
   })
 
   return (
@@ -141,10 +137,9 @@ export default function Login() {
               </div>
               <div>Facebook</div>
             </a>
-            <a
+            <div
               className='flex  gap-x-2 items-center justify-center p-3 border border-gray-300 rounded-lg basis-1/2 shadow-md hover:scale-105'
-              // onClick={loginWithGoogle}
-              href={googleOAuthUrl}
+              onClick={() => handleLoginGoogle()}
             >
               <div>
                 <svg xmlns='http://www.w3.org/2000/svg' height='25' width='25' viewBox='-0.5 0 48 48' version='1.1'>
@@ -180,7 +175,7 @@ export default function Login() {
                 </svg>
               </div>
               <div>Google</div>
-            </a>
+            </div>
           </div>
           <div className='flex items-center justify-center mt-8'>
             <span className='text-gray-400'>Bạn chưa có tài khoản?</span>

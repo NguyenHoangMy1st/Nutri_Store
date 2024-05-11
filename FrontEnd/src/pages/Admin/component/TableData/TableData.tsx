@@ -36,6 +36,7 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
       return adminApi.getAllProducts()
     }
   })
+  console.log(productsData, '2')
   const { data: categoriesData } = useQuery({
     queryKey: ['categories', queryConfig],
     queryFn: () => {
@@ -64,9 +65,6 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
   useEffect(() => {
     fetchData()
   }, [productsData])
-  useEffect(() => {
-    fetchData()
-  }, [ProductData])
   const handleUpdateSuccess = () => {
     console.log(shouldRefetch)
     setShouldRefetch(true) // Trigger fetchData khi cập nhật thành công

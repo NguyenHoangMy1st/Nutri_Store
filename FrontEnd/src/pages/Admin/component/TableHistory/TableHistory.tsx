@@ -16,6 +16,7 @@ function TableHistory() {
     queryKey: ['orders', queryConfig],
     queryFn: () => adminApi.getAllOrder()
   })
+  console.log(orderData)
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
   const [statuses, setStatuses] = useState<number[]>([]) // Mảng các trạng thái
@@ -123,11 +124,6 @@ function TableHistory() {
   useEffect(() => {
     fetchData() // Gọi fetchData khi component mount lần đầu
   }, [])
-
-  useEffect(() => {
-    fetchData() // Gọi lại fetchData khi có thay đổi trong biến statuses
-  }, [statuses])
-  // Render Table với dữ liệu đơn hàng và columns đã được khai báo
   return (
     <>
       <Table

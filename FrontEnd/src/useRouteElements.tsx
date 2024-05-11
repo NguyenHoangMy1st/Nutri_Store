@@ -20,6 +20,7 @@ import Accounts from './pages/Admin/pages/Accounts'
 import Products from './pages/Admin/pages/Products'
 import Orders from './pages/Admin/pages/Orders'
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
+import FormInput from './pages/User/FormInput'
 
 // import FormAccountEdit from './pages/Admin/component/FormAccountEdit'
 
@@ -91,6 +92,10 @@ export default function UseRouterElement() {
             {
               path: path.historyPurchase
               // element: <HistoryPurchase />
+            },
+            {
+              path: path.formInput,
+              element: <FormInput />
             }
           ]
         }

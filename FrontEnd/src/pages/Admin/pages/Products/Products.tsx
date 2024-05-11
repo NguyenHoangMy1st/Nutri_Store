@@ -17,15 +17,13 @@ function Products() {
 
   useEffect(() => {
     if (shouldRefetch) {
-      console.log(products)
       fetchData()
       setShouldRefetch(false) // Đặt shouldRefetch lại sau khi fetchData đã được gọi
     }
   }, [shouldRefetch])
   const handleCreatSuccess = () => {
-    setShouldRefetch(true) // Trigger fetchData khi cập nhật thành công
+    setShouldRefetch(true)
   }
-  console.log(shouldRefetch)
   return (
     <div className='flex flex-col  gap-8 border border-gray-200 rounded-lg w-full px-4 pt-4    '>
       <h1 className='font items-center text-[24px] font-bold text-center'>Quản lý thông tin sản phẩm</h1>

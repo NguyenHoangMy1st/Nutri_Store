@@ -42,7 +42,7 @@ const adminApi = {
   getcategories() {
     return http.get<SuccessResponse<Category[]>>(`/admin/categories`)
   },
-  createProduct(body: FormData) {
+  createProduct(body: any) {
     return http.post<SuccessResponse<Product[]>>('/admin/products', body)
   },
   uploadImage(body: any) {

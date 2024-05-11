@@ -4,6 +4,7 @@ const path = {
   profile: '/user/profile',
   changePassword: '/user/password',
   historyPurchase: '/user/purchase',
+  formInput: 'user/input',
   login: '/login',
   register: '/register',
   logout: '/logout',

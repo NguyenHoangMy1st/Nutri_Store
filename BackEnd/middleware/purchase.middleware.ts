@@ -34,12 +34,12 @@ export const addToCartRules = () => {
       .isMongoId()
       .withMessage('product_id không đúng định dạng'),
     body('buy_count')
-      .exists({ checkFalsy: true })
-      .withMessage('buy_count không được để trống')
+      // .exists({ checkFalsy: true })
+      // .withMessage('buy_count không được để trống')
       .custom((value) => {
         if (
           typeof value !== 'number' ||
-          value < 1 ||
+          value < 0 ||
           !Number.isInteger(value)
         ) {
           return false

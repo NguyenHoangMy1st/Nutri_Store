@@ -245,7 +245,7 @@ export default function Cart() {
                             </span>
                           </td>
                           <td className='pr-12'>
-                            <span className='text-black'>{orderItem.product.stockQuantity}</span>
+                            <span className='text-black'>{orderItem.product.quantity}</span>
                           </td>
                         </tr>
                       </>

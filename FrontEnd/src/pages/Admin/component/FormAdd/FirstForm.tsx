@@ -119,19 +119,19 @@ const CollectionCreateFormModal: React.FC<CollectionCreateFormModalProps> = ({
       const values = await (formInstance?.validateFields() as Promise<Product>)
       console.log('Form values:', values) // In ra giá trị của form trước khi gọi API
 
-      const formData = new FormData()
-      Object.entries(values).forEach(([key, value]) => {
-        if (key === 'images' && Array.isArray(value)) {
-          // Loại bỏ địa chỉ cơ sở từ mỗi URL và thêm vào formData một cách riêng biệt
-          value.forEach((url) => {
-            const imageUrlWithoutBaseURL = url.replace(/^http:\/\/localhost:4000\/images\//, '')
-            formData.append(key, imageUrlWithoutBaseURL)
-          })
-        } else {
-          formData.append(key, value)
-        }
-      })
-      await adminApi.createProduct(formData)
+      // const formData = new FormData()
+      // Object.entries(values).forEach(([key, value]) => {
+      // if (key === 'images' && Array.isArray(value)) {
+      //   // Loại bỏ địa chỉ cơ sở từ mỗi URL và thêm vào formData một cách riêng biệt
+      //   value.forEach((url) => {
+      //     const imageUrlWithoutBaseURL = url.replace(/^http:\/\/localhost:4000\/images\//, '')
+      //     formData.append(key, imageUrlWithoutBaseURL)
+      //   })
+      // } else {
+      // formData.append(key, value)
+      // }
+      // })
+      await adminApi.createProduct(values)
       formInstance?.resetFields()
       onCreate(values)
     } catch (error) {
@@ -167,7 +167,6 @@ const FristForm: React.FC<CollectionCreateFormProps> = ({ onCreated }) => {
   const [open, setOpen] = useState(false)
 
   const onCreate = (values: Values) => {
-    // console.log('Received values of form: ', values)
     setFormValues(values)
     setOpen(false)
     onCreated()

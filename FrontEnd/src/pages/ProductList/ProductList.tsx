@@ -97,7 +97,7 @@ export default function ProductList() {
               }).toString()
             }}
           >
-            <ItemCategory img='yensao.png' name='Yến sào'></ItemCategory>
+            <ItemCategory img='yensao.png' name='Yến'></ItemCategory>
           </Link>
 
           <Link
@@ -122,7 +122,7 @@ export default function ProductList() {
           >
             <ItemCategory img='suachua.png' name='Sữa chua'></ItemCategory>
           </Link>
-
+            
           <Link
             to={{
               pathname: path.productCategory,

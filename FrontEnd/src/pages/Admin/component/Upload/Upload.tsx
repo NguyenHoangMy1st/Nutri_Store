@@ -11,19 +11,11 @@ interface UploadimgsProps {
   onUpload: (data: string[]) => void
 }
 const Uploadimgs: React.FC<UploadimgsProps> = ({ onUpload }) => {
-  const [fileList, setFileList] = useState<UploadFile[]>([
-    // {
-    //   uid: '-1',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-    // }
-  ])
+  const [fileList, setFileList] = useState<UploadFile[]>([])
   const uploadedDataArray: string[] = []
   const uploadImageMutaion = useMutation(adminApi.uploadImage)
   const onChange: UploadProps['onChange'] = async ({ fileList: newFileList }) => {
     const formData = new FormData()
-
     // Lặp qua mỗi file mới được chọn
     newFileList.forEach((file) => {
       formData.append('image', file.originFileObj || '')
@@ -33,10 +25,12 @@ const Uploadimgs: React.FC<UploadimgsProps> = ({ onUpload }) => {
         uploadedDataArray.push(file.uid)
       }
     })
+
     const removeBaseUrl = (url: string): string => {
       const baseUrl = 'http://localhost:4000/images/'
       return url.startsWith(baseUrl) ? url.slice(baseUrl.length) : url
     }
+
     // Lặp qua mỗi file đã được tải lên trước đó
     uploadedDataArray.forEach((url) => {
       // Nếu không tìm thấy URL trong fileList mới, loại bỏ nó khỏi mảng
@@ -65,7 +59,7 @@ const Uploadimgs: React.FC<UploadimgsProps> = ({ onUpload }) => {
       }
     })
 
-    const filteredUrls: string[] = uploadedDataArray.filter((url) => url.endsWith('.jpg')).map((url) => url.toString())
+    const filteredUrls: string[] = uploadedDataArray.filter((url) => url.endsWith('.png')).map((url) => url.toString())
     setFileList(updatedFileList)
     onUpload(filteredUrls)
   }
@@ -107,7 +101,7 @@ const Uploadimgs: React.FC<UploadimgsProps> = ({ onUpload }) => {
       onError(error)
     }
   }
-  // console.log(fileList)
+
   return (
     <ImgCrop rotationSlider>
       <Upload

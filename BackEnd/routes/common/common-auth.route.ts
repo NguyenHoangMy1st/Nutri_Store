@@ -16,9 +16,9 @@ commonAuthRouter.post(
 
 commonAuthRouter.post(
   '/login/google',
-  authMiddleware.loginRules(),
+  // authMiddleware.loginRules(),
   helpersMiddleware.entityValidator,
-  wrapAsync(googleLoginController)
+  wrapAsync(authController.loginGoogleController)
 )
 
 commonAuthRouter.post(
