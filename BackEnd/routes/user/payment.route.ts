@@ -12,5 +12,5 @@ userPaymentRouter.get(
   helpersMiddleware.entityValidator,
   // purchaseMiddleware.identifyPurchase,
   authMiddleware.verifyAccessToken,
-  wrapAsync(paymentController.paymentVNPay)
+  wrapAsync(paymentController.getPayments)
 )

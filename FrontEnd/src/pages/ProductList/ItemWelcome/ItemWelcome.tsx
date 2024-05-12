@@ -8,7 +8,7 @@ export default function ItemWelcome() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
-      console.log(currentScrollY)
+      // console.log(currentScrollY)
       if (560 <= currentScrollY && currentScrollY <= 750 && !hasAnimated) {
         setHasAnimated(true)
       } else if (559 >= currentScrollY || currentScrollY >= 755) {
@@ -23,7 +23,7 @@ export default function ItemWelcome() {
     }
   }, [hasAnimated])
 
-  console.log(hasAnimated)
+  // console.log(hasAnimated)
   // useEffect(() => {
   //   const handleScroll = () => {
   //     if (window.scrollY <= 648 && !hasAnimated && !scrollListenerRemoved && !isAnimationInProgress) {

@@ -41,7 +41,7 @@ const getAllOrders = async (req: Request, res: Response) => {
         .select('-password -__v')
         .lean()
       order.userInfo = userInfo
-      // order.product = handleImageProduct(cloneDeep(order.product))
+      order.product = handleImageProduct(cloneDeep(order.product))
       return order
     })
   )

@@ -21,6 +21,7 @@ import Products from './pages/Admin/pages/Products'
 import Orders from './pages/Admin/pages/Orders'
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import FormInput from './pages/User/FormInput'
+import HistoryPurchase from './pages/User/HistoryPurchase/HistoryPuchase'
 
 // import FormAccountEdit from './pages/Admin/component/FormAccountEdit'
 
@@ -90,8 +91,8 @@ export default function UseRouterElement() {
               element: <ChangePassword />
             },
             {
-              path: path.historyPurchase
-              // element: <HistoryPurchase />
+              path: path.historyPurchase,
+              element: <HistoryPurchase />
             },
             {
               path: path.formInput,

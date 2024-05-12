@@ -13,7 +13,17 @@ const purchaseApi = {
       params
     })
   },
-  buyProducts(body: { product_id: string; buy_count: number }[]) {
+  buyProducts(body: {
+    street: string
+    totalMoney: number
+    city: string
+    name: string
+    phone: string
+    paymentMethod: number
+    purchase: string[]
+    order: { product_id: string; buy_count: string }[]
+  }) {
+    console.log(body)
     return http.post<SuccessResponse<Purchase[]>>(`${URL}/buy-products`, body)
   },
   updatePurchase(body: { product_id: string; buy_count: number }) {

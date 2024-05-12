@@ -42,8 +42,8 @@ export default function Header() {
     queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart }),
     enabled: isAuthenticated
   })
-  console.log(purchasesInCartData)
   const purchasesInCart = purchasesInCartData?.data.data
+  // console.log(purchasesInCart)
   return (
     <div className='pb-5 pt-2 bg-gradient-to-b from-[#1CA7EC] to-[#4ADEDE] text-white '>
       <div className='mx-6'>
@@ -91,23 +91,19 @@ export default function Header() {
                       <div className='mt-5'>
                         {purchasesInCart.slice(0, MAX_PURCHASES).map((purchase) => (
                           <div className='mt-2 flex py-2 hover:bg-gray-100' key={purchase._id}>
-                            {purchase.order?.map((orderItem) => (
-                              <div>
-                                <div className='flex-shrink-0'>
-                                  <img
-                                    src={orderItem.product.image}
-                                    // alt={orderItem.product.name}
-                                    className='h-11 w-11 object-cover'
-                                  />
-                                </div>
-                                <div className='ml-2 flex-grow overflow-hidden'>
-                                  <div className='truncate'>{orderItem.product.name} </div>
-                                </div>
-                                <div className='ml-2 flex-shrink-0'>
-                                  <span className='text-[#1CA7EC]'>{formatCurrency(orderItem.product.price)}</span>
-                                </div>
-                              </div>
-                            ))}
+                            <div className='flex-shrink-0'>
+                              <img
+                                src={purchase.product.image}
+                                // alt={purchase.product.name}
+                                className='h-11 w-11 object-cover'
+                              />
+                            </div>
+                            <div className='ml-2 flex-grow overflow-hidden'>
+                              <div className='truncate'>{purchase.product.name} </div>
+                            </div>
+                            <div className='ml-2 flex-shrink-0'>
+                              <span className='text-[#1CA7EC]'>{formatCurrency(purchase.product.price)}</span>
+                            </div>
                           </div>
                         ))}
                       </div>

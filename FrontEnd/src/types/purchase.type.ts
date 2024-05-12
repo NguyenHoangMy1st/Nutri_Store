@@ -6,20 +6,12 @@ export type PurchaseListStatus = PurchaseStatus | 0
 
 export interface Purchase {
   _id: string
-  order: [{ buy_count: number; product: Product }]
+  buy_count: number
   price: number
   price_before_discount: number
   status: PurchaseStatus
   user: string
-  shippingAddress: [
-    {
-      street: string
-      city: string
-      postalCode: string
-      phone: string
-      paymentMethod: string
-    }
-  ]
+  product: Product
   createdAt: string
   updatedAt: string
 }
