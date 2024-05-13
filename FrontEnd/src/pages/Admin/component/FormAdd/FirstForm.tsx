@@ -36,7 +36,7 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({ onFormInsta
   useEffect(() => {
     onFormInstanceReady(form)
   }, [])
-  console.log(form)
+  // console.log(form)
   const queryConfig = useQueryConfig()
   const { data: categoriesData } = useQuery({
     queryKey: ['categories', queryConfig],
@@ -117,7 +117,7 @@ const CollectionCreateFormModal: React.FC<CollectionCreateFormModalProps> = ({
   const handleCreate = async () => {
     try {
       const values = await (formInstance?.validateFields() as Promise<Product>)
-      console.log('Form values:', values) // In ra giá trị của form trước khi gọi API
+      // console.log('Form values:', values) // In ra giá trị của form trước khi gọi API
 
       // const formData = new FormData()
       // Object.entries(values).forEach(([key, value]) => {
@@ -135,7 +135,7 @@ const CollectionCreateFormModal: React.FC<CollectionCreateFormModalProps> = ({
       formInstance?.resetFields()
       onCreate(values)
     } catch (error) {
-      console.log('Failed:', error)
+      // console.log('Failed:', error)
     }
   }
   return (
@@ -171,7 +171,7 @@ const FristForm: React.FC<CollectionCreateFormProps> = ({ onCreated }) => {
     setOpen(false)
     onCreated()
   }
-  console.log(formValues)
+  // console.log(formValues)
 
   return (
     <>

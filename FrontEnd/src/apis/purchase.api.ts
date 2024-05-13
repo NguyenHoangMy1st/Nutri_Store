@@ -23,7 +23,7 @@ const purchaseApi = {
     purchase: string[]
     order: { product_id: string; buy_count: string }[]
   }) {
-    console.log(body)
+    // console.log(body)
     return http.post<SuccessResponse<Purchase[]>>(`${URL}/buy-products`, body)
   },
   updatePurchase(body: { product_id: string; buy_count: number }) {

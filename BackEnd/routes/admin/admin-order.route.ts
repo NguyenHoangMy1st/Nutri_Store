@@ -1,53 +1,16 @@
 import { Router } from 'express'
-import orderController from '../../controllers/order.controller'
+import paymentController from '../../controllers/payment.controller'
 import authMiddleware from '../../middleware/auth.middleware'
 import helpersMiddleware from '../../middleware/helpers.middleware'
 import { wrapAsync } from '../../utils/response'
 
 const adminOrderRouter = Router()
 
-// adminOrderRouter.get(
-//   '/:id',
-//   authMiddleware.middleWare,
-//   orderController.getOrderById
-// )
-
-// adminOrderRouter.put(
-//   '/update',
-//   authMiddleware.middleWare,
-//   orderController.updateOrder
-// )
-
-// adminOrderRouter.put(
-//   '/update-status',
-//   authMiddleware.middleWare,
-//   orderController.updateAllStatusOrder
-// )
-
-// adminOrderRouter.put(
-//   '/update-payment',
-//   authMiddleware.middleWare,
-//   orderController.updatePaymentOrder
-// )
-
-// adminOrderRouter.put(
-//   '/update-status-payment',
-//   authMiddleware.middleWare,
-//   orderController.updateStatusPaymentOrder
-// )
-
-// adminOrderRouter.delete('/:id', orderController.deleteOrder)
-
-// adminOrderRouter.post(
-//   '/insert',
-//   authMiddleware.middleWare,
-//   orderController.insertOrder
-// )
 adminOrderRouter.get(
   '',
   authMiddleware.verifyAccessToken,
   authMiddleware.verifyAdmin,
-  wrapAsync(orderController.getAllOrders)
+  wrapAsync(paymentController.getAllOrders)
 )
 adminOrderRouter.put(
   '/:order_id/confirm',
@@ -55,7 +18,7 @@ adminOrderRouter.put(
   authMiddleware.verifyAdmin,
   helpersMiddleware.idRule('order_id'),
   // helpersMiddleware.idValidator,
-  wrapAsync(orderController.updateOrderConfirm)
+  wrapAsync(paymentController.updateOrderConfirm)
 )
 adminOrderRouter.put(
   '/:order_id/cancel',
@@ -63,19 +26,7 @@ adminOrderRouter.put(
   authMiddleware.verifyAdmin,
   helpersMiddleware.idRule('order_id'),
   // helpersMiddleware.idValidator,
-  wrapAsync(orderController.updateOrderCancel)
+  wrapAsync(paymentController.updateOrderCancel)
 )
 
-adminOrderRouter.get(
-  '/order_by_user',
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  wrapAsync(orderController.getOrderByIdAccount)
-)
-// adminOrderRouter.get(
-//   '/users-with-purchase',
-//   authMiddleware.verifyAccessToken,
-//   authMiddleware.verifyAdmin,
-//   wrapAsync(orderController.getUsersWithPurchase)
-// )
 export default adminOrderRouter

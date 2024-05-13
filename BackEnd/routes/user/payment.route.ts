@@ -8,8 +8,8 @@ import { wrapAsync } from '../../utils/response'
 export const userPaymentRouter = Router()
 
 userPaymentRouter.get(
-  '/',
-  helpersMiddleware.entityValidator,
+  '',
+  // helpersMiddleware.entityValidator,
   // purchaseMiddleware.identifyPurchase,
   authMiddleware.verifyAccessToken,
   wrapAsync(paymentController.getPayments)

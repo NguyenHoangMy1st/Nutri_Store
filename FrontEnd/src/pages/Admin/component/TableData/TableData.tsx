@@ -36,7 +36,7 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
       return adminApi.getAllProducts()
     }
   })
-  console.log(productsData, '2')
+  // console.log(productsData, '2')
   const { data: categoriesData } = useQuery({
     queryKey: ['categories', queryConfig],
     queryFn: () => {
@@ -66,7 +66,7 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
     fetchData()
   }, [productsData])
   const handleUpdateSuccess = () => {
-    console.log(shouldRefetch)
+    // console.log(shouldRefetch)
     setShouldRefetch(true) // Trigger fetchData khi cập nhật thành công
   }
   const deleteProductMutation = useMutation({

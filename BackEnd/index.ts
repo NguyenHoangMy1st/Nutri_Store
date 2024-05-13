@@ -41,53 +41,8 @@ routes.forEach((item) =>
 app.use(function (err: any, req: any, res: any, next: any) {
   responseError(res, err)
 })
-const getOauthGoogleToken = async (code) => {
-  const body = {
-    code,
-    client_id: process.env.GOOGLE_CLIENT_ID,
-    client_secret: process.env.GOOGLE_CLIENT_SECRET,
-    redirect_uri: process.env.GOOGLE_AUTHORIZED_REDIRECT_URI,
-  }
-  const { data } = await axios.post(
-    'https://oauth2.googleapis.com/token',
-    body,
-    {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    }
-  )
-  return data
-}
-app.get('/api/oauth/google', async (req, res, next) => {
-  try {
-    const { code } = req.query
-    const data = await getOauthGoogleToken(code)
-    console.log(code)
-    console.log(data)
-    const { id_token, acccess_token } = data
-    // const googleUser = await getGoogleUser({ id_token, acccess_token })
 
-    // if (!googleUser.verified_email) {
-    //   return res.status(403).json({
-    //     message: 'Google email not verified',
-    //   })
-    // }
-
-    // const manual_access_token = jwt.sign(
-    //   {
-    //     email: googleUser.email,
-    //     type: acccess_token,
-    //   },
-    //   process.env.AC_PRIVATE_KEY,
-    //   { expiresIn: '15m' }
-    // )
-    return res.redirect(`http://localhost:3000/login/oauth`)
-  } catch (error) {
-    next(error)
-  }
-})
 
 app.listen(process.env.PORT, function () {
-  // console.log(chalk.greenBright(`API listening on port ${process.env.PORT}!`))
+  console.log(chalk.greenBright(`API listening on port ${process.env.PORT}!`))
 })

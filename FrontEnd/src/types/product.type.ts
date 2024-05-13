@@ -1,11 +1,14 @@
+import { Category } from './category.type'
+import { Brand } from './brand.type'
+
 export interface Product {
   _id: string
   name: string
   image: string
   images: string[]
   description: string
-  category: string[]
-  brand: string[]
+  category: Category
+  brand: Brand
   rating: number
   price: number
   price_before_discount: number
@@ -19,7 +22,6 @@ export interface Product {
 export interface Ingredient {
   name: string
   amount: number // Lượng của thành phần dinh dưỡng, có thể là số lượng hoặc tỉ lệ phần trăm
-  unit: string // Đơn vị đo lường của lượng thành phần (ví dụ: mg, g, IU, %DV)
 }
 export interface ProductList {
   products: Product[]
@@ -42,4 +44,5 @@ export interface ProductListConfig {
   name?: string
   category?: string
   brand?: string
+  status?: number
 }

@@ -4,10 +4,10 @@ interface Props {
 }
 function ItemCategory({ img, name }: Props) {
   return (
-    <div className=' flex flex-col items-center justify-center border border-gray-200 px-2 py-3 shadow-none hover:shadow-lg'>
+    <div className=' flex flex-col items-center justify-center px-2 py-3 hover:scale-105  '>
       <button>
-        <img src={img} alt='' className='w-[140px] h-[140px]' />
-        <div className='mt-[5px]'>
+        <img src={img} alt='' className='w-[140px] h-[140px] rounded-full border-3 border-gray-300 p-3' />
+        <div className='mt-[5px] text-[15px]'>
           <span>{name}</span>
         </div>
       </button>

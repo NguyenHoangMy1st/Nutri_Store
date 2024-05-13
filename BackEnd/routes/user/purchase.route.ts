@@ -4,6 +4,7 @@ import helpersMiddleware from '../../middleware/helpers.middleware'
 import * as purchaseMiddleware from '../../middleware/purchase.middleware'
 import * as purchaseController from '../../controllers/purchase.controller'
 import { wrapAsync } from '../../utils/response'
+import paymentController from '../../controllers/payment.controller'
 
 export const userPurchaseRouter = Router()
 

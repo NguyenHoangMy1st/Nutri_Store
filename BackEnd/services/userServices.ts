@@ -81,11 +81,11 @@ const forgottenPassword = async (
       if (error) {
         console.error('Error sending verification email', error)
       } else {
-        console.log('Verification email sent', info.response)
+        // console.log('Verification email sent', info.response)
       }
     })
     const hashPassword = hashValue(newPassword)
-    console.log(newPassword)
+    // console.log(newPassword)
     user.password = hashPassword
     await user.save()
     data.status = 200

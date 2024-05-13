@@ -5,7 +5,7 @@ import productApi from 'src/apis/product.api'
 import QuantityController from 'src/components/QuantityController'
 // import ProductRating from 'src/components/ProductRating'
 import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } from 'src/utils/utils'
-import { Popover } from 'antd'
+import { Modal, Popover } from 'antd'
 import { useEffect, useMemo, useState, useRef } from 'react'
 import { Product as ProductType, ProductListConfig } from 'src/types/product.type'
 import purchaseApi from 'src/apis/purchase.api'
@@ -14,6 +14,9 @@ import { purchasesStatus } from 'src/constants/purchase'
 
 import Product from '../ProductList/Product'
 import path from 'src/constants/path'
+import { FaHandHoldingHeart, FaHeartbeat, FaStar } from 'react-icons/fa'
+import { GrDeliver } from 'react-icons/gr'
+import Evaluate from 'src/components/Evaluate'
 
 const ProductDetail: React.FC = () => {
   // const { t } = useTranslation(['detail'])
@@ -55,7 +58,7 @@ const ProductDetail: React.FC = () => {
 
   const addToCartMutation = useMutation(purchaseApi.addToCart)
   const navigate = useNavigate()
-  const queryConfig: ProductListConfig = { limit: '20', page: '1', category: product?.category._id }
+  const queryConfig: ProductListConfig = { limit: '20', page: '1', category: product?.category._id, status: 1 }
 
   const { data: productsData } = useQuery({
     queryKey: ['products', queryConfig],
@@ -85,10 +88,20 @@ const ProductDetail: React.FC = () => {
     }
   }
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const chooseActive = (img: string) => {
     setActiveImage(img)
   }
+  const showModal = () => {
+    setIsModalOpen(true)
+  }
+  const handleOk = () => {
+    setIsModalOpen(false)
+  }
 
+  const handleCancel = () => {
+    setIsModalOpen(false)
+  }
   const handleZoom = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = event.currentTarget.getBoundingClientRect()
     const image = imageRef.current as HTMLImageElement
@@ -278,21 +291,24 @@ const ProductDetail: React.FC = () => {
                 </button>
               </div>
 
-              <div className='pt-7 flex gap-5 justify-between'>
-                <div className='flex text-[#1CA7EC] gap-1'>
-                  <img src='mienphi.png' alt='' className='w-5 h-5' />
+              <div className='pt-7 flex gap-2 justify-between'>
+                <div className='flex flex-1 text-[#1CA7EC] gap-2'>
+                  {/* <img src='mienphi.png' alt='' className='w-5 h-5' /> */}
+                  <FaHeartbeat className='text-[20px]' />
                   <Popover placement='bottom' content={content1}>
                     <span className='text-gray-700'>Sức khỏe của bạn là tài sản quý giá nhất</span>
                   </Popover>
                 </div>
-                <div className='flex text-[#1CA7EC] gap-1'>
-                  <img src='baomat.png' alt='' className='w-5 h-5' />
+                <div className='flex flex-1 text-[#1CA7EC] gap-2'>
+                  {/* <img src='baomat.png' alt='' className='w-5 h-5' /> */}
+                  <FaHandHoldingHeart className='text-[20px]' />
                   <Popover placement='bottom' content={content2}>
                     <span className='text-gray-700'>Sản phẩm được kiểm kê chất lượng</span>
                   </Popover>
                 </div>
-                <div className='flex text-[#1CA7EC] gap-1'>
-                  <img src='vanchuyen.png' alt='' className='w-5 h-5' />
+                <div className='flex flex-1 text-[#1CA7EC] gap-2'>
+                  {/* <img src='vanchuyen.png' alt='' className='w-5 h-5' /> */}
+                  <GrDeliver className='text-[20px]' />
                   <Popover placement='bottom' content={content3}>
                     <span className='text-gray-700'>Miễn phí vận chuyển</span>
                   </Popover>
@@ -314,6 +330,226 @@ const ProductDetail: React.FC = () => {
           </div>
         </div>
       </div>
+      <div className='container'>
+        <div className=' mt-8 bg-white shadow mx-32 p-5'>
+          <div
+            className='grid gap-24 mt-[50px] border-white border-b-gray-100 border-2 pb-8'
+            style={{ gridTemplateColumns: '30% 70%' }}
+          >
+            <div className='flex flex-col'>
+              <div className='flex justify-between'>
+                <span className='text-left text-xl font-bold'>12 đánh giá</span>
+                <button
+                  className='uppercase text-[16px] font-bold underline decoration-1 hover:text-black/70'
+                  onClick={showModal}
+                >
+                  Viết đánh giá
+                </button>
+                <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={800} footer={null}>
+                  <Evaluate />
+                </Modal>
+              </div>
+              <div className='flex gap-2 text-orange-500 text-[30px] text-left mt-6'>
+                <FaStar />
+                <FaStar />
+                <FaStar />
+                <FaStar />
+                <FaStar />
+              </div>
+              <div className='flex flex-col gap-4 mt-8 '>
+                <div className='flex gap-2  w-full item-center justify-center h-[30px] text-base'>
+                  <span className='text-end p-1 '>5</span>
+                  <div className='w-full flex items-center justify-center '>
+                    <div className=' w-full box-border  leading-snug'>
+                      <div className='w-full'>
+                        <div className='h-[5px] bg-[#dfdfdf]  overflow-hidden rounded-[100px] w-full   '>
+                          <div
+                            className='ant-progress-bg flex items-center justify-center'
+                            style={{ width: '66.6667%', height: '5px', background: 'rgb(0, 0, 0)' }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span className=' text-center h-[30px] p-1'>(8)</span>
+                </div>
+                <div className='flex gap-2  w-full item-center justify-center h-[30px] text-base'>
+                  <span className='text-end p-1 '>4</span>
+                  <div className='w-full flex items-center justify-center '>
+                    <div className=' w-full box-border  leading-snug'>
+                      <div className='w-full'>
+                        <div className='h-[5px] bg-[#dfdfdf]  overflow-hidden rounded-[100px] w-full   '>
+                          <div
+                            className='ant-progress-bg flex items-center justify-center'
+                            style={{ width: '0%', height: '5px', background: 'rgb(0, 0, 0)' }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span className=' text-center h-[30px] p-1'>(0)</span>
+                </div>
+                <div className='flex gap-2  w-full item-center justify-center h-[30px] text-base'>
+                  <span className='text-end p-1 '>3</span>
+                  <div className='w-full flex items-center justify-center '>
+                    <div className=' w-full box-border  leading-snug'>
+                      <div className='w-full'>
+                        <div className='h-[5px] bg-[#dfdfdf]  overflow-hidden rounded-[100px] w-full   '>
+                          <div
+                            className='ant-progress-bg flex items-center justify-center'
+                            style={{ width: '0%', height: '5px', background: 'rgb(0, 0, 0)' }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span className=' text-center h-[30px] p-1'>(0)</span>
+                </div>
+                <div className='flex gap-2  w-full item-center justify-center h-[30px] text-base'>
+                  <span className='text-end p-1 '>2</span>
+                  <div className='w-full flex items-center justify-center '>
+                    <div className=' w-full box-border  leading-snug'>
+                      <div className='w-full'>
+                        <div className='h-[5px] bg-[#dfdfdf]  overflow-hidden rounded-[100px] w-full   '>
+                          <div
+                            className='ant-progress-bg flex items-center justify-center'
+                            style={{ width: '0%', height: '5px', background: 'rgb(0, 0, 0)' }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span className=' text-center h-[30px] p-1'>(0)</span>
+                </div>
+                <div className='flex gap-2  w-full item-center justify-center h-[30px] text-base'>
+                  <span className='text-end p-1 '>1</span>
+                  <div className='w-full flex items-center justify-center '>
+                    <div className=' w-full box-border  leading-snug'>
+                      <div className='w-full'>
+                        <div className='h-[5px] bg-[#dfdfdf]  overflow-hidden rounded-[100px] w-full   '>
+                          <div
+                            className='ant-progress-bg flex items-center justify-center'
+                            style={{ width: '0', height: '5px', background: 'rgb(0, 0, 0)' }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span className=' text-center h-[30px] p-1'>(0)</span>
+                </div>
+              </div>
+            </div>
+            <div
+              className='flex flex-col gap-2 w-[90%] scrollable-container'
+              style={{ maxHeight: '455px', overflowY: 'auto' }}
+            >
+              <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
+                <span>user</span>
+                <div className='flex gap-3 mt-2'>
+                  <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                  </div>
+                  <div className='text-gray-400 '>17/04/2023</div>
+                </div>
+                <p className='text-base mt-2'>
+                  Tận hưởng hộp sữa mát lành hay tạo nên những kết hợp đắm say từ lớp nền sánh ngậy: ngọt ngào cookies
+                  bơ, béo bùi latte nóng, đậm đà ca cao thơm.
+                </p>
+              </div>
+              <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
+                <span>user</span>
+                <div className='flex gap-3 mt-2'>
+                  <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                  </div>
+                  <div className='text-gray-400 '>17/04/2023</div>
+                </div>
+                <p className='text-base mt-2'>
+                  Tận hưởng hộp sữa mát lành hay tạo nên những kết hợp đắm say từ lớp nền sánh ngậy: ngọt ngào cookies
+                  bơ, béo bùi latte nóng, đậm đà ca cao thơm.
+                </p>
+              </div>
+              <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
+                <span>user</span>
+                <div className='flex gap-3 mt-2'>
+                  <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                  </div>
+                  <div className='text-gray-400 '>17/04/2023</div>
+                </div>
+                <p className='text-base mt-2'>
+                  Tận hưởng hộp sữa mát lành hay tạo nên những kết hợp đắm say từ lớp nền sánh ngậy: ngọt ngào cookies
+                  bơ, béo bùi latte nóng, đậm đà ca cao thơm.
+                </p>
+              </div>
+              <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
+                <span>user</span>
+                <div className='flex gap-3 mt-2'>
+                  <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                  </div>
+                  <div className='text-gray-400 '>17/04/2023</div>
+                </div>
+                <p className='text-base mt-2'>
+                  Tận hưởng hộp sữa mát lành hay tạo nên những kết hợp đắm say từ lớp nền sánh ngậy: ngọt ngào cookies
+                  bơ, béo bùi latte nóng, đậm đà ca cao thơm.
+                </p>
+              </div>
+              <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
+                <span>user</span>
+                <div className='flex gap-3 mt-2'>
+                  <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                  </div>
+                  <div className='text-gray-400 '>17/04/2023</div>
+                </div>
+                <p className='text-base mt-2'>
+                  Tận hưởng hộp sữa mát lành hay tạo nên những kết hợp đắm say từ lớp nền sánh ngậy: ngọt ngào cookies
+                  bơ, béo bùi latte nóng, đậm đà ca cao thơm.
+                </p>
+              </div>
+              <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
+                <span>user</span>
+                <div className='flex gap-3 mt-2'>
+                  <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                  </div>
+                  <div className='text-gray-400 '>17/04/2023</div>
+                </div>
+                <p className='text-base mt-2'>
+                  Tận hưởng hộp sữa mát lành hay tạo nên những kết hợp đắm say từ lớp nền sánh ngậy: ngọt ngào cookies
+                  bơ, béo bùi latte nóng, đậm đà ca cao thơm.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className='container'>
         <div className='mt-8 bg-white shadow mx-32 p-5'>
           <div className='uppercase text-gray-400'>CÓ THỂ BẠN CŨNG THÍCH</div>

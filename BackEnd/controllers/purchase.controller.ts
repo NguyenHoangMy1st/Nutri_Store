@@ -1,5 +1,5 @@
+import { body } from 'express-validator'
 import { Request, Response } from 'express'
-import { STATUS_PURCHASE } from '../constants/purchase'
 import { STATUS } from '../constants/status'
 import { ProductModel } from '../database/models/product.model'
 import { PaymentModel } from '../database/models/payment.model'
@@ -7,6 +7,7 @@ import { PurchaseModel } from '../database/models/purchase.model'
 import { ErrorHandler, responseError, responseSuccess } from '../utils/response'
 import { handleImageProduct } from './product.controller'
 import { cloneDeep } from 'lodash'
+import { STATUS_ORDER, STATUS_PURCHASE } from '../constants/purchase'
 
 export const addToCart = async (req: Request, res: Response) => {
   const { product_id, buy_count } = req.body
@@ -20,7 +21,7 @@ export const addToCart = async (req: Request, res: Response) => {
     }
     const purchaseInDb: any = await PurchaseModel.findOne({
       user: req.jwtDecoded.id,
-      status: STATUS_PURCHASE.IN_CART,
+      status: STATUS_PURCHASE.INCART,
       product: {
         _id: product_id,
       },
@@ -35,7 +36,7 @@ export const addToCart = async (req: Request, res: Response) => {
       data = await PurchaseModel.findOneAndUpdate(
         {
           user: req.jwtDecoded.id,
-          status: STATUS_PURCHASE.IN_CART,
+          status: STATUS_PURCHASE.INCART,
           product: {
             _id: product_id,
           },
@@ -61,7 +62,7 @@ export const addToCart = async (req: Request, res: Response) => {
         buy_count: buy_count,
         price: product.price,
         price_before_discount: product.price_before_discount,
-        status: STATUS_PURCHASE.IN_CART,
+        status: STATUS_PURCHASE.INCART,
       }
       const addedPurchase = await new PurchaseModel(purchase).save()
       data = await PurchaseModel.findById(addedPurchase._id).populate({
@@ -85,7 +86,7 @@ export const updatePurchase = async (req: Request, res: Response) => {
   const { product_id, buy_count } = req.body
   const purchaseInDb: any = await PurchaseModel.findOne({
     user: req.jwtDecoded.id,
-    status: STATUS_PURCHASE.IN_CART,
+    status: STATUS_PURCHASE.INCART,
     product: {
       _id: product_id,
     },
@@ -107,7 +108,7 @@ export const updatePurchase = async (req: Request, res: Response) => {
     const data = await PurchaseModel.findOneAndUpdate(
       {
         user: req.jwtDecoded.id,
-        status: STATUS_PURCHASE.IN_CART,
+        status: STATUS_PURCHASE.INCART,
         product: {
           _id: product_id,
         },
@@ -127,32 +128,21 @@ export const updatePurchase = async (req: Request, res: Response) => {
       })
       .lean()
     const response = {
-      message: 'Cập nhật đơn thành công',
+      message: 'Cập nhật giỏ hàng thành công',
       data,
     }
     return responseSuccess(res, response)
   } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy đơn')
+    throw new ErrorHandler(
+      STATUS.NOT_FOUND,
+      'Không tìm thấy sản phẩm cần cập nhật'
+    )
   }
 }
 
 export const buyProducts = async (req: Request, res: Response) => {
-  const purchases = []
+  const purchase = []
   const { order, ...rest } = req.body
-  // console.log(order)
-  // [
-  //   { product_id: '663e30e9e35a2273788adfea', buy_count: 10 },
-  //   { product_id: '663cf7fd175f930606062530', buy_count: 2 }
-  // ]
-
-  // console.log(rest)
-  // "street": "123 Main St",
-  //   "totalMoney":0,
-  //   "city": "City",
-  //   "name": "a",
-  //   "phone": "123-456-7890",
-  //   "paymentMethod": 1 /*Thanh toan bang paypal*/,
-  //   "purchases":["66409e6a1d64047d645a69c1", "6640854fe4d97d3e8c68a9cc"],
 
   for (const item of order) {
     const product: any = await ProductModel.findById(item.product_id).lean()
@@ -166,14 +156,14 @@ export const buyProducts = async (req: Request, res: Response) => {
         let data = await PurchaseModel.findOneAndUpdate(
           {
             user: req.jwtDecoded.id,
-            status: STATUS_PURCHASE.IN_CART,
+            status: STATUS_PURCHASE.INCART,
             product: {
               _id: item.product_id,
             },
           },
           {
             buy_count: item.buy_count,
-            status: STATUS_PURCHASE.WAIT_FOR_CONFIRMATION,
+            status: STATUS_PURCHASE.OUTCART,
           },
           {
             new: true,
@@ -197,7 +187,7 @@ export const buyProducts = async (req: Request, res: Response) => {
             buy_count: item.buy_count,
             price: product.price,
             price_before_discount: product.price_before_discount,
-            status: STATUS_PURCHASE.WAIT_FOR_CONFIRMATION,
+            status: STATUS_PURCHASE.OUTCART,
           }
           const addedPurchase = await new PurchaseModel(purchase).save()
           data = await PurchaseModel.findById(addedPurchase._id).populate({
@@ -207,17 +197,15 @@ export const buyProducts = async (req: Request, res: Response) => {
             },
           })
         }
-        purchases.push(data)
+        purchase.push(data)
       }
     } else {
       throw new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm')
     }
   }
 
-  const purchasesIds = purchases.map((purchase) => purchase._id)
+  const purchasesIds = purchase.map((purchase_id) => purchase_id._id)
   const responseData = { orderItem: purchasesIds, ...rest }
-  console.log(responseData)
-  console.log(rest)
   await (await PaymentModel.create({ ...rest })).save()
 
   const response = {
@@ -228,16 +216,16 @@ export const buyProducts = async (req: Request, res: Response) => {
 }
 
 export const getPurchases = async (req: Request, res: Response) => {
-  const { status = STATUS_PURCHASE.ALL } = req.query
+  const { status = STATUS_PURCHASE.OUTCART } = req.query
   const user_id = req.jwtDecoded.id
 
   let condition: any = {
     user: user_id,
     status: {
-      $ne: STATUS_PURCHASE.ALL,
+      $ne: STATUS_PURCHASE.OUTCART,
     },
   }
-  if (Number(status) !== STATUS_PURCHASE.ALL) {
+  if (Number(status) !== STATUS_PURCHASE.OUTCART) {
     condition.status = status
   }
 
@@ -257,7 +245,7 @@ export const getPurchases = async (req: Request, res: Response) => {
     return purchase
   })
   const response = {
-    message: 'Lấy đơn mua thành công',
+    message: 'Lấy giỏ hàng thành công',
     data: purchases,
   }
   return responseSuccess(res, response)
@@ -268,11 +256,11 @@ export const deletePurchases = async (req: Request, res: Response) => {
   const user_id = req.jwtDecoded.id
   const deletedData = await PurchaseModel.deleteMany({
     user: user_id,
-    status: STATUS_PURCHASE.IN_CART,
+    status: STATUS_PURCHASE.INCART,
     _id: { $in: purchase_ids },
   })
   return responseSuccess(res, {
-    message: `Xoá ${deletedData.deletedCount} đơn thành công`,
+    message: `Xoá sản phẩm ${deletedData.deletedCount} ra khỏi giỏ hàng thành công`,
     data: { deleted_count: deletedData.deletedCount },
   })
 }

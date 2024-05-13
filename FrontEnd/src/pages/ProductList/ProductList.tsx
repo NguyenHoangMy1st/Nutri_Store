@@ -22,6 +22,8 @@ import { VscArrowRight } from 'react-icons/vsc'
 import ItemWelcome from './ItemWelcome'
 import Pagination from 'src/components/Pagination'
 import Brand from 'src/components/Brand'
+import { useEffect, useState } from 'react'
+import { Modal } from 'antd'
 
 export default function ProductList() {
   const queryConfig = useQueryConfig()
@@ -34,16 +36,72 @@ export default function ProductList() {
     keepPreviousData: true,
     staleTime: 3 * 60 * 1000
   })
-  console.log(productsData)
+  // console.log(productsData)
   // const { data: categoriesData } = useQuery({
   //   queryKey: ['categories'],
   //   queryFn: () => {
   //     return categoryApi.getCategories()
   //   }
   // })
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const showModal = () => {
+    setIsModalOpen(true)
+  }
+  const handleOk = () => {
+    setIsModalOpen(false)
+  }
 
+  const handleCancel = () => {
+    setIsModalOpen(false)
+  }
+  // Function to handle user response
+  const handleResponse = (response: any) => {
+    if (response === 'yes') {
+      window.location.href = '/user/user/input'
+    } else {
+      setIsModalOpen(false)
+    }
+  }
+  const renderNotification = () => {
+    return (
+      <div className=''>
+        <p className=' text-gray-400 pt-7 px-5 text-[25px] mb-3'>
+          Có vẻ như bạn đang gặp vấn đề về sức khỏe và có thể cần những sản phẩm hỗ trợ. Bạn có muốn tìm kiếm chúng
+          không?
+        </p>
+        <div className='flex gap-5 justify-center items-center'>
+          <button
+            className='bg-blue text-white px-4 py-2 rounded border border-black cursor-pointerr'
+            onClick={() => handleResponse('yes')}
+          >
+            Yes
+          </button>
+          <button
+            className='bg-white text-black px-4 py-2 rounded border border-black cursor-pointer'
+            onClick={() => handleResponse('no')}
+          >
+            No
+          </button>
+        </div>
+      </div>
+    )
+  }
+  useEffect(() => {
+    // Hiển thị modal khi component được mount
+    showModal()
+  }, [])
+
+  // Call authenticateUser when the component mounts
   return (
-    <div className='h-full flex flex-col '>
+    <div className='h-full flex flex-col my-6 mx-32'>
+      <div className=''>
+        <div className='h-full flex flex-col'>
+          <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={800} footer={null}>
+            {renderNotification()}
+          </Modal>
+        </div>
+      </div>
+
       <div className='min-h-[680px]'>
         <div className='my-10 mx-32  relative pt-8 flex items-start justify-center'>
           <img src='unnamed.webp' alt='' className='z-0' />
@@ -81,7 +139,7 @@ export default function ProductList() {
               pathname: path.productCategory,
               search: createSearchParams({
                 // ...queryConfig,
-                category: '65ef3bb004766a6306cc63b6'
+                category: '60afacca6ef5b902180aacaf'
               }).toString()
             }}
           >
@@ -93,7 +151,7 @@ export default function ProductList() {
               pathname: path.productCategory,
               search: createSearchParams({
                 // ...queryConfig,
-                category: '60afacca6ef5b902180aacaf'
+                category: '60afafe76ef5b902180aacb5'
               }).toString()
             }}
           >
@@ -105,7 +163,7 @@ export default function ProductList() {
               pathname: path.productCategory,
               search: createSearchParams({
                 // ...queryConfig,
-                category: '65ef3b5a04766a6306cc63b3'
+                category: '60aba4e24efcc70f8892e1c6'
               }).toString()
             }}
           >
@@ -116,19 +174,19 @@ export default function ProductList() {
               pathname: path.productCategory,
               search: createSearchParams({
                 // ...queryConfig,
-                category: '65ef3b9c04766a6306cc63b3'
+                category: '66261875e777d143ac0442a0'
               }).toString()
             }}
           >
             <ItemCategory img='suachua.png' name='Sữa chua'></ItemCategory>
           </Link>
-            
+
           <Link
             to={{
               pathname: path.productCategory,
               search: createSearchParams({
                 // ...queryConfig,
-                category: '60afafe76ef5b902180aacb5'
+                category: '662618d3e777d143ac0442a3'
               }).toString()
             }}
           >
@@ -139,7 +197,7 @@ export default function ProductList() {
               pathname: path.productCategory,
               search: createSearchParams({
                 // ...queryConfig,
-                category: '60aba4e24efcc70f8892e1c6'
+                category: '662618e6e777d143ac0442a6'
               }).toString()
             }}
           >

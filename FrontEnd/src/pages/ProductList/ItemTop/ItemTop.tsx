@@ -27,21 +27,18 @@ function ItemTop({ data }: Props) {
     <Swiper
       slidesPerView={6}
       freeMode={true}
-      spaceBetween={30}
+      spaceBetween={-10}
       navigation={true}
       mousewheel={true}
       keyboard={true}
-      pagination={{
-        clickable: true
-      }}
       modules={[Pagination, Navigation]}
-      className='h-full w-full'
+      className='h-full w-full '
     >
       {listItem?.length > 0 &&
         listItem?.slice(0, 18)?.map((product, index) => (
           <SwiperSlide
             key={index}
-            className='mx-10 flex flex-col items-center border justify-center px-2 shadow-none hover:shadow-lg w-full relative '
+            className='mx-10 flex flex-col items-center border justify-center  shadow-none hover:shadow-lg w-full relative rounded-md'
           >
             <SwiperItemTop product={product}></SwiperItemTop>
           </SwiperSlide>

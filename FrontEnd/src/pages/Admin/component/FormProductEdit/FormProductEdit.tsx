@@ -31,7 +31,7 @@ const FormProductEdit: React.FC<CollectionCreateFormProps> = ({ productId, onClo
 
   const [productData, setProductData] = useState<any>(null)
   const [initialCategoryValue, setInitialCategoryValue] = useState([''])
-  console.log(initialCategoryValue)
+  // console.log(initialCategoryValue)
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -119,7 +119,7 @@ const FormProductEdit: React.FC<CollectionCreateFormProps> = ({ productId, onClo
       onError(error)
     }
   }
-  console.log(productData)
+  // console.log(productData)
 
   const images = productData?.data.images
   useEffect(() => {

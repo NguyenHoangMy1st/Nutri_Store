@@ -1,5 +1,8 @@
 export const purchasesStatus = {
-  inCart: -1,
+  inCart: 1,
+  outCart: 0
+} as const
+export const orderStatus = {
   all: 0,
   waitForConfirmation: 1,
   waitForGetting: 2,

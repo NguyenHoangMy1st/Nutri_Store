@@ -4,46 +4,34 @@ import { AppContext } from 'src/contexts/app.context'
 import NavHeader from '../NavHeader'
 import Popover from '../Popover'
 import { useContext } from 'react'
-import { useMutation, useQuery } from 'react-query'
-import authApi from 'src/apis/auth.api'
+import { useQuery } from 'react-query'
 import { purchasesStatus } from 'src/constants/purchase'
 import purchaseApi from 'src/apis/purchase.api'
 import { formatCurrency } from 'src/utils/utils'
+import useSearchProducts from 'src/hooks/useSearchProducts'
 const MAX_PURCHASES = 5
 export default function Header() {
-  const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
-  const logoutMutation = useMutation({
-    mutationFn: authApi.logout,
-    onSuccess: () => {
-      setIsAuthenticated(false)
-      setProfile(null)
-    }
-  })
+  const { isAuthenticated } = useContext(AppContext)
 
-  const handleLogout = () => {
-    logoutMutation.mutate()
-  }
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`)
-  }
-  const myTheme = {
-    components: {
-      Select: {
-        colorPrimaryHover: '#fa913c',
-        colorPrimary: '#fa913c',
-        colorBorder: '#e07925',
-        optionSelectedBg: '#ff8e8eaa',
-        colorText: '#939292'
-      }
-    }
-  }
+  // const myTheme = {
+  //   components: {
+  //     Select: {
+  //       colorPrimaryHover: '#fa913c',
+  //       colorPrimary: '#fa913c',
+  //       colorBorder: '#e07925',
+  //       optionSelectedBg: '#ff8e8eaa',
+  //       colorText: '#939292'
+  //     }
+  //   }
+  // }
   const { data: purchasesInCartData } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
     queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart }),
     enabled: isAuthenticated
   })
+
+  const { onSubmitSearch, register } = useSearchProducts()
   const purchasesInCart = purchasesInCartData?.data.data
-  // console.log(purchasesInCart)
   return (
     <div className='pb-5 pt-2 bg-gradient-to-b from-[#1CA7EC] to-[#4ADEDE] text-white '>
       <div className='mx-6'>
@@ -56,12 +44,14 @@ export default function Header() {
               <span className='text-[#2734a8]'>Store</span>
             </div>
           </Link>
-          <form className='col-span-6 ml-7'>
+          <form className='col-span-6 ml-7' onSubmit={onSubmitSearch}>
             <div className='bg-white rounded-sm p-1 flex '>
               <input
                 type='text'
+                {...register('name')}
                 className='text-black px-3 py-2 flex-grow border-none outline-none bg-transparent'
                 placeholder='Search'
+                
               />
               <button className='rounded-sm py-2 px-6 flex-shrink-0 bg-[#1CA7EC] hover:opacity-90'>
                 <svg

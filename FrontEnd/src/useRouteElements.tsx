@@ -120,10 +120,6 @@ export default function UseRouterElement() {
       )
     },
     {
-      path: path.productSearch,
-      element: <MainLayout>{/* <ProductSearch /> */}</MainLayout>
-    },
-    {
       path: path.productCategory,
       element: (
         <MainLayout>

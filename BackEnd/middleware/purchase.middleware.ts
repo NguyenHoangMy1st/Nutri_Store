@@ -1,5 +1,5 @@
 import { body } from 'express-validator'
-import { STATUS_PURCHASE } from '../constants/purchase'
+import { STATUS_ORDER } from '../constants/purchase'
 import { STATUS } from '../constants/status'
 import { PurchaseModel } from '../database/models/purchase.model'
 import { ErrorHandler } from '../utils/response'

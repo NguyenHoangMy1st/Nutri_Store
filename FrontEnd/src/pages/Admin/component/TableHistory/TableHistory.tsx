@@ -16,7 +16,7 @@ function TableHistory() {
     queryKey: ['orders', queryConfig],
     queryFn: () => adminApi.getAllOrder()
   })
-  console.log(orderData)
+  // console.log(orderData)
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
   const [statuses, setStatuses] = useState<number[]>([]) // Mảng các trạng thái

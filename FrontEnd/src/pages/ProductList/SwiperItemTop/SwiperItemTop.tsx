@@ -9,24 +9,19 @@ export default function SwiperItemTop({ product }: Props) {
     <div>
       <Link
         to={`${path.home}${generateNameId({ name: product.name, id: product._id })}`}
-        className='flex flex-col items-center gap-4'
+        className='flex flex-col  gap-4  '
       >
-        <div className='relative'>
-          <img src={product?.image} alt='' />
-          <div className='absolute bottom-0 w-full'>
-            <div className=' bg-gray-500 text-white  w-full h-6 flex items-center justify-center opacity-50 '>
-              Đã Bán {product?.view} k
-            </div>
-          </div>
+        <div className='relative  w-full h-[200px]'>
+          <img src={product?.image} alt='' className='h-[200px] w-full' />
         </div>
 
-        <div className='w-full'>
-          <p className='max-w-40 line-clamp-3 overflow-hidden'>{product?.name}</p>
+        <div className='w-full px-3  flex flex-start'>
+          <p className='w-full line-clamp-3 '>{product?.name}</p>
           {/* <p className='truncate ...'>{products.name}</p> */}
         </div>
       </Link>
       <div className='absolute top-0 left-0'>
-        <div className=' bg-gradient-to-b from-[#4ADEDE] to-[#1CA7EC] text-white  w-10 h-7 flex items-center justify-center rounded-br-lg'>
+        <div className=' bg-gradient-to-b from-[#c48678] to-[#ec571c] text-white  w-10 h-7 flex items-center justify-center rounded-br-lg'>
           TOP
         </div>
       </div>

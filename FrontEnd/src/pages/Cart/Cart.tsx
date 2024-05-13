@@ -1,6 +1,5 @@
 import { Breadcrumb, Modal, Switch } from 'antd'
 import './styles.scss'
-// import 'src/Styles/Header.scss'
 import { Link, useLocation } from 'react-router-dom'
 import path from 'src/constants/path'
 import { useContext, useEffect, useMemo, useState } from 'react'
@@ -12,9 +11,8 @@ import { keyBy } from 'lodash'
 import { formatCurrency, generateNameId } from 'src/utils/utils'
 import QuantityController from 'src/components/QuantityController'
 import { Purchase } from 'src/types/purchase.type'
-// import 'src/Styles/CheckBoxBrand.scss'
-import { AppContext } from 'src/contexts/app.context'
 import Payment from '../Payment'
+import { AppContext } from 'src/contexts/app.context'
 
 export default function Cart() {
   const { extendedPurchases, setExtendedPurchases } = useContext(AppContext)
@@ -23,16 +21,13 @@ export default function Cart() {
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
     queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart })
   })
-  // console.log(purchasesInCartData)
+
   const updatePurchaseMutation = useMutation({
     mutationFn: purchaseApi.updatePurchase,
     onSuccess: () => {
       refetch()
     }
   })
-  // const buyProductsMutation = useMutation({
-  //   mutationFn: purchaseApi.buyProducts
-  // })
   const deletePurchasesMutation = useMutation({
     mutationFn: purchaseApi.deletePurchase,
     onSuccess: () => {
@@ -117,27 +112,15 @@ export default function Cart() {
     deletePurchasesMutation.mutate([purchaseId])
   }
   const [isModalVisible, setIsModalVisible] = useState(false)
-  const handleCancel = () => {
+  const handlePaymentSuccess = () => {
     setIsModalVisible(false)
   }
   const handleBuyPurchases = () => {
     if (checkedPurchases.length > 0) {
       setIsModalVisible(true)
-      // const body = checkedPurchases.map((purchase) => ({
-      //   product_id: purchase.product._id,
-      //   buy_count: purchase.buy_count
-      // }))
-      // buyProductsMutation.mutate(body, {
-      //   onSuccess: () => {
-      //     const checkedPurchaseIds = checkedPurchases.map((purchase) => purchase._id)
-      //     localStorage.setItem('checkedPurchaseIds', JSON.stringify(checkedPurchaseIds))
-      //   }
-      // })
-      // console.log(body)
-      // console.log(buyProductsMutation)
     }
   }
-  // console.log(extendedPurchases)
+  console.log(checkedPurchases)
   return (
     <section className='flex flex-col my-4 mx-16 font '>
       <Breadcrumb
@@ -277,8 +260,18 @@ export default function Cart() {
                 >
                   Thanh Toán Ngay
                 </button>
-                <Modal title='Thanh toán' open={isModalVisible} onCancel={handleCancel} footer={null} width={1000}>
-                  <Payment checkedPurchases={checkedPurchases} totalCheckedPurchasePrice={totalCheckedPurchasePrice} />{' '}
+                <Modal
+                  title='Thanh toán'
+                  open={isModalVisible}
+                  onCancel={() => setIsModalVisible(false)}
+                  footer={null}
+                  width={1000}
+                >
+                  <Payment
+                    checkedPurchases={checkedPurchases}
+                    totalCheckedPurchasePrice={totalCheckedPurchasePrice}
+                    onPaymentSuccess={handlePaymentSuccess}
+                  />{' '}
                   {/* Thay thế bằng nội dung modal của bạn */}
                 </Modal>
               </div>

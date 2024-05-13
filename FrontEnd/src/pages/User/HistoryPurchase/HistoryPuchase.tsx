@@ -3,23 +3,23 @@ import classNames from 'classnames'
 import { createSearchParams, Link } from 'react-router-dom'
 import purchaseApi from 'src/apis/purchase.api'
 import path from 'src/constants/path'
-import { purchasesStatus } from 'src/constants/purchase'
+import { orderStatus, purchasesStatus } from 'src/constants/purchase'
 import useQueryParams from 'src/hooks/useQueryParams'
 import { PurchaseListStatus } from 'src/types/purchase.type'
 import { formatCurrency, generateNameId } from 'src/utils/utils'
 
 const purchaseTabs = [
-  { status: purchasesStatus.all, name: 'Tất cả' },
-  { status: purchasesStatus.waitForConfirmation, name: 'Chờ xác nhận' },
-  { status: purchasesStatus.waitForGetting, name: 'Chờ lấy hàng' },
-  { status: purchasesStatus.inProgress, name: 'Đang giao' },
-  { status: purchasesStatus.delivered, name: 'Đã giao' },
-  { status: purchasesStatus.cancelled, name: 'Đã hủy' }
+  { status: orderStatus.all, name: 'Tất cả' },
+  { status: orderStatus.waitForConfirmation, name: 'Chờ xác nhận' },
+  { status: orderStatus.waitForGetting, name: 'Chờ lấy hàng' },
+  { status: orderStatus.inProgress, name: 'Đang giao' },
+  { status: orderStatus.delivered, name: 'Đã giao' },
+  { status: orderStatus.cancelled, name: 'Đã hủy' }
 ]
 
 export default function HistoryPurchase() {
   const queryParams: { status?: string } = useQueryParams()
-  const status: number = Number(queryParams.status) || purchasesStatus.all
+  const status: number = Number(queryParams.status) || orderStatus.all
 
   const { data: purchasesInCartData } = useQuery({
     queryKey: ['purchases', { status }],
@@ -47,9 +47,6 @@ export default function HistoryPurchase() {
       {tab.name}
     </Link>
   ))
-  const getImageUrl = (imagePath: string) => {
-    return `http://localhost:4000/images/${imagePath}`
-  }
   return (
     <div>
       <div className='overflow-x-auto'>
@@ -70,7 +67,7 @@ export default function HistoryPurchase() {
                       <div className='flex-shrink-0  mb-5'>
                         <img
                           className='h-20 w-20 object-cover'
-                          src={getImageUrl(purchase?.product?.image)}
+                          src={purchase?.product?.image}
                           alt={purchase?.product?.name}
                         />
                       </div>
