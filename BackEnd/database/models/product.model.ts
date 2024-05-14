@@ -24,11 +24,11 @@ const ProductSchema = new Schema(
     rating: { type: Number, default: 0 },
     price_before_discount: { type: Number, default: 0 },
     quantity: { type: Number, default: 0 },
-    ingredient: [{ type: ingredientSchema }],
+    ingredient: { type: String },
     madeIn: { type: String },
     sold: { type: Number, default: 0 },
     view: { type: Number, default: 0 },
-    status: { type: Number },
+    status: { type: Number, default: 1 },
   },
   {
     timestamps: true,

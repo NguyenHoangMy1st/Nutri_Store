@@ -58,7 +58,7 @@ const ProductDetail: React.FC = () => {
 
   const addToCartMutation = useMutation(purchaseApi.addToCart)
   const navigate = useNavigate()
-  const queryConfig: ProductListConfig = { limit: '20', page: '1', category: product?.category._id, status: 1 }
+  const queryConfig: ProductListConfig = { limit: '20', page: '1', category: product?.category._id }
 
   const { data: productsData } = useQuery({
     queryKey: ['products', queryConfig],

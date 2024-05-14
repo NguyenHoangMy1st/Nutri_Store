@@ -17,7 +17,7 @@ export interface Product {
   madeIn: string
   view: number
   sold: number
-  status?: string
+  status?: number
 }
 export interface Ingredient {
   name: string
@@ -44,5 +44,4 @@ export interface ProductListConfig {
   name?: string
   category?: string
   brand?: string
-  status?: number
 }

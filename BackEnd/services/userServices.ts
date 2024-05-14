@@ -68,9 +68,9 @@ const forgottenPassword = async (
     const mailOptions = {
       from: MailConfig.FROM_ADDRESS,
       to: user.email, // Đảm bảo rằng user tồn tại trước khi truy cập email
-      subject: 'NDTV - Xác thực tài khoản',
+      subject: 'NutriStore - Xác thực tài khoản',
       text: `
-              NDTV
+              NutriStore
                           
               Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi, 
           

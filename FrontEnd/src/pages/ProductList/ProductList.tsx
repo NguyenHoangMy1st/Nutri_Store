@@ -43,6 +43,7 @@ export default function ProductList() {
   //     return categoryApi.getCategories()
   //   }
   // })
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const showModal = () => {
     setIsModalOpen(true)

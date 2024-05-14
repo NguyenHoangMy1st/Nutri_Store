@@ -53,7 +53,6 @@ const addProduct = async (req: Request, res: Response) => {
       price_before_discount,
       quantity,
       ingredient,
-      status,
       madeIn,
     } = form
     const product = {
@@ -152,9 +151,7 @@ const getProducts = async (req: Request, res: Response) => {
   let [products, totalProducts]: [products: any, totalProducts: any] =
     await Promise.all([
       ProductModel.find(condition)
-        .populate({
-          path: 'category',
-        })
+        .populate({ path: 'category brand' })
         .sort({ [sort_by]: order === 'desc' ? -1 : 1 })
         .skip(page * limit - limit)
         .limit(limit)
@@ -195,6 +192,20 @@ const getAllProducts = async (req: Request, res: Response) => {
     data: products,
   }
   return responseSuccess(res, response)
+}
+const getAllProduct = async (req: Request, res: Response) => {
+  try {
+    // console.log('hihi')
+    const productDB: any = await ProductModel.find({ status: 0 })
+    // productDB = productDB.map((product) => handleImageProduct(product))
+
+    return responseSuccess(res, {
+      message: `Lấy danh sách sản phẩm đã xóa thành công`,
+      data: productDB,
+    })
+  } catch (error) {
+    return responseError(res, 'Lỗi khi lấy sản phẩm đã xóa')
+  }
 }
 
 const getProduct = async (req: Request, res: Response) => {
@@ -259,6 +270,36 @@ const updateProduct = async (req: Request, res: Response) => {
   if (productDB) {
     const response = {
       message: 'Cập nhật sản phẩm thành công',
+      data: handleImageProduct(productDB),
+    }
+    return responseSuccess(res, response)
+  } else {
+    throw new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm')
+  }
+}
+
+const updateDeleteProduct = async (req: Request, res: Response) => {
+  const form: Product = req.body
+  const { status, quantity } = form
+  const product = omitBy(
+    {
+      status,
+      quantity,
+    },
+    (value) => value === undefined
+  )
+  const productDB = await ProductModel.findByIdAndUpdate(
+    req.params.product_id,
+    product,
+    {
+      new: true,
+    }
+  )
+    .select({ __v: 0 })
+    .lean()
+  if (productDB) {
+    const response = {
+      message: 'Khôi phục sản phẩm thành công',
       data: handleImageProduct(productDB),
     }
     return responseSuccess(res, response)
@@ -353,13 +394,14 @@ const uploadManyProductImages = async (req: Request, res: Response) => {
   }
   return responseSuccess(res, response)
 }
-
 const ProductController = {
   addProduct,
   getAllProducts,
+  getAllProduct,
   getProducts,
   getProduct,
   updateProduct,
+  updateDeleteProduct,
   searchProduct,
   deleteProduct,
   deleteQuantityProducts,

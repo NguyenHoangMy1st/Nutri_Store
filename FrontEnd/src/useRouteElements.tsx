@@ -22,6 +22,7 @@ import Orders from './pages/Admin/pages/Orders'
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import FormInput from './pages/User/FormInput'
 import HistoryPurchase from './pages/User/HistoryPurchase/HistoryPuchase'
+import Forgetpassword from './pages/Forgetpassword'
 
 // import FormAccountEdit from './pages/Admin/component/FormAccountEdit'
 
@@ -65,7 +66,11 @@ export default function UseRouterElement() {
         },
         {
           path: path.forgetpassword,
-          element: <RegisterLayout>{/* <Forgetpassword /> */}</RegisterLayout>
+          element: (
+            <RegisterLayout>
+              <Forgetpassword />
+            </RegisterLayout>
+          )
         }
       ]
     },

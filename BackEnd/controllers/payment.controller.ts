@@ -4,6 +4,8 @@ import { ErrorHandler, responseSuccess } from '../utils/response'
 import { STATUS } from '../constants/status'
 import { STATUS_ORDER } from '../constants/purchase'
 import { Payment } from '../@types/order.type'
+import { handleImageProduct } from './product.controller'
+import { cloneDeep } from 'lodash'
 
 // User
 const getPayments = async (req: Request, res: Response) => {
@@ -25,6 +27,17 @@ const getPayments = async (req: Request, res: Response) => {
         createdAt: -1,
       })
       .lean()
+    payments = payments.map((payment) => {
+      if (payment.purchase && payment.purchase.length > 0) {
+        payment.purchase = payment.purchase.map((purchase) => {
+          if (purchase.product) {
+            purchase.product = handleImageProduct(cloneDeep(purchase.product))
+          }
+          return purchase
+        })
+      }
+      return payment
+    })
     payments = payments.filter((payment) => payment.purchase.length > 0)
     // console.log(payments)
     const response = {
@@ -53,6 +66,18 @@ const getAllOrders = async (req: Request, res: Response) => {
         createdAt: -1,
       })
       .lean()
+
+    payments = payments.map((payment) => {
+      if (payment.purchase && payment.purchase.length > 0) {
+        payment.purchase = payment.purchase.map((purchase) => {
+          if (purchase.product) {
+            purchase.product = handleImageProduct(cloneDeep(purchase.product))
+          }
+          return purchase
+        })
+      }
+      return payment
+    })
     payments = payments.filter((payment) => payment.purchase.length > 0)
     // console.log(payments)
     const response = {

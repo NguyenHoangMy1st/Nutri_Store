@@ -34,6 +34,14 @@ adminProductRouter.get(
   helpersMiddleware.entityValidator,
   wrapAsync(ProductController.getAllProducts)
 )
+adminProductRouter.get(
+  '/deleteProduct',
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  // // productMiddleware.getAllProductsRules(),
+  helpersMiddleware.entityValidator,
+  wrapAsync(ProductController.getAllProduct)
+)
 
 adminProductRouter.get(
   '/:product_id',
@@ -60,6 +68,16 @@ adminProductRouter.put(
   productMiddleware.updateProductRules(),
   helpersMiddleware.entityValidator,
   wrapAsync(ProductController.updateProduct)
+)
+adminProductRouter.patch(
+  '/:product_id',
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  helpersMiddleware.idRule('product_id'),
+  helpersMiddleware.idValidator,
+  // productMiddleware.updateProductRules(),
+  helpersMiddleware.entityValidator,
+  wrapAsync(ProductController.updateDeleteProduct)
 )
 
 adminProductRouter.delete(

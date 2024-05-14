@@ -178,7 +178,10 @@ export const buyProducts = async (req: Request, res: Response) => {
           .lean()
 
         await ProductModel.findByIdAndUpdate(item.product_id, {
-          $inc: { quantity: -Number(item.buy_count) },
+          $inc: {
+            quantity: -Number(item.buy_count),
+            sold: +Number(item.buy_count),
+          },
         })
         if (!data) {
           const purchase = {

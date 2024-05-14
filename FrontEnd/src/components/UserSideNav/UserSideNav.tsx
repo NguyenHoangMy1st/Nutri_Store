@@ -77,7 +77,7 @@ export default function UserSideNav() {
           <div className='mr-3 h-[25px] w-[25px]'>
             <BsCartCheckFill className=' h-[25px] w-[25px]' />
           </div>
-          Đơn mua
+          Lịch sử mua hàng
         </NavLink>
         <NavLink
           to={path.formInput}

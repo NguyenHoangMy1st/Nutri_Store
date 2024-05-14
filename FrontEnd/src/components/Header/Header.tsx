@@ -50,8 +50,7 @@ export default function Header() {
                 type='text'
                 {...register('name')}
                 className='text-black px-3 py-2 flex-grow border-none outline-none bg-transparent'
-                placeholder='Search'
-                
+                placeholder='Tìm kiếm'
               />
               <button className='rounded-sm py-2 px-6 flex-shrink-0 bg-[#1CA7EC] hover:opacity-90'>
                 <svg

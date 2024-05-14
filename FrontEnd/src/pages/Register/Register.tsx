@@ -50,7 +50,7 @@ export default function Register() {
             })
           }
         }
-        toast.error('Tài khoản đăng thất bại!', {
+        toast.error('Tài khoản đăng ký thất bại!', {
           autoClose: 1300 // Tự động đóng thông báo sau 2 giây
         })
       }

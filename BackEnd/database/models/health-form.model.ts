@@ -9,14 +9,10 @@ const HealthFormSchema = new Schema(
     },
     sex: { type: String },
     height: { type: Number }, // Chiều cao của người dùng
-    age: { type: String },
+    age: { type: Number },
     weight: { type: Number }, // Cân nặng của người dùng
-    blood_pressure: { type: String }, // Huyết áp của người dùng
-    medical_history: [{ type: String }], // Lịch sử bệnh lý của người dùng (mảng với nhiều lịch sử)
-    allergies: [{ type: String }], // Các loại dị ứng của người dùng (mảng với nhiều loại dị ứng)
-    current_health_conditions: [{ type: String }], // Tình trạng sức khỏe hiện tại của người dùng (mảng với nhiều tình trạng)
-    dietary_restrictions: [{ type: String }], // Hạn chế dinh dưỡng của người dùng (mảng với nhiều hạn chế)
-    other_notes: { type: String },
+    current_health_conditions: [{ name: String }],
+    dietary_restrictions: [{ name: String }], // Hạn chế dinh dưỡng của người dùng (mảng với nhiều hạn chế)
   },
   {
     timestamps: true, // Tự động thêm trường createdAt và updatedAt

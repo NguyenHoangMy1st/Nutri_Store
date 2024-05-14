@@ -20,6 +20,7 @@ export default function Orders() {
       return adminApi.getAllOrder()
     }
   })
+  console.log(ordersData)
 
   const [role, setRole] = useState<Role>({
     role1: 0,
@@ -54,13 +55,9 @@ export default function Orders() {
   return (
     <div className='flex gap-10 mt-20 ml-12'>
       <div className='flex-grow basis-10/12'>
-        {' '}
-        {/* Flex grow for remaining space, basis for 60% */}
         <TableHistory></TableHistory>
       </div>
       <div className='flex-grow basis-3/10 items-center justify-center'>
-        {' '}
-        {/* Flex grow for remaining space, basis for 40% */}
         <ChartHistory role={role}></ChartHistory>
       </div>
     </div>

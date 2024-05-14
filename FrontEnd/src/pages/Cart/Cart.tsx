@@ -13,6 +13,7 @@ import QuantityController from 'src/components/QuantityController'
 import { Purchase } from 'src/types/purchase.type'
 import Payment from '../Payment'
 import { AppContext } from 'src/contexts/app.context'
+import { toast } from 'react-toastify'
 
 export default function Cart() {
   const { extendedPurchases, setExtendedPurchases } = useContext(AppContext)
@@ -117,10 +118,21 @@ export default function Cart() {
   }
   const handleBuyPurchases = () => {
     if (checkedPurchases.length > 0) {
-      setIsModalVisible(true)
+      let shouldRefetch = false
+      checkedPurchases.forEach((purchase) => {
+        if (purchase.buy_count > purchase.product.quantity) {
+          shouldRefetch = true
+          toast.error('Thanh toán thất bại do không đủ số lượng sản phẩm')
+        }
+      })
+      if (shouldRefetch) {
+        refetch()
+      } else {
+        setIsModalVisible(true)
+      }
     }
   }
-  console.log(checkedPurchases)
+  // console.log(checkedPurchases)
   return (
     <section className='flex flex-col my-4 mx-16 font '>
       <Breadcrumb
