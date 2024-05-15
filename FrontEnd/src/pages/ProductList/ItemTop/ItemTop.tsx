@@ -10,10 +10,16 @@ import SwiperItemTop from '../SwiperItemTop'
 interface Props {
   data?: any
   product?: Product
+  name?: string
 }
-function ItemTop({ data }: Props) {
+interface Item {
+  sold: number
+  view: number
+  // Add other properties if necessary
+}
+function ItemTop({ data, name }: Props) {
   // SwiperCore.use([Navigation, Pagination])
-  const [listItem, setListItem] = useState([])
+  const [listItem, setListItem] = useState<Item[]>([])
   const fectchBannerItem = async () => {
     if (data) {
       setListItem(data)
@@ -35,14 +41,25 @@ function ItemTop({ data }: Props) {
       className='h-full w-full '
     >
       {listItem?.length > 0 &&
-        listItem?.slice(0, 18)?.map((product, index) => (
-          <SwiperSlide
-            key={index}
-            className='mx-10 flex flex-col items-center border justify-center  shadow-none hover:shadow-lg w-full relative rounded-md'
-          >
-            <SwiperItemTop product={product}></SwiperItemTop>
-          </SwiperSlide>
-        ))}
+        listItem
+          ?.sort((a, b) => {
+            if (name === 'sold') {
+              return b.sold - a.sold
+            } else if (name === 'view') {
+              return b.view - a.view
+            } else {
+              return 0 // Nếu name không phải là 'sold' hoặc 'view', không sắp xếp
+            }
+          })
+          ?.slice(0, 18)
+          ?.map((product, index) => (
+            <SwiperSlide
+              key={index}
+              className='mx-10 flex flex-col items-center border justify-center  shadow-none hover:shadow-lg w-full relative rounded-md'
+            >
+              <SwiperItemTop product={product}></SwiperItemTop>
+            </SwiperSlide>
+          ))}
     </Swiper>
   )
 }

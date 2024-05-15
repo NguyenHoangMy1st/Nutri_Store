@@ -1,20 +1,20 @@
-import { Modal, Space, Table, message } from 'antd'
+import { Space, Table } from 'antd'
 import type { TableProps } from 'antd'
 // import { Link } from 'react-router-dom'
 import adminApi from 'src/apis/admin.api'
-import { useMutation, useQuery } from 'react-query'
+import { useQuery } from 'react-query'
 import { Product } from 'src/types/product.type'
 import useQueryConfig from 'src/hooks/useQueryConfig'
 import { useEffect, useState } from 'react'
 import FormProductEdit from '../FormProductEdit'
 
-import { MdDelete } from 'react-icons/md'
 import { AiFillEdit } from 'react-icons/ai'
 import { IoEye } from 'react-icons/io5'
+import FormRestoreProduct from '../FormRestoreProduct'
 type OnChange = NonNullable<TableProps<any>['onChange']>
 type Filters = Parameters<OnChange>[1]
 
-function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
+function TableDataDetele({ shouldRefetch }: { shouldRefetch: boolean }) {
   const [editProductId, setEditProductId] = useState<string | null>(null)
   const [viewProductId, setViewProductId] = useState<string | null>(null)
   const [shouldRefetch1, setShouldRefetch] = useState<boolean>(false)
@@ -30,10 +30,10 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
   const categoryName = (filteredInfo?.category as any)?.name
 
   const queryConfig = useQueryConfig()
-  const { data: productsData, refetch } = useQuery({
+  const { data: deletedProductsData, refetch } = useQuery({
     queryKey: ['products', queryConfig],
     queryFn: () => {
-      return adminApi.getAllProducts()
+      return adminApi.getDeteledProducts()
     }
   })
   const { data: categoriesData } = useQuery({
@@ -48,7 +48,7 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
     }) || []
   const fetchData = async () => {
     try {
-      const productData = await adminApi.getAllProducts()
+      const productData = await adminApi.getDeteledProducts()
       setProductData(productData)
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -63,41 +63,12 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
 
   useEffect(() => {
     fetchData()
-  }, [productsData])
+  }, [deletedProductsData])
   const handleUpdateSuccess = () => {
     // console.log(shouldRefetch)
     setShouldRefetch(true) // Trigger fetchData khi cập nhật thành công
   }
-  const deleteProductMutation = useMutation({
-    mutationFn: adminApi.deleteProduct,
-    onSuccess: () => {
-      refetch()
-    }
-  })
 
-  const handleDelete = (productId: string) => {
-    Modal.confirm({
-      title: 'Xác nhận xoá',
-      content: 'Bạn có chắc chắn muốn xoá sản phẩm này không?',
-      okText: 'Xoá',
-      cancelText: 'Hủy',
-      async onOk() {
-        try {
-          await deleteProductMutation.mutate([productId])
-          message.success('Xoá sản phẩm  thành công')
-          refetch() // Refetch data after successful deletion
-        } catch (error) {
-          message.error('Xoá sản phẩm thất bại: ')
-        }
-      },
-
-      okButtonProps: {
-        style: {
-          backgroundColor: '#b94545'
-        }
-      }
-    })
-  }
   const columns: TableProps<Product>['columns'] = [
     {
       title: 'Tên sản phẩm',
@@ -137,12 +108,6 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
       render: (record) => (
         <Space size='middle'>
           <button
-            onClick={() => handleDelete(record._id)}
-            className='bg-none text-black transition-colors hover:text-blue'
-          >
-            <MdDelete className='text-[20px]' />
-          </button>
-          <button
             type='button'
             onClick={() => handleEdit(record._id)}
             className='bg-none text-black transition-colors hover:text-blue'
@@ -167,7 +132,7 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
     return (
       <>
         {editProductId !== null && (
-          <FormProductEdit
+          <FormRestoreProduct
             productId={editProductId}
             onClose={() => setEditProductId(null)}
             onUpdateSuccess={handleUpdateSuccess}
@@ -176,7 +141,7 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
         {viewProductId !== null && (
           <FormProductEdit
             productId={viewProductId}
-            onClose={() => setEditProductId(null)}
+            onClose={() => setViewProductId(null)}
             onUpdateSuccess={handleUpdateSuccess}
           />
         )}
@@ -191,14 +156,14 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
         />
       </>
     )
-  } else if (productsData) {
-    const { data }: any = productsData
+  } else if (deletedProductsData) {
+    const { data }: any = deletedProductsData
     const products: Product[] = data.data
 
     return (
       <>
         {editProductId !== null && (
-          <FormProductEdit
+          <FormRestoreProduct
             productId={editProductId}
             onClose={() => setEditProductId(null)}
             onUpdateSuccess={handleUpdateSuccess}
@@ -218,4 +183,4 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
   }
 }
 
-export default TableData
+export default TableDataDetele

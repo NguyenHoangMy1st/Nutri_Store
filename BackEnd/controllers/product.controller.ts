@@ -177,10 +177,11 @@ const getProducts = async (req: Request, res: Response) => {
 
 const getAllProducts = async (req: Request, res: Response) => {
   let { category } = req.query
-  let condition = {}
+  let condition: any = { status: { $ne: 0 } } // Excluding products with status 0
   if (category) {
-    condition = { category: category }
+    condition.category = category
   }
+
   let products: any = await ProductModel.find(condition)
     .populate({ path: 'category' })
     .sort({ createdAt: -1 })
@@ -193,11 +194,10 @@ const getAllProducts = async (req: Request, res: Response) => {
   }
   return responseSuccess(res, response)
 }
-const getAllProduct = async (req: Request, res: Response) => {
+
+const getProductDelete = async (req: Request, res: Response) => {
   try {
-    // console.log('hihi')
     const productDB: any = await ProductModel.find({ status: 0 })
-    // productDB = productDB.map((product) => handleImageProduct(product))
 
     return responseSuccess(res, {
       message: `Lấy danh sách sản phẩm đã xóa thành công`,
@@ -280,10 +280,10 @@ const updateProduct = async (req: Request, res: Response) => {
 
 const updateDeleteProduct = async (req: Request, res: Response) => {
   const form: Product = req.body
-  const { status, quantity } = form
+  const { quantity } = form
   const product = omitBy(
     {
-      status,
+      status: 1,
       quantity,
     },
     (value) => value === undefined
@@ -312,7 +312,7 @@ const deleteProduct = async (req: Request, res: Response) => {
     const product_id = req.params.product_id
     const productDB: any = await ProductModel.findByIdAndUpdate(
       product_id,
-      { status: 0 },
+      { status: 0, quantity: 0 },
       { new: true } // this option ensures that the updated document is returned
     ).lean()
     if (productDB) {
@@ -394,10 +394,20 @@ const uploadManyProductImages = async (req: Request, res: Response) => {
   }
   return responseSuccess(res, response)
 }
+
+const uploadBrandImage = async (req: Request, res: Response) => {
+  const path = await uploadFile(req, FOLDERS.BRAND)
+  const response = {
+    message: 'Upload ảnh của brand thành công',
+    data: path,
+  }
+  return responseSuccess(res, response)
+}
+
 const ProductController = {
   addProduct,
   getAllProducts,
-  getAllProduct,
+  getProductDelete,
   getProducts,
   getProduct,
   updateProduct,
@@ -407,6 +417,7 @@ const ProductController = {
   deleteQuantityProducts,
   uploadProductImage,
   uploadManyProductImages,
+  uploadBrandImage,
 }
 
 export default ProductController

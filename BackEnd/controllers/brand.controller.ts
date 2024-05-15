@@ -23,7 +23,7 @@ const getBrands = async (req: Request, res: Response) => {
   let condition = exclude ? { _id: { $ne: exclude } } : {}
   const brands = await BrandModel.find(condition).select({ __v: 0 }).lean()
   const response = {
-    message: 'Lấy categories thành công',
+    message: 'Lấy brands thành công',
     data: brands,
   }
   return responseSuccess(res, response)
@@ -55,22 +55,12 @@ const updateBrand = async (req: Request, res: Response) => {
     .lean()
   if (brandDB) {
     const response = {
-      message: 'Cập nhật category thành công',
+      message: 'Cập nhật Brand thành công',
       data: brandDB,
     }
     return responseSuccess(res, response)
   } else {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy Category')
-  }
-}
-
-const deleteBrand = async (req: Request, res: Response) => {
-  const brand_id = req.params.category_id
-  const brandDB = await BrandModel.findByIdAndDelete(brand_id).lean()
-  if (brandDB) {
-    return responseSuccess(res, { message: 'Xóa thành công' })
-  } else {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy Category')
+    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy Brand')
   }
 }
 
@@ -79,7 +69,6 @@ const brandController = {
   getBrand,
   getBrands,
   updateBrand,
-  deleteBrand,
 }
 
 export default brandController

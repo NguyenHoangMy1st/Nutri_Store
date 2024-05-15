@@ -19,6 +19,7 @@ const path = {
   dashboard: '/admin/dashboard',
   accounts: '/admin/accounts',
   products: '/admin/products',
+  deteledProducts: '/admin/deletedProducts',
   orders: '/admin/orders',
   formAccountEdit: '/admin/accounts/edit',
   formProductEdit: '/admin/products/edit'

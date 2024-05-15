@@ -44,6 +44,12 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({ onFormInsta
       return adminApi.getcategories()
     }
   })
+  const { data: brandsData } = useQuery({
+    queryKey: ['brands', queryConfig],
+    queryFn: () => {
+      return adminApi.getbrands()
+    }
+  })
   const handleMainImageUpload = (imageUrl: string) => {
     form.setFieldsValue({ image: imageUrl })
   }
@@ -87,6 +93,18 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({ onFormInsta
             </Select.Option>
           ))}
         </Select>
+      </Form.Item>
+      <Form.Item label='Thương hiệu' name={['brand']}>
+        <Select style={{ width: 340 }}>
+          {brandsData?.data.data.map((brand) => (
+            <Select.Option key={brand._id} value={brand._id}>
+              {brand.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+      <Form.Item label='Dinh dưỡng sản phẩm' name='ingredient' rules={[{ required: true, message: 'Please input!' }]}>
+        <Input.TextArea />
       </Form.Item>
       <div className=''>
         <Form.Item label='Ảnh chính' name='image' rules={[{ required: true, message: 'Please input!' }]}>

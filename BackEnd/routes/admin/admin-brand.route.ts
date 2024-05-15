@@ -3,6 +3,7 @@ import helpersMiddleware from '../../middleware/helpers.middleware'
 import authMiddleware from '../../middleware/auth.middleware'
 import { wrapAsync } from '../../utils/response'
 import brandController from '../../controllers/brand.controller'
+import ProductController from '../../controllers/product.controller'
 
 const adminBrandRouter = Router()
 adminBrandRouter.get(
@@ -38,12 +39,5 @@ adminBrandRouter.put(
   helpersMiddleware.entityValidator,
   wrapAsync(brandController.updateBrand)
 )
-adminBrandRouter.delete(
-  '/delete/:brand_id',
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  helpersMiddleware.idRule('brand_id'),
-  helpersMiddleware.idValidator,
-  wrapAsync(brandController.deleteBrand)
-)
+
 export default adminBrandRouter

@@ -235,7 +235,7 @@ export default function ProductList() {
         {productsData && (
           <div className='flex flex-row gap-5 items-center justify-center px-1 mt-1 min-h-96 '>
             <div className='flex h-80 w-full items-start'>
-              <ItemTop data={productsData.data.data.products}></ItemTop>
+              <ItemTop data={productsData.data.data.products} name='sold'></ItemTop>
             </div>
           </div>
         )}
@@ -247,7 +247,9 @@ export default function ProductList() {
       <div className='min-h-80 my-6 mx-32 border-2 border-gray-100 p-3 rounded-lg  bg-[#fafafa]'>
         <div className='py-4 px-5 flex justify-between border-b-2 border-gray-100'>
           <div className=' text-[#e57a44] flex flex-row gap-1 '>
-            <div className='text-gray-400 uppercase text-[23px] '>{/* {t('category')} */}Top những sản phẩm mới</div>
+            <div className='text-gray-400 uppercase text-[23px] '>
+              {/* {t('category')} */}Top những sản phẩm được xem nhiều nhất
+            </div>
           </div>
           <div className='flex flex-row gap-1 text-gray-400 items-center hover:text-gray-300 '>
             <Link
@@ -266,7 +268,7 @@ export default function ProductList() {
         {productsData && (
           <div className='flex flex-row gap-5 items-center justify-center px-1 mt-1 min-h-96 '>
             <div className='flex h-80 w-full items-start'>
-              <ItemTop data={productsData.data.data.products}></ItemTop>
+              <ItemTop data={productsData.data.data.products} name='view'></ItemTop>
             </div>
           </div>
         )}

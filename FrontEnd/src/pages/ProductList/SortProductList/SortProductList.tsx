@@ -53,7 +53,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
         <div className='flex flex-wrap items-center gap-2'>
           <div>
             {/* {t('arrange')} */}
-            Arrange
+            Sắp xếp theo
           </div>
           <button
             className={classNames('h-8 px-4 text-center text-sm capitalize ', {
@@ -63,7 +63,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
             onClick={() => handleSort(sortBy.view)}
           >
             {/* {t('popular')} */}
-            Popular
+            Lượt xem
           </button>
           <button
             className={classNames('h-8 px-4 text-center text-sm capitalize ', {
@@ -73,7 +73,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
             onClick={() => handleSort(sortBy.createdAt)}
           >
             {/* {t('Latest')} */}
-            Latest
+            Mới nhất
           </button>
           <button
             className={classNames('h-8 px-4 text-center text-sm capitalize ', {
@@ -83,7 +83,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
             onClick={() => handleSort(sortBy.sold)}
           >
             {/* {t('Selling')} */}
-            Selling
+            Bán chạy
           </button>
           <select
             className={classNames('h-8  px-4 text-left text-sm capitalize  outline-none ', {

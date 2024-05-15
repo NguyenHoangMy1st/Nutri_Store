@@ -1,3 +1,4 @@
+import { Brand } from 'src/types/brand.type'
 import { Category } from 'src/types/category.type'
 import { Order } from 'src/types/order.type'
 import { Product, ProductList } from 'src/types/product.type'
@@ -28,7 +29,7 @@ const adminApi = {
     return http.delete<SuccessResponse<User[]>>(`/admin/users/delete/${id}`)
   },
   getAllProducts() {
-    return http.get<SuccessResponse<ProductList[]>>('/admin/products')
+    return http.get<SuccessResponse<ProductList[]>>('/admin/products/all')
   },
   getProduct(id: string[]) {
     return http.get<SuccessResponse<ProductList[]>>(`/admin/products/${id}`)
@@ -41,6 +42,22 @@ const adminApi = {
   },
   getcategories() {
     return http.get<SuccessResponse<Category[]>>(`/admin/categories`)
+  },
+
+  createCaterory(body: any) {
+    return http.post<SuccessResponse<Category[]>>(`/admin/categories`, body)
+  },
+  updateCaterory(body: any, id: string) {
+    return http.post<SuccessResponse<Category[]>>(`/admin/categories/${id}`, body)
+  },
+  getbrands() {
+    return http.get<SuccessResponse<Brand[]>>(`/admin/brands`)
+  },
+  createBrand(body: any) {
+    return http.post<SuccessResponse<Brand[]>>(`/admin/brands`, body)
+  },
+  updateBrand(body: any, id: string) {
+    return http.post<SuccessResponse<Brand[]>>(`/admin/brands/${id}`, body)
   },
   createProduct(body: any) {
     return http.post<SuccessResponse<Product[]>>('/admin/products', body)
@@ -67,6 +84,14 @@ const adminApi = {
   },
   confirmcancel(id: string[]) {
     return http.put<SuccessResponse<Order[]>>(`/admin/orders/${id}/cancel`)
+  },
+  getDeteledProducts() {
+    return http.get<SuccessResponse<ProductList[]>>('/admin/products/deleteProduct')
+  },
+  updateDeteledProduct(body: any, id: string) {
+    console.log(body)
+    console.log(id)
+    return http.post<SuccessResponse<Brand[]>>(`/admin/products/${id}`, body)
   }
 }
 

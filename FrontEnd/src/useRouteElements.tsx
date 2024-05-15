@@ -23,6 +23,7 @@ import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import FormInput from './pages/User/FormInput'
 import HistoryPurchase from './pages/User/HistoryPurchase/HistoryPuchase'
 import Forgetpassword from './pages/Forgetpassword'
+import DeteledProducts from './pages/Admin/pages/DeteledProducts'
 
 // import FormAccountEdit from './pages/Admin/component/FormAccountEdit'
 
@@ -171,6 +172,10 @@ export default function UseRouterElement() {
             {
               path: path.products,
               element: <Products />
+            },
+            {
+              path: path.deteledProducts,
+              element: <DeteledProducts />
             },
             {
               path: path.orders,

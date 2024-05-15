@@ -40,7 +40,7 @@ adminProductRouter.get(
   authMiddleware.verifyAdmin,
   // // productMiddleware.getAllProductsRules(),
   helpersMiddleware.entityValidator,
-  wrapAsync(ProductController.getAllProduct)
+  wrapAsync(ProductController.getProductDelete)
 )
 
 adminProductRouter.get(
