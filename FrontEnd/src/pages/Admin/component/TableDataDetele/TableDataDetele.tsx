@@ -69,6 +69,7 @@ function TableDataDetele({ shouldRefetch }: { shouldRefetch: boolean }) {
     setShouldRefetch(true) // Trigger fetchData khi cập nhật thành công
   }
 
+  // console.log(deletedProductsData)
   const columns: TableProps<Product>['columns'] = [
     {
       title: 'Tên sản phẩm',

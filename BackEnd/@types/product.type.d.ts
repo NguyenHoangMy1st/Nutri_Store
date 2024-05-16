@@ -5,7 +5,7 @@ interface Product {
   description: string
   category: Category
   brand?: Brand
-  rating: number
+  // rating: number
   price: number
   price_before_discount: number
   quantity: number
@@ -14,12 +14,21 @@ interface Product {
   view: number
   sold: number
   status?: number
+  comment: Comment[] // Thêm trường comment
 }
+
 interface Category {
   name: string
 }
+
 interface Brand {
   name: string
   image: string
   description: string
+}
+
+interface Comment {
+  user: User
+  rating: number
+  comment: string
 }

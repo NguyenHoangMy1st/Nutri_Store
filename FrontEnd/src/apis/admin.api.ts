@@ -92,6 +92,12 @@ const adminApi = {
     console.log(body)
     console.log(id)
     return http.post<SuccessResponse<Brand[]>>(`/admin/products/${id}`, body)
+  },
+  getDeleteProduct() {
+    return http.get<SuccessResponse<Product[]>>('/admin/products/deleteProduct')
+  },
+  getBrands() {
+    return http.get<SuccessResponse<Product[]>>('/admin/brands')
   }
 }
 

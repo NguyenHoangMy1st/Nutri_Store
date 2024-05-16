@@ -155,7 +155,7 @@ const getProducts = async (req: Request, res: Response) => {
         .sort({ [sort_by]: order === 'desc' ? -1 : 1 })
         .skip(page * limit - limit)
         .limit(limit)
-        .select({ __v: 0, description: 0 })
+        // .select({ __v: 0, description: 0 })
         .lean(),
       ProductModel.find(condition).countDocuments().lean(),
     ])
@@ -183,7 +183,7 @@ const getAllProducts = async (req: Request, res: Response) => {
   }
 
   let products: any = await ProductModel.find(condition)
-    .populate({ path: 'category' })
+    .populate({ path: 'category brand' })
     .sort({ createdAt: -1 })
     .select({ __v: 0, description: 0 })
     .lean()
@@ -198,6 +198,9 @@ const getAllProducts = async (req: Request, res: Response) => {
 const getProductDelete = async (req: Request, res: Response) => {
   try {
     const productDB: any = await ProductModel.find({ status: 0 })
+      .populate('category brand')
+      .select({ __v: 0 })
+      .lean()
 
     return responseSuccess(res, {
       message: `Lấy danh sách sản phẩm đã xóa thành công`,
@@ -215,7 +218,7 @@ const getProduct = async (req: Request, res: Response) => {
     { $inc: { view: 1 } },
     { new: true }
   )
-    .populate('category')
+    .populate('category brand')
     .select({ __v: 0 })
     .lean()
   if (productDB) {
@@ -403,6 +406,92 @@ const uploadBrandImage = async (req: Request, res: Response) => {
   }
   return responseSuccess(res, response)
 }
+const getSoldProductByCategory = async (req: Request, res: Response) => {
+  const categoryId = req.params.categoryId
+  try {
+    const products: any = await ProductModel.find({ category: categoryId })
+      .populate({ path: 'category brand' })
+      .lean()
+
+    let totalSold = 0
+    for (const product of products) {
+      const soldCount = product.sold || 0
+      totalSold += soldCount
+    }
+    const response = {
+      message: 'Lấy tất cả sản phẩm thành công',
+      data: {
+        products: products,
+        totalSold: totalSold,
+      },
+    }
+    return responseSuccess(res, response)
+  } catch (error) {
+    // Xử lý lỗi nếu có
+    res.status(500).json({ error: 'Lỗi khi lấy sản phẩm từ danh mục' })
+  }
+}
+
+const getSoldProductByBrand = async (req: Request, res: Response) => {
+  const brandId = req.params.brandId
+  try {
+    const products: any = await ProductModel.find({ brand: brandId })
+      .populate({ path: 'category brand' })
+      .lean()
+    let totalSold = 0
+    for (const product of products) {
+      const soldCount = product.sold || 0
+      totalSold += soldCount
+    }
+    const response = {
+      message: 'Lấy tất cả sản phẩm thành công',
+      data: {
+        products: products,
+        totalSold: totalSold,
+      },
+    }
+    return responseSuccess(res, response)
+  } catch (error) {
+    // Xử lý lỗi nếu có
+    res.status(500).json({ error: 'Lỗi khi lấy sản phẩm từ thương hiệu' })
+  }
+}
+export const addCommentToProduct = async (req: Request, res: Response) => {
+  const product_id = req.params.product_id
+  const { rating, commentItem } = req.body
+  try {
+    if (!req.jwtDecoded || !req.jwtDecoded.id) {
+      return res
+        .status(400)
+        .json({ error: 'Thông tin người dùng không hợp lệ' })
+    }
+    // Tìm và cập nhật sản phẩm trong database
+    const product: any = await ProductModel.findByIdAndUpdate(
+      product_id,
+      {
+        $push: {
+          comment: {
+            user: req.jwtDecoded.id,
+            rating: rating,
+            commentItem: commentItem,
+          },
+        },
+      },
+      { new: true } // Option để trả về sản phẩm sau khi cập nhật
+    )
+
+    if (!product) {
+      return res.status(404).json({ error: 'Sản phẩm không tồn tại' })
+    }
+
+    return res
+      .status(200)
+      .json({ message: 'Đã thêm comment thành công', data: product })
+  } catch (error) {
+    console.error('Lỗi khi thêm comment vào sản phẩm:', error)
+    return res.status(500).json({ error: 'Lỗi khi thêm comment vào sản phẩm' })
+  }
+}
 
 const ProductController = {
   addProduct,
@@ -418,6 +507,9 @@ const ProductController = {
   uploadProductImage,
   uploadManyProductImages,
   uploadBrandImage,
+  getSoldProductByCategory,
+  getSoldProductByBrand,
+  addCommentToProduct,
 }
 
 export default ProductController

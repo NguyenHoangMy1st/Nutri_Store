@@ -3,13 +3,15 @@ import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import adminApi from 'src/apis/admin.api'
 import useQueryConfig from 'src/hooks/useQueryConfig'
-import TableHistory from '../../component/TableHistory'
 import ChartHistory from '../../component/ChartHistory'
+import TableHistoryAdmin from '../../component/TableHistoryAdmin'
 
 interface Role {
   role1: number
   role2: number
   role3: number
+  role4: number
+  role5: number
 }
 
 export default function Orders() {
@@ -20,30 +22,38 @@ export default function Orders() {
       return adminApi.getAllOrder()
     }
   })
-  console.log(ordersData)
 
   const [role, setRole] = useState<Role>({
     role1: 0,
     role2: 0,
-    role3: 0
+    role3: 0,
+    role4: 0,
+    role5: 0
   }) // Initialize role state with the Role type
 
   const handleGetAllAccount = async () => {
     const roleCounts: Role = {
       role1: 0,
       role2: 0,
-      role3: 0
+      role3: 0,
+      role4: 0,
+      role5: 0
     }
-    if (ordersData)
+    if (ordersData) {
       ordersData.data.data.forEach((item: { status: number }) => {
         if (item.status === 1) {
           roleCounts.role1++
-        } else if (item.status === 3) {
+        } else if (item.status === 2) {
           roleCounts.role2++
-        } else {
+        } else if (item.status === 3) {
           roleCounts.role3++
+        } else if (item.status === 4) {
+          roleCounts.role4++
+        } else if (item.status === 5) {
+          roleCounts.role5++
         }
       })
+    }
 
     setRole(roleCounts)
   }
@@ -51,15 +61,14 @@ export default function Orders() {
   useEffect(() => {
     handleGetAllAccount()
   }, [ordersData])
-
+  console.log(ordersData)
   return (
-    <div className='flex gap-10 mt-20 ml-12'>
-      <div className='flex-grow basis-10/12'>
-        <TableHistory></TableHistory>
-      </div>
-      <div className='flex-grow basis-3/10 items-center justify-center'>
+    <div className='flex flex-col  gap-8 border border-gray-200 rounded-lg w-full px-4 pt-4    '>
+      <h1 className='font items-center text-[24px] font-bold text-center'>Quản lý thông Lịch sử đơn hàng</h1>
+      <div className='flex items-center justify-center border-b-2 border-gray-200 w-full pb-8'>
         <ChartHistory role={role}></ChartHistory>
       </div>
+      <TableHistoryAdmin />
     </div>
   )
 }

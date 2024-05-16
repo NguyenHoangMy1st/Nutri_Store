@@ -4,8 +4,8 @@ import { STATUS } from '../constants/status'
 import { BrandModel } from '../database/models/brand.model'
 
 const addBrand = async (req: Request, res: Response) => {
-  const name: string = req.body.name
-  const brandAdd = await new BrandModel({ name }).save()
+  const { name, image, description } = req.body
+  const brandAdd = await new BrandModel({ name, image, description }).save()
   const response = {
     message: 'Tạo Brand thành công',
     data: brandAdd.toObject({
@@ -23,7 +23,7 @@ const getBrands = async (req: Request, res: Response) => {
   let condition = exclude ? { _id: { $ne: exclude } } : {}
   const brands = await BrandModel.find(condition).select({ __v: 0 }).lean()
   const response = {
-    message: 'Lấy brands thành công',
+    message: 'Lấy categories thành công',
     data: brands,
   }
   return responseSuccess(res, response)

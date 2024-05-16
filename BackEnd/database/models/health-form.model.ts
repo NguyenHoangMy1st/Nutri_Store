@@ -8,11 +8,11 @@ const HealthFormSchema = new Schema(
       required: true,
     },
     sex: { type: String },
-    height: { type: Number }, // Chiều cao của người dùng
-    age: { type: Number },
-    weight: { type: Number }, // Cân nặng của người dùng
-    current_health_conditions: [{ name: String }],
-    dietary_restrictions: [{ name: String }], // Hạn chế dinh dưỡng của người dùng (mảng với nhiều hạn chế)
+    height: { type: String }, // Chiều cao của người dùng
+    age: { type: String },
+    weight: { type: String }, // Cân nặng của người dùng
+    current_health_conditions: [{ type: String }],
+    aiRecommendation: [{ type: String }], // Sản phẩm được gợi ý
   },
   {
     timestamps: true, // Tự động thêm trường createdAt và updatedAt

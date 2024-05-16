@@ -28,6 +28,7 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
     setViewProductId(productId) // Set the ID of the user being edited
   }
   const categoryName = (filteredInfo?.category as any)?.name
+  const brandName = (filteredInfo?.brand as any)?.name
 
   const queryConfig = useQueryConfig()
   const { data: productsData, refetch } = useQuery({
@@ -36,15 +37,26 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
       return adminApi.getAllProducts()
     }
   })
+  // console.log(productsData)
   const { data: categoriesData } = useQuery({
     queryKey: ['categories', queryConfig],
     queryFn: () => {
       return adminApi.getcategories()
     }
   })
-  const filters =
+  const { data: brandsData } = useQuery({
+    queryKey: ['brands', queryConfig],
+    queryFn: () => {
+      return adminApi.getBrands()
+    }
+  })
+  const filtercategori =
     categoriesData?.data.data.map(function (category) {
       return { text: category.name, value: category.name }
+    }) || []
+  const filterbrands =
+    brandsData?.data.data.map(function (brand) {
+      return { text: brand.name, value: brand.name }
     }) || []
   const fetchData = async () => {
     try {
@@ -65,7 +77,7 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
     fetchData()
   }, [productsData])
   const handleUpdateSuccess = () => {
-    // console.log(shouldRefetch)
+    console.log(shouldRefetch)
     setShouldRefetch(true) // Trigger fetchData khi cập nhật thành công
   }
   const deleteProductMutation = useMutation({
@@ -103,18 +115,20 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
       title: 'Tên sản phẩm',
       dataIndex: 'name',
       key: 'name',
-      width: 400
+      width: 350
     },
     {
       title: 'Giá sản phẩm',
       dataIndex: 'price',
       key: 'price',
+
       sorter: (a, b) => a.price - b.price
     },
     {
       title: 'Số lượng',
       dataIndex: 'quantity',
       key: 'quantity',
+
       sorter: (a, b) => a.quantity - b.quantity
     },
 
@@ -122,7 +136,7 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
       title: 'Danh mục',
       dataIndex: ['category', 'name'],
       key: 'category.name',
-      filters: filters,
+      filters: filtercategori,
       filteredValue: categoryName,
       onFilter: (value: string | number | any, record: Product) => {
         const stringValue = typeof value === 'string' ? value : String(value)
@@ -130,36 +144,50 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
       },
       ellipsis: true
     },
+    {
+      title: 'Thương Hiệu',
+      dataIndex: ['brand', 'name'],
+      key: 'brand.name',
+      filters: filterbrands,
+      filteredValue: brandName,
+      onFilter: (value: string | number | any, record: Product) => {
+        const stringValue = typeof value === 'string' ? value : String(value)
+        return record['brand']['name'].includes(stringValue)
+      },
+      ellipsis: true
+    },
 
     {
+      width: 100,
       title: 'Action',
       key: 'action',
       render: (record) => (
-        <Space size='middle'>
+        <Space size='middle' className='flex gap-2 '>
           <button
             onClick={() => handleDelete(record._id)}
             className='bg-none text-black transition-colors hover:text-blue'
           >
-            <MdDelete className='text-[20px]' />
+            <MdDelete className='text-[18px]' />
           </button>
           <button
             type='button'
             onClick={() => handleEdit(record._id)}
             className='bg-none text-black transition-colors hover:text-blue'
           >
-            <AiFillEdit className='text-[20px]' />
+            <AiFillEdit className='text-[18px]' />
           </button>
           <button
             type='button'
             onClick={() => handleView(record._id)}
             className='bg-none text-black transition-colors hover:text-blue'
           >
-            <IoEye className='text-[20px]' />
+            <IoEye className='text-[18px]' />
           </button>
         </Space>
       )
     }
   ]
+
   if (ProductData) {
     const { data }: any = ProductData
     const products: Product[] = data.data
@@ -181,6 +209,7 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
           />
         )}
         <Table
+          className='scrollable-container'
           pagination={{
             showSizeChanger: true, // Hiển thị tùy chọn lựa chọn pageSize
             pageSizeOptions: ['6', '8', '12'], // Các tùy chọn pageSize
@@ -197,6 +226,7 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
 
     return (
       <>
+        {' '}
         {editProductId !== null && (
           <FormProductEdit
             productId={editProductId}

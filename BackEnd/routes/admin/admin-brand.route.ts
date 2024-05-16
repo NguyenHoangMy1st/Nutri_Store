@@ -39,5 +39,10 @@ adminBrandRouter.put(
   helpersMiddleware.entityValidator,
   wrapAsync(brandController.updateBrand)
 )
-
+adminBrandRouter.post(
+  '/upload-image',
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  wrapAsync(ProductController.uploadBrandImage)
+)
 export default adminBrandRouter

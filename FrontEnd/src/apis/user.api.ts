@@ -1,3 +1,4 @@
+import { HealthForm } from 'src/types/health.type'
 import { Purchase } from 'src/types/purchase.type'
 import { User } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
@@ -27,13 +28,23 @@ const userApi = {
     })
   },
   forgetPassword(body: BodyForgetPassword) {
-    return http.post<SuccessResponse<User>>('/forgotten', body)
+    return http.post<SuccessResponse<User>>('forgotten', body)
   },
-  shippingAddress(
-    purchaseIds: string[],
-    body: { street: string; city: string; postalCode: string; phone: string; paymentMethod: string }
-  ) {
-    return http.post<SuccessResponse<Purchase>>(`/address/${purchaseIds}`, body)
+  getHealthForm() {
+    return http.get<SuccessResponse<HealthForm>>('health')
+  },
+  createHealthForm(body: {
+    sex: String
+    height: String
+    age: String
+    weight: String
+    current_health_conditions: String[]
+    dietary_restrictions: String[]
+  }) {
+    return http.post<SuccessResponse<HealthForm>>('health/add-form', body)
+  },
+  getHealthFormDetails() {
+    return http.get<SuccessResponse<HealthForm>>('health')
   }
 }
 

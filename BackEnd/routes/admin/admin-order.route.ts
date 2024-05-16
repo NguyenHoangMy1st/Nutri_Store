@@ -21,6 +21,22 @@ adminOrderRouter.put(
   wrapAsync(paymentController.updateOrderConfirm)
 )
 adminOrderRouter.put(
+  '/:order_id/progress',
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  helpersMiddleware.idRule('order_id'),
+  // helpersMiddleware.idValidator,
+  wrapAsync(paymentController.updateOrderProgress)
+)
+adminOrderRouter.put(
+  '/:order_id/delivered',
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  helpersMiddleware.idRule('order_id'),
+  // helpersMiddleware.idValidator,
+  wrapAsync(paymentController.updateOrderDelivered)
+)
+adminOrderRouter.put(
   '/:order_id/cancel',
   authMiddleware.verifyAccessToken,
   authMiddleware.verifyAdmin,

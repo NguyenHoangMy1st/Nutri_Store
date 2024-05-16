@@ -3,6 +3,7 @@ import ProductController from '../../controllers/product.controller'
 import productMiddleware from '../../middleware/product.middleware'
 import helpersMiddleware from '../../middleware/helpers.middleware'
 import { wrapAsync } from '../../utils/response'
+import authMiddleware from '../../middleware/auth.middleware'
 
 const commonProductRouter = Router()
 /**
@@ -24,9 +25,28 @@ commonProductRouter.get(
   helpersMiddleware.idValidator,
   wrapAsync(ProductController.getProduct)
 )
+commonProductRouter.post(
+  '/:product_id',
+  authMiddleware.verifyAccessToken,
+  helpersMiddleware.idRule('product_id'),
+  // helpersMiddleware.idValidator,
+  wrapAsync(ProductController.addCommentToProduct)
+)
 
 commonProductRouter.get(
-  '/search',
-  wrapAsync(ProductController.searchProduct)
+  '/category/:categoryId',
+  // authMiddleware.verifyAccessToken,
+  productMiddleware.getProductsRules(),
+  helpersMiddleware.entityValidator,
+  wrapAsync(ProductController.getSoldProductByCategory)
 )
+commonProductRouter.get(
+  '/brand/:brandId',
+  // authMiddleware.verifyAccessToken,
+  productMiddleware.getProductsRules(),
+  helpersMiddleware.entityValidator,
+  wrapAsync(ProductController.getSoldProductByBrand)
+)
+
+commonProductRouter.get('/search', wrapAsync(ProductController.searchProduct))
 export default commonProductRouter

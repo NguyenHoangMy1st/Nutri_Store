@@ -96,7 +96,72 @@ const updateOrderConfirm = async (req: Request, res: Response) => {
     const orderDB = await PaymentModel.findByIdAndUpdate(
       req.params.order_id,
       {
+        status: STATUS_ORDER.WAIT_FOR_GETTING,
+      },
+      { new: true }
+    )
+
+    // Kiểm tra nếu không tìm thấy đơn hàng
+    if (!orderDB) {
+      return res.status(404).json({
+        message: 'Không tìm thấy đơn hàng',
+      })
+    }
+
+    // Lưu lại thay đổi vào cơ sở dữ liệu
+    await orderDB.save()
+
+    // Trả về thông báo thành công
+    return res.status(200).json({
+      message: 'Cập nhật đơn hàng thành công',
+      data: orderDB,
+    })
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Đã xảy ra lỗi khi cập nhật đơn hàng',
+      error: error.message,
+    })
+  }
+}
+const updateOrderProgress = async (req: Request, res: Response) => {
+  try {
+    const orderDB = await PaymentModel.findByIdAndUpdate(
+      req.params.order_id,
+      {
         status: STATUS_ORDER.IN_PROGRESS,
+      },
+      { new: true }
+    )
+
+    // Kiểm tra nếu không tìm thấy đơn hàng
+    if (!orderDB) {
+      return res.status(404).json({
+        message: 'Không tìm thấy đơn hàng',
+      })
+    }
+
+    // Lưu lại thay đổi vào cơ sở dữ liệu
+    await orderDB.save()
+
+    // Trả về thông báo thành công
+    return res.status(200).json({
+      message: 'Cập nhật đơn hàng thành công',
+      data: orderDB,
+    })
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Đã xảy ra lỗi khi cập nhật đơn hàng',
+      error: error.message,
+    })
+  }
+}
+
+const updateOrderDelivered = async (req: Request, res: Response) => {
+  try {
+    const orderDB = await PaymentModel.findByIdAndUpdate(
+      req.params.order_id,
+      {
+        status: STATUS_ORDER.DELIVERED,
       },
       { new: true }
     )
@@ -161,6 +226,8 @@ const paymentController = {
   getPayments,
   getAllOrders,
   updateOrderConfirm,
+  updateOrderProgress,
+  updateOrderDelivered,
   updateOrderCancel,
 }
 

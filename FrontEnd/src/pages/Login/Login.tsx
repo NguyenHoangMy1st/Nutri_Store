@@ -76,7 +76,6 @@ export default function Login() {
       console.log(result)
       setAccessTokenToLS(result.data.data.access_token)
       setProfileToLS(result.data.data.user)
-
       toast.success('Đăng nhập thành công!', {
         autoClose: 1300 // Tự động đóng thông báo sau 2 giây
       })
