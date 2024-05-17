@@ -85,6 +85,12 @@ const adminApi = {
   confirmcancel(id: string[]) {
     return http.put<SuccessResponse<Order[]>>(`/admin/orders/${id}/cancel`)
   },
+  confirmdelivery(id: string[]) {
+    return http.put<SuccessResponse<Order[]>>(`/admin/orders/${id}/delivered`)
+  },
+  confirmprogress(id: string[]) {
+    return http.put<SuccessResponse<Order[]>>(`/admin/orders/${id}/progress`)
+  },
   getDeteledProducts() {
     return http.get<SuccessResponse<ProductList[]>>('/admin/products/deleteProduct')
   },
@@ -98,6 +104,9 @@ const adminApi = {
   },
   getBrands() {
     return http.get<SuccessResponse<Product[]>>('/admin/brands')
+  },
+  getBrandsbyID(id: string) {
+    return http.get<SuccessResponse<Brand[]>>(`/admin/brands/${id}`)
   }
 }
 

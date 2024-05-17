@@ -92,9 +92,15 @@ export default function TableHistoryAdmin() {
           }
 
           try {
-            if (newStatus === 3) {
+            if (newStatus === 2) {
               // Gọi API confirmaccept
               await adminApi.confirmaccept([record._id])
+            } else if (newStatus === 3) {
+              // Gọi API confirmcancel
+              await adminApi.confirmprogress([record._id])
+            } else if (newStatus === 4) {
+              // Gọi API confirmcancel
+              await adminApi.confirmdelivery([record._id])
             } else if (newStatus === 5) {
               // Gọi API confirmcancel
               await adminApi.confirmcancel([record._id])

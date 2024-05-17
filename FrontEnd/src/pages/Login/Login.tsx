@@ -121,7 +121,7 @@ export default function Login() {
             </button>
           </div>
           <div className='mt-3 flex justify-end text-[14px] text-blue-500 hover:text-blue-600'>
-            <a href='/forgetpassword'>Forget Password</a>
+            <a href='/forgetpassword'>Quên mật khẩu</a>
             {/* <ToastContainer /> */}
           </div>
           <div className='mt-3 w-full'>

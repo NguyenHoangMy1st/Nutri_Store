@@ -20,6 +20,7 @@ const path = {
   accounts: '/admin/accounts',
   products: '/admin/products',
   deteledProducts: '/admin/deletedProducts',
+  brands: '/admin/brands',
   orders: '/admin/orders',
   formAccountEdit: '/admin/accounts/edit',
   formProductEdit: '/admin/products/edit'

@@ -1,5 +1,4 @@
 import { Link, useMatch } from 'react-router-dom'
-import logo from 'src/assets/images/logo1.png'
 
 export default function RegisterHeader() {
   const registerMatch = useMatch('/register')
@@ -11,7 +10,11 @@ export default function RegisterHeader() {
           <nav className='flex items-center'>
             <Link to='/'>
               <div className='flex text-4xl items-center justify-items-center gap-1 font-extrabold'>
-                <img src={logo} alt='' className='w-40 h-12 items-center justify-items-center mr-2 rounded-full ' />
+                <img
+                  src='logo1.png'
+                  alt=''
+                  className='w-40 h-12 items-center justify-items-center mr-2 rounded-full '
+                />
                 <span className='text-[#ff3e38]'>Nutri</span>
                 <span className='text-[#4245f5]'>Store</span>
               </div>

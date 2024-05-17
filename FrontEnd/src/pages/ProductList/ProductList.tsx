@@ -116,7 +116,7 @@ export default function ProductList() {
                 </span>
                 <div className='w-[200px]'>
                   <Link
-                    to='/'
+                    to='/productCategory'
                     className='flex gap-1 font-semibold py-4 px-3 uppercase bg-[#17414F] w-full text-sm hover:opacity-80 rounded-full text-gray-100 items-center  justify-center'
                   >
                     <div className=''>Mua ngay</div>

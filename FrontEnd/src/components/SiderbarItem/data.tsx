@@ -17,13 +17,19 @@ export const data = [
     link: path.products
   },
   {
-    id: 3,
+    id: 2,
     title: 'Deteled Products',
     icon: <BiSolidPackage />,
     link: path.deteledProducts
   },
   {
     id: 3,
+    title: 'Brands',
+    icon: <BiSolidPackage />,
+    link: path.brands
+  },
+  {
+    id: 4,
     title: 'Orders',
     icon: <FaShoppingCart />,
     link: path.orders

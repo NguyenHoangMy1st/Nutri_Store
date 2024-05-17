@@ -458,20 +458,15 @@ const getSoldProductByBrand = async (req: Request, res: Response) => {
 }
 export const addCommentToProduct = async (req: Request, res: Response) => {
   const product_id = req.params.product_id
-  const { rating, commentItem } = req.body
+  const { user, rating, commentItem } = req.body
   try {
-    if (!req.jwtDecoded || !req.jwtDecoded.id) {
-      return res
-        .status(400)
-        .json({ error: 'Thông tin người dùng không hợp lệ' })
-    }
     // Tìm và cập nhật sản phẩm trong database
     const product: any = await ProductModel.findByIdAndUpdate(
       product_id,
       {
         $push: {
           comment: {
-            user: req.jwtDecoded.id,
+            user,
             rating: rating,
             commentItem: commentItem,
           },

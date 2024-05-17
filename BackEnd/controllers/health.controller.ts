@@ -10,7 +10,7 @@ async function callAIRecommendationAPI(healthData) {
       'http://127.0.0.1:8000/recommend',
       healthData
     )
-    console.log(response)
+    // console.log(response)
 
     const additionalData = response.data.additionalData
     return {
@@ -57,7 +57,6 @@ const createHealthForm = async (req: Request, res: Response) => {
       user: req.jwtDecoded.id,
       ...formData,
       aiRecommendation: aiRecommendationIds,
-      additionalData: additionalData,
     })
 
     const savedHealthForm = await healthForm.save()
@@ -90,10 +89,28 @@ const getHealthFormData = async (req, res) => {
     return res.status(500).json({ error: error.message })
   }
 }
-
+const getHealthFormById = async (req, res) => {
+  try {
+    const healthFormData: any = await HealthFormModel.findById(
+      req.params.health_id
+    ).select('-__v')
+    const productsDetails = await getProductsDetails(
+      healthFormData.aiRecommendation
+    )
+    return res.status(200).json({
+      message: 'Lấy biểu mẫu sức khỏe thành công',
+      data: healthFormData,
+      products: productsDetails,
+    })
+  } catch (error) {
+    console.error('Failed to retrieve health form data:', error)
+    return res.status(500).json({ error: error.message })
+  }
+}
 const HealthController = {
   createHealthForm,
   getHealthFormData,
+  getHealthFormById,
 }
 
 export default HealthController

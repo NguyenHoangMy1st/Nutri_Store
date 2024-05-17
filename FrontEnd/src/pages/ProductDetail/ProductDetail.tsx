@@ -221,7 +221,9 @@ const ProductDetail: React.FC = () => {
               <h1 className='text-xl font-medium uppercase'>{product.name}</h1>
               <div className='mt-8 flex items-center'>
                 <div className='flex items-center'>
-                  <span className='mr-1 border-b border-b-orange-400 text-orange-500'>{product.rating}</span>
+                  <span className='mr-1 border-b border-b-orange-400 text-orange-500'>
+                    {product.view} Lượt xem sản phẩm
+                  </span>
                   {/* <ProductRating
                     rating={product.rating}
                     activeClassname='fill-orange-400 text-orange-400 h-4 w-4'
@@ -346,7 +348,7 @@ const ProductDetail: React.FC = () => {
                   Viết đánh giá
                 </button>
                 <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={800} footer={null}>
-                  <Evaluate />
+                  <Evaluate productId={product._id} />
                 </Modal>
               </div>
               <div className='flex gap-2 text-orange-500 text-[30px] text-left mt-6'>
@@ -443,108 +445,22 @@ const ProductDetail: React.FC = () => {
               className='flex flex-col gap-2 w-[90%] scrollable-container'
               style={{ maxHeight: '455px', overflowY: 'auto' }}
             >
-              <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
-                <span>user</span>
-                <div className='flex gap-3 mt-2'>
-                  <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
+              {product.comment.map((commentIndex, index) => (
+                <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
+                  <span>{commentIndex.user}</span>
+                  <div className='flex gap-3 mt-2'>
+                    <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
+                      <FaStar />
+                      <FaStar />
+                      <FaStar />
+                      <FaStar />
+                      <FaStar />
+                    </div>
+                    <div className='text-gray-400 '>17/04/2023</div>
                   </div>
-                  <div className='text-gray-400 '>17/04/2023</div>
+                  <p className='text-base mt-2'>{commentIndex.commentItem}</p>
                 </div>
-                <p className='text-base mt-2'>
-                  Tận hưởng hộp sữa mát lành hay tạo nên những kết hợp đắm say từ lớp nền sánh ngậy: ngọt ngào cookies
-                  bơ, béo bùi latte nóng, đậm đà ca cao thơm.
-                </p>
-              </div>
-              <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
-                <span>user</span>
-                <div className='flex gap-3 mt-2'>
-                  <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                  </div>
-                  <div className='text-gray-400 '>17/04/2023</div>
-                </div>
-                <p className='text-base mt-2'>
-                  Tận hưởng hộp sữa mát lành hay tạo nên những kết hợp đắm say từ lớp nền sánh ngậy: ngọt ngào cookies
-                  bơ, béo bùi latte nóng, đậm đà ca cao thơm.
-                </p>
-              </div>
-              <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
-                <span>user</span>
-                <div className='flex gap-3 mt-2'>
-                  <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                  </div>
-                  <div className='text-gray-400 '>17/04/2023</div>
-                </div>
-                <p className='text-base mt-2'>
-                  Tận hưởng hộp sữa mát lành hay tạo nên những kết hợp đắm say từ lớp nền sánh ngậy: ngọt ngào cookies
-                  bơ, béo bùi latte nóng, đậm đà ca cao thơm.
-                </p>
-              </div>
-              <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
-                <span>user</span>
-                <div className='flex gap-3 mt-2'>
-                  <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                  </div>
-                  <div className='text-gray-400 '>17/04/2023</div>
-                </div>
-                <p className='text-base mt-2'>
-                  Tận hưởng hộp sữa mát lành hay tạo nên những kết hợp đắm say từ lớp nền sánh ngậy: ngọt ngào cookies
-                  bơ, béo bùi latte nóng, đậm đà ca cao thơm.
-                </p>
-              </div>
-              <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
-                <span>user</span>
-                <div className='flex gap-3 mt-2'>
-                  <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                  </div>
-                  <div className='text-gray-400 '>17/04/2023</div>
-                </div>
-                <p className='text-base mt-2'>
-                  Tận hưởng hộp sữa mát lành hay tạo nên những kết hợp đắm say từ lớp nền sánh ngậy: ngọt ngào cookies
-                  bơ, béo bùi latte nóng, đậm đà ca cao thơm.
-                </p>
-              </div>
-              <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
-                <span>user</span>
-                <div className='flex gap-3 mt-2'>
-                  <div className='flex gap-1 text-orange-500 text-[13px] pr-3 '>
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                  </div>
-                  <div className='text-gray-400 '>17/04/2023</div>
-                </div>
-                <p className='text-base mt-2'>
-                  Tận hưởng hộp sữa mát lành hay tạo nên những kết hợp đắm say từ lớp nền sánh ngậy: ngọt ngào cookies
-                  bơ, béo bùi latte nóng, đậm đà ca cao thơm.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
         </div>

@@ -24,6 +24,7 @@ import FormInput from './pages/User/FormInput'
 import HistoryPurchase from './pages/User/HistoryPurchase/HistoryPuchase'
 import Forgetpassword from './pages/Forgetpassword'
 import DeteledProducts from './pages/Admin/pages/DeteledProducts'
+import Brands from './pages/Admin/pages/Brands'
 
 // import FormAccountEdit from './pages/Admin/component/FormAccountEdit'
 
@@ -176,6 +177,10 @@ export default function UseRouterElement() {
             {
               path: path.deteledProducts,
               element: <DeteledProducts />
+            },
+            {
+              path: path.brands,
+              element: <Brands />
             },
             {
               path: path.orders,

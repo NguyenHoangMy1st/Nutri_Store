@@ -13,15 +13,18 @@ export interface Product {
   price: number
   price_before_discount: number
   quantity: number
-  ingredient: Ingredient[]
+  ingredient: string
   madeIn: string
   view: number
   sold: number
   status?: number
+  comment: Comment[]
 }
-export interface Ingredient {
-  name: string
-  amount: number // Lượng của thành phần dinh dưỡng, có thể là số lượng hoặc tỉ lệ phần trăm
+
+export interface Comment {
+  rating: number
+  user: string
+  commentItem: string
 }
 export interface ProductList {
   products: Product[]

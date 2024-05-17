@@ -1,6 +1,9 @@
-import axios, { AxiosError, HttpStatusCode } from 'axios'
+import axios, { AxiosError, AxiosResponse, HttpStatusCode } from 'axios'
 import config from 'src/constants/config'
 import userImage from 'src/assets/images/user.svg'
+import { SuccessResponse } from 'src/types/utils.type'
+import { HealthForm } from 'src/types/health.type'
+import http from './http'
 
 export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
   // eslint-disable-next-line import/no-named-as-default-member
@@ -41,3 +44,23 @@ export const getIdFromNameId = (nameId: string) => {
 }
 
 export const getAvatarUrl = (avatarName?: string) => (avatarName ? `${config.baseUrl}images/${avatarName}` : userImage)
+
+
+export type CreateHealthFormConfig = {
+  mutationFn: (body: {
+    user: string;
+    sex: string;
+    height: string;
+    age: string;
+    weight: string;
+    current_health_conditions: string[];
+  }) => Promise<AxiosResponse<SuccessResponse<HealthForm>>>;
+  timeout?: number;
+};
+
+export const createHealthFormConfig: CreateHealthFormConfig = {
+  mutationFn: (body) => {
+    return http.post<SuccessResponse<HealthForm>>('health/add-form', body);
+  },
+  timeout: 100000,
+};

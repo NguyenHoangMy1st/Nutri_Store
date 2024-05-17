@@ -5,37 +5,24 @@ import adminApi from 'src/apis/admin.api'
 import { useQuery } from 'react-query'
 import { Product } from 'src/types/product.type'
 import useQueryConfig from 'src/hooks/useQueryConfig'
-import { useEffect, useState } from 'react'
-import FormProductEdit from '../FormProductEdit'
-
-import { AiFillEdit } from 'react-icons/ai'
-import { IoEye } from 'react-icons/io5'
-import FormRestoreProduct from '../FormRestoreProduct'
+import { useState } from 'react'
+import { FaRecycle } from 'react-icons/fa6'
 type OnChange = NonNullable<TableProps<any>['onChange']>
 type Filters = Parameters<OnChange>[1]
 
-function TableDataDetele({ shouldRefetch }: { shouldRefetch: boolean }) {
-  const [editProductId, setEditProductId] = useState<string | null>(null)
-  const [viewProductId, setViewProductId] = useState<string | null>(null)
-  const [shouldRefetch1, setShouldRefetch] = useState<boolean>(false)
-  const [ProductData, setProductData] = useState<any>(null)
+function TableDataDelete() {
   const [filteredInfo] = useState<Filters>({})
 
-  const handleEdit = (productId: string) => {
-    setEditProductId(productId) // Set the ID of the user being edited
-  }
-  const handleView = (productId: string) => {
-    setViewProductId(productId) // Set the ID of the user being edited
-  }
   const categoryName = (filteredInfo?.category as any)?.name
 
   const queryConfig = useQueryConfig()
-  const { data: deletedProductsData, refetch } = useQuery({
-    queryKey: ['products', queryConfig],
+  const { data: productsData } = useQuery({
+    queryKey: ['orders', queryConfig],
     queryFn: () => {
-      return adminApi.getDeteledProducts()
+      return adminApi.getDeleteProduct()
     }
   })
+
   const { data: categoriesData } = useQuery({
     queryKey: ['categories', queryConfig],
     queryFn: () => {
@@ -46,36 +33,13 @@ function TableDataDetele({ shouldRefetch }: { shouldRefetch: boolean }) {
     categoriesData?.data.data.map(function (category) {
       return { text: category.name, value: category.name }
     }) || []
-  const fetchData = async () => {
-    try {
-      const productData = await adminApi.getDeteledProducts()
-      setProductData(productData)
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
-  }
-  useEffect(() => {
-    if (shouldRefetch1) {
-      fetchData()
-      setShouldRefetch(false) // Đặt shouldRefetch lại sau khi fetchData đã được gọi
-    }
-  }, [shouldRefetch1])
 
-  useEffect(() => {
-    fetchData()
-  }, [deletedProductsData])
-  const handleUpdateSuccess = () => {
-    // console.log(shouldRefetch)
-    setShouldRefetch(true) // Trigger fetchData khi cập nhật thành công
-  }
-
-  // console.log(deletedProductsData)
   const columns: TableProps<Product>['columns'] = [
     {
       title: 'Tên sản phẩm',
       dataIndex: 'name',
       key: 'name',
-      width: 400
+      width: 500
     },
     {
       title: 'Giá sản phẩm',
@@ -106,70 +70,26 @@ function TableDataDetele({ shouldRefetch }: { shouldRefetch: boolean }) {
     {
       title: 'Action',
       key: 'action',
+      width: '80px',
       render: (record) => (
         <Space size='middle'>
           <button
             type='button'
-            onClick={() => handleEdit(record._id)}
+            // onClick={() => handleView(record._id)}
             className='bg-none text-black transition-colors hover:text-blue'
           >
-            <AiFillEdit className='text-[20px]' />
-          </button>
-          <button
-            type='button'
-            onClick={() => handleView(record._id)}
-            className='bg-none text-black transition-colors hover:text-blue'
-          >
-            <IoEye className='text-[20px]' />
+            <FaRecycle className='text-[20px]' />
           </button>
         </Space>
       )
     }
   ]
-  if (ProductData) {
-    const { data }: any = ProductData
+  if (productsData) {
+    const { data }: any = productsData
     const products: Product[] = data.data
 
     return (
       <>
-        {editProductId !== null && (
-          <FormRestoreProduct
-            productId={editProductId}
-            onClose={() => setEditProductId(null)}
-            onUpdateSuccess={handleUpdateSuccess}
-          />
-        )}
-        {viewProductId !== null && (
-          <FormProductEdit
-            productId={viewProductId}
-            onClose={() => setViewProductId(null)}
-            onUpdateSuccess={handleUpdateSuccess}
-          />
-        )}
-        <Table
-          pagination={{
-            showSizeChanger: true, // Hiển thị tùy chọn lựa chọn pageSize
-            pageSizeOptions: ['6', '8', '12'], // Các tùy chọn pageSize
-            defaultPageSize: 6 // Kích thước mặc định của pageSize
-          }}
-          columns={columns}
-          dataSource={products}
-        />
-      </>
-    )
-  } else if (deletedProductsData) {
-    const { data }: any = deletedProductsData
-    const products: Product[] = data.data
-
-    return (
-      <>
-        {editProductId !== null && (
-          <FormRestoreProduct
-            productId={editProductId}
-            onClose={() => setEditProductId(null)}
-            onUpdateSuccess={handleUpdateSuccess}
-          />
-        )}
         <Table
           pagination={{
             showSizeChanger: true, // Hiển thị tùy chọn lựa chọn pageSize
@@ -184,4 +104,4 @@ function TableDataDetele({ shouldRefetch }: { shouldRefetch: boolean }) {
   }
 }
 
-export default TableDataDetele
+export default TableDataDelete

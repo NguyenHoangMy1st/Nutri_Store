@@ -34,17 +34,19 @@ const userApi = {
     return http.get<SuccessResponse<HealthForm>>('health')
   },
   createHealthForm(body: {
-    sex: String
-    height: String
-    age: String
-    weight: String
-    current_health_conditions: String[]
-    dietary_restrictions: String[]
+    user: string
+    sex: string
+    height: string
+    age: string
+    weight: string
+    current_health_conditions: string[]
+    // dietary_restrictions: string[]
   }) {
+    // console.log(body)
     return http.post<SuccessResponse<HealthForm>>('health/add-form', body)
   },
-  getHealthFormDetails() {
-    return http.get<SuccessResponse<HealthForm>>('health')
+  getHealthFormDetail(id: string) {
+    return http.get<SuccessResponse<HealthForm>>(`health/${id}`)
   }
 }
 

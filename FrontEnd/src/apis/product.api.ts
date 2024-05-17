@@ -11,6 +11,9 @@ const productApi = {
   },
   getProductDetail(id: string) {
     return http.get<SuccessResponse<Product>>(`${URL}/${id}`)
+  },
+  addComment(id: string, body: { rating: number; commentItem: string }) {
+    return http.post<SuccessResponse<Product>>(`products/${id}`, body)
   }
 }
 

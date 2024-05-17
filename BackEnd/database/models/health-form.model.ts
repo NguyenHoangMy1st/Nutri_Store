@@ -10,12 +10,13 @@ const HealthFormSchema = new Schema(
     sex: { type: String },
     height: { type: String }, // Chiều cao của người dùng
     age: { type: String },
-    weight: { type: String }, // Cân nặng của người dùng
+    weight: { type: String },
     current_health_conditions: [{ type: String }],
-    aiRecommendation: [{ type: String }], // Sản phẩm được gợi ý
+    // dietary_restrictions: { type: String },
+    aiRecommendation: [{ type: String }],
   },
   {
-    timestamps: true, // Tự động thêm trường createdAt và updatedAt
+    timestamps: true,
   }
 )
 

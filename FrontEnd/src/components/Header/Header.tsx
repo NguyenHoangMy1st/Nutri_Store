@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import logo1 from 'src/assets/images/logo1.png'
 import { AppContext } from 'src/contexts/app.context'
 import NavHeader from '../NavHeader'
 import Popover from '../Popover'
@@ -39,7 +38,7 @@ export default function Header() {
         <div className='grid grid-cols-11 gap-3 mt-4 items-center'>
           <Link to='/' className='col-span-3 mr-5 ml-4'>
             <div className='flex text-4xl items-center justify-items-center font-extrabold'>
-              <img src={logo1} alt='' className='w-40 h-12 items-center justify-items-center rounded-full ' />
+              <img src='logo1.png' alt='' className='w-40 h-12 items-center justify-items-center rounded-full ' />
               <span className='text-[#ff3e38]'>Nutri</span>
               <span className='text-[#2734a8]'>Store</span>
             </div>
