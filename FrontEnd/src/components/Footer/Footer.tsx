@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { FaFacebookF } from 'react-icons/fa'
 import { IoLogoGoogle } from 'react-icons/io'
 import { PiInstagramLogoBold } from 'react-icons/pi'
+import logo1 from 'src/assets/images/logo1.png'
 // import { IoLogoYoutube } from 'react-icons/io5'
 export default function Footer() {
   return (
@@ -12,7 +13,7 @@ export default function Footer() {
             <div className='flex-grow-1 -ml-10 '>
               <div className=' mb-6'>
                 <Link to='/' className='logo-wrapper'>
-                  <img src='logo1.png' alt='logo' className='w-[360px] h-[130px]' />
+                  <img src={logo1} alt='logo' className='w-[360px] h-[130px]' />
                 </Link>
               </div>
               <div className='flex items-center justify-center'>

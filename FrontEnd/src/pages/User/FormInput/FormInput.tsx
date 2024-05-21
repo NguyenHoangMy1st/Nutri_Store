@@ -236,11 +236,12 @@ export default function FormInput() {
             </div>
             <div className='w-[50%] flex items-center justify-center'>
               <button
-                className=' w-[50%] h-[150px] text-gray-100  font-bold rounded-full bg-gradient-to-r from-[#1dd442] via-[#0392ffd8] to-[#ffff0fd1]'
+                // className=' w-[50%] h-[150px] text-gray-100  font-bold rounded-full bg-gradient-to-r from-[#1dd442] via-[#0392ffd8] to-[#ffff0fd1]'
                 type='submit'
+                className=' w-[50%] h-[150px]'
               >
                 <img
-                  src='https://go4customer.com/images/blog/SIMPLE%20CHATBOTS.png'
+                  src='https://png.pngtree.com/png-clipart/20230429/original/pngtree-robot-artificial-intelligence-technology-transparent-png-image_9123453.png'
                   alt=''
                   className={`w-[180px] h-[120px]  transform transition-transform duration-500 ease-in-out ${
                     hovered ? 'hover:animate-customAnimation' : ''

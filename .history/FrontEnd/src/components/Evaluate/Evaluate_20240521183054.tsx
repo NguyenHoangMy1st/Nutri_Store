@@ -3,7 +3,7 @@ import TextArea from 'antd/es/input/TextArea'
 import { useState } from 'react'
 import productApi from 'src/apis/product.api'
 
-export default function Evaluate({ productId }) {
+export default function Evaluate({ productId: any }) {
   const [rating, setRating] = useState(0) // State for rating value
   const [comment, setComment] = useState('') // State for comment text
 

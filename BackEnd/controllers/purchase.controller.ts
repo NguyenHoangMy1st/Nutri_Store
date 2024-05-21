@@ -141,81 +141,113 @@ export const updatePurchase = async (req: Request, res: Response) => {
 }
 
 export const buyProducts = async (req: Request, res: Response) => {
-  const purchase = []
-  const { order, ...rest } = req.body
+  try {
+    const purchase = []
+    const { order, ...rest } = req.body
 
-  for (const item of order) {
-    const product: any = await ProductModel.findById(item.product_id).lean()
-    if (product) {
-      if (item.buy_count > product.quantity) {
-        throw new ErrorHandler(
-          STATUS.NOT_ACCEPTABLE,
-          'Số lượng mua vượt quá số lượng sản phẩm'
-        )
-      } else {
-        let data = await PurchaseModel.findOneAndUpdate(
-          {
-            user: req.jwtDecoded.id,
-            status: STATUS_PURCHASE.INCART,
-            product: {
-              _id: item.product_id,
+    for (const item of order) {
+      const product: any = await ProductModel.findById(item.product_id).lean()
+      if (product) {
+        if (item.buy_count > product.quantity) {
+          throw new ErrorHandler(
+            STATUS.NOT_ACCEPTABLE,
+            'Số lượng mua vượt quá số lượng sản phẩm'
+          )
+        } else {
+          let data = await PurchaseModel.findOneAndUpdate(
+            {
+              user: req.jwtDecoded.id,
+              status: STATUS_PURCHASE.INCART,
+              product: item.product_id,
             },
-          },
-          {
-            buy_count: item.buy_count,
-            status: STATUS_PURCHASE.OUTCART,
-          },
-          {
-            new: true,
-          }
-        )
-          .populate({
-            path: 'product',
-            populate: {
-              path: 'category',
+            {
+              buy_count: item.buy_count,
+              status: STATUS_PURCHASE.OUTCART,
+            },
+            { new: true }
+          )
+            .populate({
+              path: 'product',
+              populate: {
+                path: 'category',
+              },
+            })
+            .lean()
+
+          await ProductModel.findByIdAndUpdate(item.product_id, {
+            $inc: {
+              quantity: -Number(item.buy_count),
+              sold: +Number(item.buy_count),
             },
           })
-          .lean()
 
-        await ProductModel.findByIdAndUpdate(item.product_id, {
-          $inc: {
-            quantity: -Number(item.buy_count),
-            sold: +Number(item.buy_count),
-          },
-        })
-        if (!data) {
-          const purchase = {
-            user: req.jwtDecoded.id,
-            product: item.product_id,
-            buy_count: item.buy_count,
-            price: product.price,
-            price_before_discount: product.price_before_discount,
-            status: STATUS_PURCHASE.OUTCART,
+          if (!data) {
+            const newPurchase = new PurchaseModel({
+              user: req.jwtDecoded.id,
+              product: item.product_id,
+              buy_count: item.buy_count,
+              price: product.price,
+              price_before_discount: product.price_before_discount,
+              status: STATUS_PURCHASE.OUTCART,
+            })
+
+            const addedPurchase = await newPurchase.save()
+            data = await PurchaseModel.findById(addedPurchase._id)
           }
-          const addedPurchase = await new PurchaseModel(purchase).save()
-          data = await PurchaseModel.findById(addedPurchase._id).populate({
-            path: 'product',
-            populate: {
-              path: 'category',
-            },
-          })
+          purchase.push(data)
         }
-        purchase.push(data)
+      } else {
+        throw new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm')
       }
-    } else {
-      throw new ErrorHandler(STATUS.NOT_FOUND, 'Không tìm thấy sản phẩm')
     }
-  }
 
-  const purchasesIds = purchase.map((purchase_id) => purchase_id._id)
-  const responseData = { orderItem: purchasesIds, ...rest }
-  await (await PaymentModel.create({ ...rest })).save()
+    const purchasesIds = purchase.map((purchase) => purchase._id)
+    const responseData = { orderItem: purchasesIds, ...rest }
 
-  const response = {
-    message: 'Mua thành công',
-    data: responseData,
+    const paymentProducts = purchase.map((item) => {
+      const product = item.product
+      return {
+        product: {
+          name: product.name,
+          image: product.image,
+          price: product.price,
+        },
+        buy_count: item.buy_count,
+        price: product.price,
+      }
+    })
+
+    const totalMoney = paymentProducts.reduce(
+      (acc, item) => acc + item.price * item.buy_count,
+      0
+    )
+
+    const paymentData = {
+      ...rest,
+      purchases: paymentProducts,
+      totalMoney,
+      user: req.jwtDecoded.id,
+    }
+
+    const newPayment = await PaymentModel.create(paymentData)
+
+    const populatedPayment = await PaymentModel.findById(newPayment._id)
+      .populate({
+        path: 'purchases',
+      })
+      .lean()
+
+    const response = {
+      message: 'Mua thành công',
+      data: populatedPayment,
+    }
+
+    return responseSuccess(res, response)
+  } catch (error) {
+    return res.status(error.status || 500).json({
+      message: error.message || 'Internal Server Error',
+    })
   }
-  return responseSuccess(res, response)
 }
 
 export const getPurchases = async (req: Request, res: Response) => {
@@ -224,10 +256,12 @@ export const getPurchases = async (req: Request, res: Response) => {
 
   let condition: any = {
     user: user_id,
-    status: {
-      $ne: STATUS_PURCHASE.OUTCART,
+    'product.status': {
+      $ne: 0, // Loại bỏ các sản phẩm có status = 0
     },
   }
+
+  // Nếu status là OUTCART, loại bỏ điều kiện lọc sản phẩm OUTCART
   if (Number(status) !== STATUS_PURCHASE.OUTCART) {
     condition.status = status
   }
@@ -243,10 +277,21 @@ export const getPurchases = async (req: Request, res: Response) => {
       createdAt: -1,
     })
     .lean()
+
+  purchases = purchases
+    .map((purchase) => {
+      if (purchase.product.status === 0) {
+        purchase.status = 0 // Đặt purchase.status = 0 nếu product.status = 0
+      }
+      return purchase
+    })
+    .filter((purchase) => purchase.status !== 0) // Loại bỏ các mục có purchase.status = 0
+
   purchases = purchases.map((purchase) => {
     purchase.product = handleImageProduct(cloneDeep(purchase.product))
     return purchase
   })
+
   const response = {
     message: 'Lấy giỏ hàng thành công',
     data: purchases,

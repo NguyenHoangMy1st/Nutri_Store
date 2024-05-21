@@ -166,7 +166,7 @@ export default function TableHistory() {
                   </div>
                   <div className='flex gap-[54px]'>
                     <span className='text-start text-[14px] font-semibold '>
-                      Số lượng mặt hàng: <span className='font-normal'>{filteredPayment.purchase.length}</span>{' '}
+                      Số lượng mặt hàng: <span className='font-normal'>{filteredPayment.purchases.length}</span>{' '}
                     </span>
                     <span className='text-start text-[14px] font-semibold '>
                       Tổng tiền thanh toán:{' '}
@@ -185,7 +185,7 @@ export default function TableHistory() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredPayment.purchase.map((Item: any) => (
+                    {filteredPayment.purchases.map((Item: any) => (
                       <>
                         <tr>
                           <td className='px-4 py-2 text-center'>

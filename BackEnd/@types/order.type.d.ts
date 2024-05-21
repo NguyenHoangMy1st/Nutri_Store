@@ -1,17 +1,24 @@
-import { Purchase } from './purchase.type'
-
 export type OrderStatus = 1 | 2 | 3 | 4 | 5
 
 export type OrderListStatus = OrderStatus | 0
 
 export interface Payment {
-  _id: string
-  status: OrderListStatus
-  purchase: Purchase
-  street: string
-  city: string
+  purchases: Purchase[]
+  totalMoney: number
+  name?: string
+  street?: string
+  city?: string
+  phone?: string
+  paymentMethod: number
+  status: number
+}
+interface Product {
   name: string
-  phone: string
-  createdAt: string
-  updatedAt: string
+  image: string
+  price: number
+}
+interface Purchase {
+  product: Product
+  buy_count: number
+  price: number
 }

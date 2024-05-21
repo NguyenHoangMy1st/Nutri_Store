@@ -282,12 +282,9 @@ const updateProduct = async (req: Request, res: Response) => {
 }
 
 const updateDeleteProduct = async (req: Request, res: Response) => {
-  const form: Product = req.body
-  const { quantity } = form
   const product = omitBy(
     {
       status: 1,
-      quantity,
     },
     (value) => value === undefined
   )
@@ -315,7 +312,7 @@ const deleteProduct = async (req: Request, res: Response) => {
     const product_id = req.params.product_id
     const productDB: any = await ProductModel.findByIdAndUpdate(
       product_id,
-      { status: 0, quantity: 0 },
+      { status: 0 },
       { new: true } // this option ensures that the updated document is returned
     ).lean()
     if (productDB) {
@@ -459,6 +456,7 @@ const getSoldProductByBrand = async (req: Request, res: Response) => {
 export const addCommentToProduct = async (req: Request, res: Response) => {
   const product_id = req.params.product_id
   const { user, rating, commentItem } = req.body
+  console.log(req.jwtDecoded.id)
   try {
     // Tìm và cập nhật sản phẩm trong database
     const product: any = await ProductModel.findByIdAndUpdate(
@@ -466,7 +464,7 @@ export const addCommentToProduct = async (req: Request, res: Response) => {
       {
         $push: {
           comment: {
-            user,
+            user: req.jwtDecoded.id,
             rating: rating,
             commentItem: commentItem,
           },

@@ -44,5 +44,30 @@ adminOrderRouter.put(
   // helpersMiddleware.idValidator,
   wrapAsync(paymentController.updateOrderCancel)
 )
+adminOrderRouter.get(
+  '/revenue/daily',
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  wrapAsync(paymentController.getDailyRevenue)
+)
+adminOrderRouter.get(
+  '/revenue/monthly',
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  wrapAsync(paymentController.getMonthlyRevenue)
+)
+
+adminOrderRouter.get(
+  '/top-selling-product/weekly',
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  wrapAsync(paymentController.getTopSellingProductWeekly)
+)
+adminOrderRouter.get(
+  '/top-selling-product/month',
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  wrapAsync(paymentController.getTopSellingProductMonthly)
+)
 
 export default adminOrderRouter

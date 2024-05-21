@@ -27,7 +27,7 @@ commonProductRouter.get(
 )
 commonProductRouter.post(
   '/:product_id',
-  // authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAccessToken,
   helpersMiddleware.idRule('product_id'),
   // helpersMiddleware.idValidator,
   wrapAsync(ProductController.addCommentToProduct)
@@ -35,7 +35,7 @@ commonProductRouter.post(
 
 commonProductRouter.get(
   '/category/:categoryId',
-  // authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAccessToken,
   productMiddleware.getProductsRules(),
   helpersMiddleware.entityValidator,
   wrapAsync(ProductController.getSoldProductByCategory)

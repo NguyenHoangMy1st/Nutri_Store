@@ -57,6 +57,7 @@ const createHealthForm = async (req: Request, res: Response) => {
       user: req.jwtDecoded.id,
       ...formData,
       aiRecommendation: aiRecommendationIds,
+      additionalData: additionalData,
     })
 
     const savedHealthForm = await healthForm.save()
