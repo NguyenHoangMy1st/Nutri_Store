@@ -45,10 +45,10 @@ const getBrand = async (req: Request, res: Response) => {
 }
 
 const updateBrand = async (req: Request, res: Response) => {
-  const { name } = req.body
+  const { name, description } = req.body
   const brandDB = await BrandModel.findByIdAndUpdate(
     req.params.brand_id,
-    { name },
+    { name, description },
     { new: true }
   )
     .select({ __v: 0 })

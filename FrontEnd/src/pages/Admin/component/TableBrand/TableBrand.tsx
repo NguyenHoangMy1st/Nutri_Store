@@ -6,11 +6,11 @@ import { useQuery } from 'react-query'
 
 import useQueryConfig from 'src/hooks/useQueryConfig'
 import { useEffect, useState } from 'react'
-import FormAccountEdit from '../FormAccountEdit'
 
 import { AiFillEdit } from 'react-icons/ai'
 import { FaEye } from 'react-icons/fa6'
 import { Brand } from 'src/types/brand.type'
+import FormBrandEdit from '../FormBrandEdit'
 
 interface props {
   handleView: (id: string) => void
@@ -57,6 +57,7 @@ function TableBrand({ handleView }: props) {
         return totalQuantity
       }
     },
+
     {
       title: 'Action',
       key: 'action',
@@ -99,8 +100,8 @@ function TableBrand({ handleView }: props) {
       <>
         {/* Render the FormAccountEdit component if editUserId is not null */}
         {editBrandId !== null && (
-          <FormAccountEdit
-            userId={editBrandId}
+          <FormBrandEdit
+            brandId={editBrandId}
             onClose={() => setEditBrandId(null)}
             onUpdateSuccess={handleUpdateSuccess}
           />
@@ -118,6 +119,8 @@ function TableBrand({ handleView }: props) {
         />
       </>
     )
+  } else {
+    return null
   }
 }
 

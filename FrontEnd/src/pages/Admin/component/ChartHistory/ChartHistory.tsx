@@ -45,12 +45,12 @@ interface ChartOptions {
 
 function ChartHistory({ role }: any) {
   const data: ChartData = {
-    labels: ['Đang chờ xác nhận', 'Đã xác nhận', 'Đã Hủy'],
+    labels: ['Đang chờ xác nhận', 'Đang chuẩn bị', 'Đợi vận chuyển', 'Đang giao', 'Giao thành công'],
     datasets: [
       {
         label: 'Total Order',
-        data: [role.role1, role.role2, role.role3],
-        backgroundColor: ['#d59723', '#7cd57c', '#eb7777'],
+        data: [role.role1, role.role2, role.role3, role.role4, role.role5],
+        backgroundColor: ['#d59723', '#7cd57c', '#eb7777', '#ffd700', '#008000'],
         hoverOffset: 4
         // rgb(75, 238, 157)
       }
@@ -100,23 +100,34 @@ function ChartHistory({ role }: any) {
   }
 
   return (
-    <figure className='flex flex-col '>
-      <div className='max-w-[200px] max-h-[300px] ml-20'>
+    <figure className='flex flex-col font'>
+      <div className='w-full max-h-[200px] flex items-center justify-center'>
         <Doughnut data={data} options={options} />
       </div>
       <figcaption className='flex flex-wrap items-center gap-x-[15px] mt-[10px] gap-y-[10px]'>
-        <div className='flex items-center gap-x-[10px]'>
-          <div className='bg-[#d59723] w-[50px] h-[20px]' />
+        <div className='flex items-center gap-x-[10px] justify-center'>
+          <div className='bg-[#d59723] w-[15px] h-[15px] rounded-full' />
           <span>Đang chờ xác nhận</span>
         </div>
 
-        <div className='flex items-center gap-x-[10px]'>
-          <div className='bg-[#7cd57c] w-[50px] h-[20px]' />
-          <span>Đã xác nhận</span>
+        <div className='flex items-center gap-x-[10px] justify-center'>
+          <div className='bg-[#7cd57c] w-[15px] h-[15px] rounded-full' />
+          <span>Đang chuẩn bị</span>
         </div>
-        <div className='flex items-center gap-x-[10px]'>
-          <div className='bg-[#eb7777] w-[50px] h-[20px]' />
-          <span>Đã bị huy</span>
+
+        <div className='flex items-center gap-x-[10px] justify-center'>
+          <div className='bg-[#eb7777] w-[15px] h-[15px] rounded-full' />
+          <span>Đợi vận chuyển</span>
+        </div>
+
+        <div className='flex items-center gap-x-[10px] justify-center'>
+          <div className='bg-[#ffd700] w-[15px] h-[15px] rounded-full' />
+          <span>Đang giao</span>
+        </div>
+
+        <div className='flex items-center gap-x-[10px] justify-center'>
+          <div className='bg-[#008000] w-[15px] h-[15px] rounded-full' />
+          <span>Giao thành công</span>
         </div>
       </figcaption>
     </figure>

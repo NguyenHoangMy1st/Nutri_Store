@@ -5,7 +5,6 @@ import { ProductModel } from '../database/models/product.model'
 import { PaymentModel } from '../database/models/payment.model'
 import { PurchaseModel } from '../database/models/purchase.model'
 import { ErrorHandler, responseError, responseSuccess } from '../utils/response'
-import { handleImageProduct } from './product.controller'
 import { cloneDeep } from 'lodash'
 import { STATUS_ORDER, STATUS_PURCHASE } from '../constants/purchase'
 
@@ -201,9 +200,6 @@ export const buyProducts = async (req: Request, res: Response) => {
       }
     }
 
-    const purchasesIds = purchase.map((purchase) => purchase._id)
-    const responseData = { orderItem: purchasesIds, ...rest }
-
     const paymentProducts = purchase.map((item) => {
       const product = item.product
       return {
@@ -286,11 +282,6 @@ export const getPurchases = async (req: Request, res: Response) => {
       return purchase
     })
     .filter((purchase) => purchase.status !== 0) // Loại bỏ các mục có purchase.status = 0
-
-  purchases = purchases.map((purchase) => {
-    purchase.product = handleImageProduct(cloneDeep(purchase.product))
-    return purchase
-  })
 
   const response = {
     message: 'Lấy giỏ hàng thành công',

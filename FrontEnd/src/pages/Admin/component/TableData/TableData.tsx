@@ -245,6 +245,8 @@ function TableData({ shouldRefetch }: { shouldRefetch: boolean }) {
         />
       </>
     )
+  } else {
+    return null
   }
 }
 

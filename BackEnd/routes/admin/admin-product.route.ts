@@ -1,9 +1,13 @@
 import { Router } from 'express'
 import helpersMiddleware from '../../middleware/helpers.middleware'
 import authMiddleware from '../../middleware/auth.middleware'
-import ProductController from '../../controllers/product.controller'
+// import ProductController, {
+//   upload,
+//   uploadProductImage1,
+// } from '../../controllers/product.controller'
 import productMiddleware from '../../middleware/product.middleware'
 import { wrapAsync } from '../../utils/response'
+import ProductController from '../../controllers/product.controller'
 
 const adminProductRouter = Router()
 /**
@@ -97,16 +101,4 @@ adminProductRouter.delete(
   wrapAsync(ProductController.deleteProduct)
 )
 
-adminProductRouter.post(
-  '/upload-image',
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  wrapAsync(ProductController.uploadProductImage)
-)
-adminProductRouter.post(
-  '/upload-images',
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  wrapAsync(ProductController.uploadManyProductImages)
-)
 export default adminProductRouter

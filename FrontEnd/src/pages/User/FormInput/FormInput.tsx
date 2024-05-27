@@ -1,11 +1,8 @@
-import { ConfigProviderProps, Form, Input, message, Select, SelectProps } from 'antd'
+import { Button, ConfigProviderProps, Form, Image, Input, message, Modal, Select, SelectProps } from 'antd'
 import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
-import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import userApi from 'src/apis/user.api'
-import path from 'src/constants/path'
-import { generateNameId, getAvatarUrl } from 'src/utils/utils'
 type SizeType = ConfigProviderProps['componentSize']
 const options: SelectProps['options'] = [
   { label: 'Hạ canxi máu(tụt canxi)', value: 'Hạ canxi máu(tụt canxi)' },
@@ -48,12 +45,14 @@ const options2: SelectProps['options'] = [
 export default function FormInput() {
   const [userId, setUserId] = useState('')
   const [products, setProducts] = useState([])
+  console.log(products)
   const [data, setdata] = useState({
+    user: '',
     sex: '',
     height: '',
     age: '',
     weight: '',
-    current_health_conditions: ''
+    current_health_conditions: []
   })
   const handleChange = (value: string) => {
     console.log(`selected ${value}`)
@@ -111,7 +110,7 @@ export default function FormInput() {
   // const checkedPurchases = [...]; // Thay [... ] bằng mảng sản phẩm đã mua
 
   // Hàm mở modal
-  const handleOpenModal = async () => {
+  const showModal = async () => {
     setIsModalOpen(true)
     const value = localStorage.getItem('Id_form') ?? ''
 
@@ -119,6 +118,7 @@ export default function FormInput() {
       const productDetail: any = await getHealthFormDetail.mutateAsync(value)
       setProducts(productDetail.data.products)
       setdata(productDetail.data.data)
+      console.log(productDetail.data.data)
     } catch (error) {
       console.log(error, 'show')
     }
@@ -260,66 +260,128 @@ export default function FormInput() {
 
       <div>
         <button
-          onClick={handleOpenModal}
+          onClick={() => showModal()}
           className='text-[20px] bg-gradient-to-l from-[#1dd442af] via-[#0392ffa4] to-[#ffff0fd1] rounded-xl p-2 mt-2 text-white'
         >
           Xem sản phẩm gợi ý
         </button>
-        <Modal isOpen={isModalOpen} onClose={handleCloseModal} product={products} />
-      </div>
-    </div>
-  )
-}
-interface props {
-  isOpen: any
-  onClose: any
-  product: any
-}
+        <Modal
+          title=''
+          width={1000}
+          visible={isModalOpen}
+          onCancel={handleCloseModal}
+          footer={[
+            <Button key='back' onClick={handleCloseModal}>
+              Đóng
+            </Button>
+          ]}
+        >
+          <div className='flex flex-col border-2 border-gray-100 rounded-lg p-4 font'>
+            <span className='text-center text-[16px] font-bold uppercase'>GỢI Ý CHU TRÌNH CHO BẠN</span>
 
-const Modal = ({ isOpen, onClose, product }: props) => {
-  if (!isOpen) return null
-  console.log(product)
-  return (
-    <div className='modal'>
-      <div className='modal-content w-full flex flex-col '>
-        <div className='w-full'>
-          <button
-            onClick={onClose}
-            className='flex justify-end justify-items-end items-end w-full h-[24px] text-[40px]'
-          >
-            &times;
-          </button>
-        </div>
+            <div className='px-2 flex flex-col gap-3 mt-2 relative'>
+              <div className='flex gap-6'>
+                <span className='text-start text-[14px] font-semibold '>
+                  Tên người dùng: <span className='font-normal'>{data?.user}</span>{' '}
+                </span>
+                <span className='text-start text-[14px] font-semibold '>
+                  Tuổi : <span className='font-normal'>{data.age}</span>{' '}
+                </span>
+              </div>
+              <div className='flex gap-6'>
+                <span className='text-start text-[14px] font-semibold '>
+                  Chiều cao: <span className='font-normal'>{data.height}</span>{' '}
+                </span>
+                <span className='text-start text-[14px] font-semibold '>
+                  Cân nặng <span className='font-normal'>{data.weight}</span>{' '}
+                </span>
+              </div>
+              <div className='flex gap-[54px]'>
+                <span className='text-start text-[14px] font-semibold '>
+                  Tình trạng bệnh
+                  {data.current_health_conditions.map((condition) => (
+                    <span className='font-normal ml-1'>{condition},</span>
+                  ))}
+                </span>
+                <span className='text-start text-[14px] font-semibold '>
+                  Sản phẩm dị ứng <span className='font-normal'>Sữa</span>{' '}
+                </span>
+              </div>
+              <div className='absolute top-0 right-0'>
+                {/* <img src={logo} alt='' className='w-[240px] h-[100px]' /> */}
+              </div>
+            </div>
+            <div className='flex gap-[54px] px-2 mt-4 w-full'>
+              <div className='text-start text-[14px] font-semibold border-2  border-gray-200 rounded-lg p-4 flex-[40%]'>
+                Lời khuyên
+                <div className='font-normal px-4'>
+                  <ul className='list-disc'>
+                    <li>
+                      For the patient with chronic kidney disease (Suy thận), it is essential to focus on a low-sodium
+                      diet, limit potassium intake, restrict protein consumption, and avoid phosphorus-rich foods.
+                    </li>
+                    <li>
+                      For the patient with goiter (Bướu cổ) due to iodine deficiency, it is crucial to incorporate foods
+                      rich in iodine, magnesium, minerals, and vitamins to support thyroid health.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className='text-start text-[14px] font-semibold border-2  border-gray-200 rounded-lg p-4  flex-[60%]'>
+                Tình trạng bệnh
+                <div className='font-normal px-4'>
+                  <ul className='list-disc'>
+                    <li>
+                      Health_report: Based on the patient's current health conditions (Suy thận, Bướu cổ), additional
+                      diseases they may encounter include:
+                    </li>
+                    <li>1. Chronic kidney disease (due to Suy thận) </li>
+                    <li>2. Goiter (due to Bướu cổ)</li>
+                    <li>
+                      Given the patient's age, height, and weight, it is essential to monitor for any signs of growth
+                      and development delays, nutritional deficiencies, and potential complications related to the
+                      current illnesses. Regular follow-ups and appropriate management are crucial in maintaining the
+                      patient's overall health and well-being.
+                    </li>
+                  </ul>
+                </div>{' '}
+              </div>
+            </div>
 
-        <div className='flex flex-col border-2 border-gray-100 rounded-lg p-3'>
-          <span className='text-center text-[16px] font-bold uppercase'>Sản phẩm phù hợp cho bạn</span>
-          <table className='table-auto w-full mt-5 text-[12px]'>
-            <thead>
-              <tr>
-                <th className='px-4 py-2 text-center text-[12px]'>Ảnh</th>
-                <th className='px-4 py-2 text-center w-[40%] text-[12px]'>Tên sản phẩm</th>
-                <th className='px-4 py-2 text-center text-[12px]'>Thành phần</th>
-                <th className='px-4 py-2 text-center text-[12px]'>Nơi sản xuất</th>
-              </tr>
-            </thead>
-            <tbody>
-              {product.map((Item: any) => (
+            <table className='table-auto w-full mt-5 text-[12px] border-2 border-gray-100 rounded-lg p-4'>
+              <thead>
                 <tr>
-                  <td className='px-4 py-2 text-start'>
-                    <Link to={`${path.home}${generateNameId({ name: Item.name, id: Item._id })}`}>
-                      <img src={getAvatarUrl(Item.image)} alt={Item.name} style={{ width: 90, borderRadius: '5px' }} />
-                    </Link>
-                  </td>
-                  <td className='px-4 py-2 text-start'>
-                    <Link to={`${path.home}${generateNameId({ name: Item.name, id: Item._id })}`}>{Item?.name} </Link>
-                  </td>
-                  <td className='px-4 py-2 text-start'>{Item?.ingredient}</td>
-                  <td className='px-4 py-2 text-start'>{Item?.madeIn}</td>
+                  <th className='px-4 py-2 text-center w-[10%] text-[12px]'>Sản phẩm</th>
+                  <th className='px-4 py-2 text-center text-[12px]'>Ảnh</th>
+                  <th className='px-4 py-2 text-center w-[40%] text-[12px]'>Tên sản phẩm</th>{' '}
+                  <th className='px-4 py-2 text-center text-[12px]'>Công dụng</th>
                 </tr>
+              </thead>
+              {products.map((product, index) => (
+                <tbody>
+                  <>
+                    <tr>
+                      <td className='px-4 py-2 text-center'>Sản phẩm {index + 1}</td>
+                      <td className='px-4 py-2 text-center'>
+                        <Image width={80} src={product.image} style={{ borderRadius: '5px' }} />
+                      </td>
+
+                      <td className='py-2 text-start pl-10'>{product?.name}</td>
+                      <td className='px-4 py-2 text-start'>{product.ingredient}</td>
+                    </tr>
+                  </>
+                </tbody>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </table>
+            <div className='flex gap-[54px] px-2 mt-4 w-full items-center justify-center'>
+              <div>
+                <strong>
+                  <em>Sức khỏe của bạn là trên hết. Vậy nên hãy chăm sóc bản thân mình nhé</em>
+                </strong>
+              </div>
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   )

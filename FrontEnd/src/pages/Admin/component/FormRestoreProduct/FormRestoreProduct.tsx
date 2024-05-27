@@ -3,10 +3,6 @@ import { Form, Input, Modal } from 'antd'
 
 import adminApi from 'src/apis/admin.api'
 import { toast } from 'react-toastify'
-import useQueryConfig from 'src/hooks/useQueryConfig'
-import { useQuery } from 'react-query'
-import { values } from 'lodash'
-
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },

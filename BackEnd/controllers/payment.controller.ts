@@ -4,7 +4,6 @@ import { ErrorHandler, responseSuccess } from '../utils/response'
 import { STATUS } from '../constants/status'
 import { STATUS_ORDER } from '../constants/purchase'
 import { Payment } from '../@types/order.type'
-import { handleImageProduct } from './product.controller'
 import { cloneDeep } from 'lodash'
 import moment from 'moment'
 
@@ -19,19 +18,7 @@ const getPayments = async (req: Request, res: Response) => {
         createdAt: -1,
       })
       .lean()
-    payments = payments.map((payment) => {
-      if (payment.purchases && payment.purchases.length > 0) {
-        payment.purchases = payment.purchases.map((purchaseItem) => {
-          if (purchaseItem.product) {
-            purchaseItem.product = handleImageProduct(
-              cloneDeep(purchaseItem.product)
-            )
-          }
-          return purchaseItem
-        })
-      }
-      return payment
-    })
+
     payments = payments.filter((payment) => payment.purchases.length > 0)
     const response = {
       message: 'Lấy đơn mua thành công',
@@ -60,19 +47,6 @@ const getAllOrders = async (req: Request, res: Response) => {
       })
       .lean()
 
-    payments = payments.map((payment) => {
-      if (payment.purchases && payment.purchases.length > 0) {
-        payment.purchases = payment.purchases.map((purchaseItem) => {
-          if (purchaseItem.product) {
-            purchaseItem.product = handleImageProduct(
-              cloneDeep(purchaseItem.product)
-            )
-          }
-          return purchaseItem
-        })
-      }
-      return payment
-    })
     payments = payments.filter((payment) => payment.purchases.length > 0)
     // console.log(payments)
     const response = {

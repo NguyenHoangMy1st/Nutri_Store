@@ -1,11 +1,24 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Form, Input, Modal, ConfigProvider, Select, InputNumber, type FormInstance } from 'antd'
-import Uploadmain from '../Uploadmain'
-import Uploadimgs from '../Upload'
+import {
+  Button,
+  Form,
+  Input,
+  Modal,
+  ConfigProvider,
+  Select,
+  InputNumber,
+  type FormInstance,
+  Upload,
+  message,
+  GetProp,
+  UploadProps
+} from 'antd'
+
 import adminApi from 'src/apis/admin.api'
 import { useQuery } from 'react-query'
 import useQueryConfig from 'src/hooks/useQueryConfig'
 import { Product } from 'src/types/product.type'
+import axios from 'axios'
 
 const formItemLayout = {
   labelCol: {
@@ -50,13 +63,128 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({ onFormInsta
       return adminApi.getbrands()
     }
   })
-  const handleMainImageUpload = (imageUrl: string) => {
-    form.setFieldsValue({ image: imageUrl })
+
+  const uploadProfileImg = async (formData: any) => {
+    try {
+      const res = await axios.post('https://api.cloudinary.com/v1_1/dvpgs36ca/image/upload', formData)
+      const { url, asset_id, etag } = res.data
+      return { url, asset_id, etag }
+    } catch (err) {
+      console.log(err)
+    }
   }
-  const handleIllustrationImageUpload = (imageUrl: string | string[]) => {
-    form.setFieldsValue({ images: imageUrl })
+  const uploadProfileImg1 = async (formData: any) => {
+    try {
+      const res = await axios.post('https://api.cloudinary.com/v1_1/dvpgs36ca/image/upload', formData)
+      const { url, asset_id, etag } = res.data
+      return { url, asset_id, etag }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  const [fileList, setFileList] = useState<any>([])
+
+  const [fileList1, setFileList1] = useState<any>([])
+  const [previewImage, setPreviewImage] = useState('')
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const handleRemove = (e: any) => {
+    const index = fileList?.findIndex((f: any) => f?.uid === e?.uid)
+    const copyList = fileList.slice()
+    copyList.splice(index, 1)
+    setFileList([...copyList])
+  }
+  const handleRemove1 = (e: any) => {
+    const index = fileList1?.findIndex((f: any) => f?.uid === e?.uid)
+    const copyList = fileList1.slice()
+    copyList.splice(index, 1)
+    setFileList1([...copyList])
   }
 
+  const getBase64 = (file: any) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = (error) => reject(error)
+    })
+  const handlePreview = async (file: any) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj)
+    }
+    setPreviewImage(file.url || file.preview)
+    setPreviewOpen(true)
+  }
+  /* Upload image with local */
+  const upLoadImage = async (e: any) => {
+    try {
+      if (e.file) {
+        const formData = new FormData()
+        formData.append('file', e.file)
+        formData.append('upload_preset', 'Health')
+        const image = await uploadProfileImg(formData)
+        console.log(image)
+        setFileList((prevImagePaths: any) => [
+          ...prevImagePaths,
+          {
+            url: image?.url
+          }
+        ])
+        form.setFieldsValue({ image: image?.url })
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
+  const beforeUpload = (file: FileType) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+    if (!isJpgOrPng) {
+      message.error('You can only upload JPG/PNG file!')
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2
+    if (!isLt2M) {
+      message.error('Image must smaller than 2MB!')
+    }
+    return isJpgOrPng && isLt2M
+  }
+
+  const upLoadImage1 = async (e: any) => {
+    try {
+      if (e.file) {
+        const formData = new FormData()
+        formData.append('file', e.file)
+        formData.append('upload_preset', 'Health')
+        const image = await uploadProfileImg1(formData)
+        console.log(image)
+        console.log(image)
+        if (image && image.url) {
+          const newFileList1 = [...fileList1, { url: image.url }]
+          setFileList1((prevImagePaths: any) => [
+            ...prevImagePaths,
+            {
+              url: image?.url
+            }
+          ])
+          const urls = newFileList1.map((file) => file.url)
+
+          form.setFieldsValue({ images: urls })
+        }
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const beforeUpload1 = async (file: any, list: any) => {
+    const prevList = fileList1.length
+    const maxCount = list.length
+
+    if (prevList + maxCount > 6) {
+      return false
+    }
+    return true
+  }
   return (
     <Form
       {...formItemLayout}
@@ -108,10 +236,54 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({ onFormInsta
       </Form.Item>
       <div className=''>
         <Form.Item label='Ảnh chính' name='image' rules={[{ required: true, message: 'Please input!' }]}>
-          <Uploadmain onUpload={handleMainImageUpload} />
+          <Upload
+            name='avatar'
+            action='https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload'
+            listType='picture-card'
+            fileList={fileList}
+            maxCount={1}
+            onPreview={handlePreview}
+            beforeUpload={beforeUpload}
+            onRemove={(e) => handleRemove(e)}
+            customRequest={(e) => upLoadImage(e)}
+          >
+            {fileList.length >= 1 ? null : (
+              <div>
+                <div
+                  style={{
+                    marginTop: 8
+                  }}
+                >
+                  Upload
+                </div>
+              </div>
+            )}
+          </Upload>
         </Form.Item>
         <Form.Item label='Ảnh minh họa' name='images' rules={[{ required: true, message: 'Please input!' }]}>
-          <Uploadimgs onUpload={handleIllustrationImageUpload} />
+          <Upload
+            name='images'
+            action='https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload'
+            listType='picture-card'
+            fileList={fileList1}
+            maxCount={5}
+            onPreview={handlePreview}
+            beforeUpload={beforeUpload1}
+            onRemove={(e) => handleRemove1(e)}
+            customRequest={(e) => upLoadImage1(e)}
+          >
+            {fileList.length > 5 ? null : (
+              <div>
+                <div
+                  style={{
+                    marginTop: 8
+                  }}
+                >
+                  Upload
+                </div>
+              </div>
+            )}
+          </Upload>
         </Form.Item>
       </div>
     </Form>
@@ -134,21 +306,8 @@ const CollectionCreateFormModal: React.FC<CollectionCreateFormModalProps> = ({
   const [formInstance, setFormInstance] = useState<FormInstance>()
   const handleCreate = async () => {
     try {
-      const values = await (formInstance?.validateFields() as Promise<Product>)
-      // console.log('Form values:', values) // In ra giá trị của form trước khi gọi API
-
-      // const formData = new FormData()
-      // Object.entries(values).forEach(([key, value]) => {
-      // if (key === 'images' && Array.isArray(value)) {
-      //   // Loại bỏ địa chỉ cơ sở từ mỗi URL và thêm vào formData một cách riêng biệt
-      //   value.forEach((url) => {
-      //     const imageUrlWithoutBaseURL = url.replace(/^http:\/\/localhost:4000\/images\//, '')
-      //     formData.append(key, imageUrlWithoutBaseURL)
-      //   })
-      // } else {
-      // formData.append(key, value)
-      // }
-      // })
+      const values = (await formInstance?.validateFields()) as Values
+      // console.log('Form values:', values)
       await adminApi.createProduct(values)
       formInstance?.resetFields()
       onCreate(values)
@@ -185,6 +344,7 @@ const FristForm: React.FC<CollectionCreateFormProps> = ({ onCreated }) => {
   const [open, setOpen] = useState(false)
 
   const onCreate = (values: Values) => {
+    console.log(values)
     setFormValues(values)
     setOpen(false)
     onCreated()

@@ -10,7 +10,7 @@ async function callAIRecommendationAPI(healthData) {
       'http://127.0.0.1:8000/recommend',
       healthData
     )
-    // console.log(response)
+    console.log(response)
 
     const additionalData = response.data.additionalData
     return {

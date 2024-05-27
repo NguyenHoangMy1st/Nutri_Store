@@ -43,6 +43,9 @@ const adminApi = {
   getcategories() {
     return http.get<SuccessResponse<Category[]>>(`/admin/categories`)
   },
+  restoreProduct(id: string, body: any) {
+    return http.patch<SuccessResponse<User[]>>(`/admin/products/${id}`, body)
+  },
 
   createCaterory(body: any) {
     return http.post<SuccessResponse<Category[]>>(`/admin/categories`, body)
@@ -53,43 +56,34 @@ const adminApi = {
   getbrands() {
     return http.get<SuccessResponse<Brand[]>>(`/admin/brands`)
   },
+  getbrand(id: string) {
+    return http.get<SuccessResponse<Brand[]>>(`/admin/brands/${id}`)
+  },
   createBrand(body: any) {
     return http.post<SuccessResponse<Brand[]>>(`/admin/brands`, body)
   },
-  updateBrand(body: any, id: string) {
-    return http.post<SuccessResponse<Brand[]>>(`/admin/brands/${id}`, body)
+  updateBrand(brandId: string, body: any) {
+    console.log(brandId)
+    console.log(body)
+    return http.put<SuccessResponse<Brand[]>>(`/admin/brands/${brandId}`, body)
   },
   createProduct(body: any) {
     return http.post<SuccessResponse<Product[]>>('/admin/products', body)
   },
-  uploadImage(body: any) {
-    return http.post<SuccessResponse<string>>('/admin/products/upload-image', body, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-  },
-  uploadImages(body: any) {
-    return http.post<SuccessResponse<string>>('/admin/products/upload-images', body, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-  },
   getAllOrder() {
     return http.get<SuccessResponse<Order[]>>('/admin/orders')
+  },
+  confirmprogress(id: string[]) {
+    return http.put<SuccessResponse<Order[]>>(`/admin/orders/${id}/progress`)
+  },
+  confirmdelivered(id: string[]) {
+    return http.put<SuccessResponse<Order[]>>(`/admin/orders/${id}/delivered`)
   },
   confirmaccept(id: string[]) {
     return http.put<SuccessResponse<Order[]>>(`/admin/orders/${id}/confirm`)
   },
   confirmcancel(id: string[]) {
     return http.put<SuccessResponse<Order[]>>(`/admin/orders/${id}/cancel`)
-  },
-  confirmdelivery(id: string[]) {
-    return http.put<SuccessResponse<Order[]>>(`/admin/orders/${id}/delivered`)
-  },
-  confirmprogress(id: string[]) {
-    return http.put<SuccessResponse<Order[]>>(`/admin/orders/${id}/progress`)
   },
   getDeteledProducts() {
     return http.get<SuccessResponse<ProductList[]>>('/admin/products/deleteProduct')

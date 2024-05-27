@@ -1,5 +1,4 @@
 import { HealthForm } from 'src/types/health.type'
-import { Purchase } from 'src/types/purchase.type'
 import { User } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'

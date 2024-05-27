@@ -1,11 +1,10 @@
-import FirstForm from '../../component/FormAdd'
 import { useEffect, useState } from 'react'
 import adminApi from 'src/apis/admin.api'
 import TableDataDetele from '../../component/TableDataDetele'
 
 function DeteledProducts() {
   const [products, setProducts] = useState([]) // State to store products
-  const [shouldRefetch, setShouldRefetch] = useState<boolean>(false)
+  const [shouldRefetch, setShouldRefetch] = useState(false)
   const fetchData = async () => {
     try {
       const deteledProductData: any = await adminApi.getDeteledProducts()
@@ -21,18 +20,10 @@ function DeteledProducts() {
       setShouldRefetch(false) // Đặt shouldRefetch lại sau khi fetchData đã được gọi
     }
   }, [shouldRefetch])
-  const handleCreatSuccess = () => {
-    setShouldRefetch(true)
-  }
+
   return (
     <div className='flex flex-col  gap-8 border border-gray-200 rounded-lg w-full px-4 pt-4    '>
       <h1 className='font items-center text-[24px] font-bold text-center'>Quản lý sản phẩm đã xóa</h1>
-      <FirstForm
-        initialValues={{}}
-        onFormInstanceReady={() => {}}
-        onImageDataReceived={() => {}}
-        onCreated={handleCreatSuccess}
-      ></FirstForm>
       <TableDataDetele shouldRefetch={shouldRefetch} />
     </div>
   )

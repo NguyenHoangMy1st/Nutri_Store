@@ -10,18 +10,36 @@ import { FOLDERS, FOLDER_UPLOAD, ROUTE_IMAGE } from '../constants/config'
 import fs from 'fs'
 import { omitBy } from 'lodash'
 import { ORDER, SORT_BY } from '../constants/product'
+import multer from 'multer'
+import { CloudinaryStorage } from 'multer-storage-cloudinary'
+import { v2 as cloudinary } from 'cloudinary'
 
-export const handleImageProduct = (product) => {
-  if (product.image !== undefined && product.image !== '') {
-    product.image = HOST + `/${ROUTE_IMAGE}/` + product.image
-  }
-  if (product.images !== undefined && product.images.length !== 0) {
-    product.images = product.images.map((image) => {
-      return image !== '' ? HOST + `/${ROUTE_IMAGE}/` + image : ''
-    })
-  }
-  return product
-}
+// const storage = new CloudinaryStorage({
+//   cloudinary: cloudinary,
+//   params: {
+//     folder: 'product_images',
+//     format: async (req, file) => 'png', // supports promises as well
+//     public_id: (req, file) => file.originalname.split('.')[0],
+//   } as any,
+// })
+
+// export const upload = multer({ storage: storage })
+
+// export const uploadProductImage1 = async (req: Request, res: Response) => {
+//   try {
+//     console.log('try')
+//     const path = req.file.path // Cloudinary file path
+//     console.log('path', path)
+//     const response = {
+//       message: 'Upload ảnh thành công',
+//       data: path,
+//     }
+//     return responseSuccess(res, response)
+//   } catch (error) {
+//     console.log('catch')
+//     return responseError(res, 'Không thể upload ảnh')
+//   }
+// }
 
 const removeImageProduct = (image) => {
   if (image !== undefined && image !== '') {
@@ -75,12 +93,7 @@ const addProduct = async (req: Request, res: Response) => {
     const productAdd = await new ProductModel(product).save()
     const response = {
       message: 'Tạo sản phẩm thành công',
-      data: productAdd.toObject({
-        transform: (doc, ret, option) => {
-          delete ret.__v
-          return handleImageProduct(ret)
-        },
-      }),
+      data: productAdd,
     }
     // console.log(response)
     return responseSuccess(res, response)
@@ -159,7 +172,6 @@ const getProducts = async (req: Request, res: Response) => {
         .lean(),
       ProductModel.find(condition).countDocuments().lean(),
     ])
-  products = products.map((product) => handleImageProduct(product))
   const page_size = Math.ceil(totalProducts / limit) || 1
   const response = {
     message: 'Lấy các sản phẩm thành công',
@@ -187,7 +199,6 @@ const getAllProducts = async (req: Request, res: Response) => {
     .sort({ createdAt: -1 })
     .select({ __v: 0, description: 0 })
     .lean()
-  products = products.map((product) => handleImageProduct(product))
   const response = {
     message: 'Lấy tất cả sản phẩm thành công',
     data: products,
@@ -224,7 +235,7 @@ const getProduct = async (req: Request, res: Response) => {
   if (productDB) {
     const response = {
       message: 'Lấy sản phẩm thành công',
-      data: handleImageProduct(productDB),
+      data: productDB,
     }
     return responseSuccess(res, response)
   } else {
@@ -239,7 +250,8 @@ const updateProduct = async (req: Request, res: Response) => {
     description,
     category,
     image,
-    brand,
+    images,
+    // brand,
     price,
     price_before_discount,
     quantity,
@@ -252,7 +264,8 @@ const updateProduct = async (req: Request, res: Response) => {
       description,
       category,
       image,
-      brand,
+      images,
+      // brand,
       price,
       price_before_discount,
       quantity,
@@ -273,7 +286,7 @@ const updateProduct = async (req: Request, res: Response) => {
   if (productDB) {
     const response = {
       message: 'Cập nhật sản phẩm thành công',
-      data: handleImageProduct(productDB),
+      data: productDB,
     }
     return responseSuccess(res, response)
   } else {
@@ -300,7 +313,7 @@ const updateDeleteProduct = async (req: Request, res: Response) => {
   if (productDB) {
     const response = {
       message: 'Khôi phục sản phẩm thành công',
-      data: handleImageProduct(productDB),
+      data: productDB,
     }
     return responseSuccess(res, response)
   } else {
@@ -369,28 +382,9 @@ const searchProduct = async (req: Request, res: Response) => {
     .sort({ createdAt: -1 })
     .select({ __v: 0, description: 0 })
     .lean()
-  products = products.map((product) => handleImageProduct(product))
   const response = {
     message: 'Tìm các sản phẩm thành công',
     data: products,
-  }
-  return responseSuccess(res, response)
-}
-
-const uploadProductImage = async (req: Request, res: Response) => {
-  const path = await uploadFile(req, FOLDERS.PRODUCT)
-  const response = {
-    message: 'Upload ảnh thành công',
-    data: path,
-  }
-  return responseSuccess(res, response)
-}
-
-const uploadManyProductImages = async (req: Request, res: Response) => {
-  const paths = await uploadManyFile(req, FOLDERS.PRODUCT)
-  const response = {
-    message: 'Upload các ảnh thành công',
-    data: paths,
   }
   return responseSuccess(res, response)
 }
@@ -497,8 +491,6 @@ const ProductController = {
   searchProduct,
   deleteProduct,
   deleteQuantityProducts,
-  uploadProductImage,
-  uploadManyProductImages,
   uploadBrandImage,
   getSoldProductByCategory,
   getSoldProductByBrand,

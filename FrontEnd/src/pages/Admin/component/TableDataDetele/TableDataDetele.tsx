@@ -1,4 +1,4 @@
-import { Space, Table } from 'antd'
+import { Form, Input, Modal, Space, Table } from 'antd'
 import type { TableProps } from 'antd'
 // import { Link } from 'react-router-dom'
 import adminApi from 'src/apis/admin.api'
@@ -7,16 +7,62 @@ import { Product } from 'src/types/product.type'
 import useQueryConfig from 'src/hooks/useQueryConfig'
 import { useState } from 'react'
 import { FaRecycle } from 'react-icons/fa6'
+import { toast } from 'react-toastify'
 type OnChange = NonNullable<TableProps<any>['onChange']>
 type Filters = Parameters<OnChange>[1]
 
-function TableDataDelete() {
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 6 }
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 14 }
+  }
+}
+function TableDataDelete({ shouldRefetch }: { shouldRefetch: boolean }) {
   const [filteredInfo] = useState<Filters>({})
 
   const categoryName = (filteredInfo?.category as any)?.name
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [selectedRecord, setSelectedRecord] = useState<Product | null>(null)
+  const [form] = Form.useForm()
+  const showModal = (record: any) => {
+    setSelectedRecord(record)
+    setIsModalVisible(true)
+  }
+
+  const handleCancel = () => {
+    setIsModalVisible(false)
+    setSelectedRecord(null)
+    form.resetFields()
+  }
+
+  const handleConfirm = async () => {
+    try {
+      const values = await form.validateFields()
+      if (selectedRecord) {
+        await adminApi.restoreProduct(selectedRecord._id, values)
+        toast.success('Product restored successfully', {
+          position: 'top-right',
+          autoClose: 1200
+        })
+        setIsModalVisible(false)
+        setSelectedRecord(null)
+        form.resetFields()
+        refetch()
+      }
+    } catch (error) {
+      toast.error('Failed to restore product', {
+        position: 'top-right',
+        autoClose: 1200
+      })
+    }
+  }
 
   const queryConfig = useQueryConfig()
-  const { data: productsData } = useQuery({
+  const { data: productsData, refetch } = useQuery({
     queryKey: ['orders', queryConfig],
     queryFn: () => {
       return adminApi.getDeleteProduct()
@@ -75,7 +121,7 @@ function TableDataDelete() {
         <Space size='middle'>
           <button
             type='button'
-            // onClick={() => handleView(record._id)}
+            onClick={() => showModal(record)}
             className='bg-none text-black transition-colors hover:text-blue'
           >
             <FaRecycle className='text-[20px]' />
@@ -99,8 +145,24 @@ function TableDataDelete() {
           columns={columns}
           dataSource={products}
         />
+        <Modal
+          title=''
+          visible={isModalVisible}
+          onCancel={handleCancel}
+          {...formItemLayout}
+          width={380}
+          onOk={handleConfirm}
+        >
+          {/* Content of the modal, you can use selectedRecord to display record-specific information */}
+          <div className='flex flex-col  gap-4 border border-gray-200 rounded-lg w-full px-4 pt-2  font  '>
+            <h1 className='font items-center text-[14px] font-bold text-center'>Khôi phục mặt hàng </h1>
+            <p className='mb-5'>Bạn có muốn khôi phục mặt hàng này không!</p>
+          </div>
+        </Modal>
       </>
     )
+  } else {
+    return null
   }
 }
 
