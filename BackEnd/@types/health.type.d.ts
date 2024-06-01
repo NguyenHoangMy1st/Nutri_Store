@@ -4,6 +4,6 @@ interface HealthForm {
   height?: string
   age?: string
   weight?: string
-  current_health_conditions?: string[]
+  diseases?: string[]
   // dietary_restrictions?: string
 }

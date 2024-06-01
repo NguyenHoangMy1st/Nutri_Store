@@ -6,6 +6,7 @@ import ItemBrand from '../ItemBrand'
 
 interface AppProps {}
 const FlashSale: FC<AppProps> = () => {
+  
   return (
     <>
       <Swiper

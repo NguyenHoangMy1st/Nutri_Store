@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Space, Table } from 'antd'
+import { Form, Modal, Space, Table } from 'antd'
 import type { TableProps } from 'antd'
 // import { Link } from 'react-router-dom'
 import adminApi from 'src/apis/admin.api'
@@ -24,6 +24,7 @@ const formItemLayout = {
 function TableDataDelete({ shouldRefetch }: { shouldRefetch: boolean }) {
   const [filteredInfo] = useState<Filters>({})
 
+  console.log(shouldRefetch)
   const categoryName = (filteredInfo?.category as any)?.name
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedRecord, setSelectedRecord] = useState<Product | null>(null)

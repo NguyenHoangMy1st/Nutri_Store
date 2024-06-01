@@ -24,6 +24,7 @@ function Products() {
   const handleCreatSuccess = () => {
     setShouldRefetch(true)
   }
+  console.log(products)
   return (
     <div className='flex flex-col  gap-8 border border-gray-200 rounded-lg w-full px-4 pt-4    '>
       <h1 className='font items-center text-[24px] font-bold text-center'>Quản lý thông tin sản phẩm</h1>

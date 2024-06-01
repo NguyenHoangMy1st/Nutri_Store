@@ -1,4 +1,4 @@
-import { Button, ConfigProvider, Image, Modal, Select, Table, TableProps, Tag } from 'antd'
+import { Button, ConfigProvider, Image, Modal, Select, Table, TableProps } from 'antd'
 import { useQuery } from 'react-query'
 
 import { Payment } from 'src/types/payment.type'
@@ -123,18 +123,19 @@ export default function TableHistoryAdmin() {
                 <ClockCircleOutlined className='mr-2'></ClockCircleOutlined> Đang chờ xác nhận
               </option>
               <option value={2} className='green-option'>
-                <SyncOutlined className='mr-2'></SyncOutlined> Đang chuẩn bị
+                <SyncOutlined className='mr-2'></SyncOutlined> Xác nhận
               </option>
               <option value={3} className='orange-option'>
-                <CarOutlined className='mr-2' /> Đợi vận chuyển
+                <CarOutlined className='mr-2' />
+                Đang vận chuyển
               </option>
               <option value={4} className='gold-option'>
                 <CarOutlined className='mr-2' />
-                Đang giao
+                Đã giao hàng
               </option>
               <option value={5} className='green-option'>
                 <SmileOutlined className='mr-2' />
-                Giao thành công
+                Hủy đơn hàng
               </option>
             </Select>
           </ConfigProvider>
@@ -233,5 +234,7 @@ export default function TableHistoryAdmin() {
         </Modal>
       </>
     )
+  } else {
+    return null
   }
 }

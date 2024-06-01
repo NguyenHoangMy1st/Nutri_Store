@@ -45,22 +45,21 @@ export const getIdFromNameId = (nameId: string) => {
 
 export const getAvatarUrl = (avatarName?: string) => (avatarName ? `${config.baseUrl}images/${avatarName}` : userImage)
 
-
 export type CreateHealthFormConfig = {
   mutationFn: (body: {
-    user: string;
-    sex: string;
-    height: string;
-    age: string;
-    weight: string;
-    current_health_conditions: string[];
-  }) => Promise<AxiosResponse<SuccessResponse<HealthForm>>>;
-  timeout?: number;
-};
+    user: string
+    sex: string
+    height: string
+    age: string
+    weight: string
+    diseases: string[]
+  }) => Promise<AxiosResponse<SuccessResponse<HealthForm>>>
+  timeout?: number
+}
 
 export const createHealthFormConfig: CreateHealthFormConfig = {
   mutationFn: (body) => {
-    return http.post<SuccessResponse<HealthForm>>('health/add-form', body);
+    return http.post<SuccessResponse<HealthForm>>('health/add-form', body)
   },
-  timeout: 100000,
-};
+  timeout: 100000
+}

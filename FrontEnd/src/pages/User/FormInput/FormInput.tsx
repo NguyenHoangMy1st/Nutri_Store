@@ -1,4 +1,4 @@
-import { Button, ConfigProviderProps, Form, Image, Input, message, Modal, Select, SelectProps } from 'antd'
+import { Button, ConfigProviderProps, Form, Image, Input, Modal, Select, SelectProps } from 'antd'
 import { useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
@@ -25,15 +25,6 @@ const options: SelectProps['options'] = [
   { label: 'Viêm đại tràng', value: 'Viêm đại tràng' }
 ]
 
-const options1: SelectProps['options'] = [
-  { label: 'Sữa', value: 'Sữa' },
-  { label: 'Sữa chua', value: 'Sữa chua' },
-  { label: 'Yến', value: 'Yến' },
-  { label: 'Đồ ăn vặt', value: 'Đồ ăn vặt' },
-  { label: 'Ngũ cốc', value: 'Ngũ cốc' },
-  { label: 'Thực phẩm chức năng', value: 'Thực phẩm chức năng' }
-]
-
 const options2: SelectProps['options'] = [
   { label: 'Sữa', value: 'Sữa' },
   { label: 'Sữa chua', value: 'Sữa chua' },
@@ -42,18 +33,29 @@ const options2: SelectProps['options'] = [
   { label: 'Ngũ cốc', value: 'Ngũ cốc' },
   { label: 'Thực phẩm chức năng', value: 'Thực phẩm chức năng' }
 ]
+
+interface HealthFormData {
+  _id?: string
+  user: string
+  sex: string
+  height: string
+  age: string
+  weight: string
+  diseases: string[]
+}
 export default function FormInput() {
   const [userId, setUserId] = useState('')
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState<any[]>([])
   console.log(products)
-  const [data, setdata] = useState({
+  const [data, setdata] = useState<HealthFormData>({
     user: '',
     sex: '',
     height: '',
     age: '',
     weight: '',
-    current_health_conditions: []
+    diseases: []
   })
+
   const handleChange = (value: string) => {
     console.log(`selected ${value}`)
   }
@@ -99,7 +101,7 @@ export default function FormInput() {
       height: data ? data.height : undefined,
       age: data ? data.age : undefined,
       weight: data ? data.weight : undefined,
-      current_health_conditions: data ? data.current_health_conditions : undefined
+      diseases: data ? data.diseases : undefined
       // ... set values for other fields
     })
   }, [data]) // Update form values when data changes
@@ -118,7 +120,6 @@ export default function FormInput() {
       const productDetail: any = await getHealthFormDetail.mutateAsync(value)
       setProducts(productDetail.data.products)
       setdata(productDetail.data.data)
-      console.log(productDetail.data.data)
     } catch (error) {
       console.log(error, 'show')
     }
@@ -221,7 +222,7 @@ export default function FormInput() {
               </div>
               <div className='flex flex-col gap-2'>
                 <span className='text-[15px]'>Tình trạng bệnh:</span>
-                <Form.Item name={['current_health_conditions']}>
+                <Form.Item name={['diseases']}>
                   <Select
                     mode='multiple'
                     size={size}
@@ -229,7 +230,6 @@ export default function FormInput() {
                     onChange={handleChange}
                     style={{ width: 500 }}
                     options={options}
-                    defaultValue={data ? data.current_health_conditions : undefined}
                   />
                 </Form.Item>
               </div>
@@ -277,7 +277,7 @@ export default function FormInput() {
           ]}
         >
           <div className='flex flex-col border-2 border-gray-100 rounded-lg p-4 font'>
-            <span className='text-center text-[16px] font-bold uppercase'>GỢI Ý CHU TRÌNH CHO BẠN</span>
+            <span className='text-center text-[16px] font-bold uppercase'>GỢI Ý SẢN PHẨM HỖ TRỢ SỨC KHỎE CHO BẠN</span>
 
             <div className='px-2 flex flex-col gap-3 mt-2 relative'>
               <div className='flex gap-6'>
@@ -299,7 +299,7 @@ export default function FormInput() {
               <div className='flex gap-[54px]'>
                 <span className='text-start text-[14px] font-semibold '>
                   Tình trạng bệnh
-                  {data.current_health_conditions.map((condition) => (
+                  {data.diseases.map((condition) => (
                     <span className='font-normal ml-1'>{condition},</span>
                   ))}
                 </span>
@@ -354,7 +354,7 @@ export default function FormInput() {
                   <th className='px-4 py-2 text-center w-[10%] text-[12px]'>Sản phẩm</th>
                   <th className='px-4 py-2 text-center text-[12px]'>Ảnh</th>
                   <th className='px-4 py-2 text-center w-[40%] text-[12px]'>Tên sản phẩm</th>{' '}
-                  <th className='px-4 py-2 text-center text-[12px]'>Công dụng</th>
+                  <th className='px-4 py-2 text-center text-[12px]'>Dinh dưỡng</th>
                 </tr>
               </thead>
               {products.map((product, index) => (
@@ -363,11 +363,11 @@ export default function FormInput() {
                     <tr>
                       <td className='px-4 py-2 text-center'>Sản phẩm {index + 1}</td>
                       <td className='px-4 py-2 text-center'>
-                        <Image width={80} src={product.image} style={{ borderRadius: '5px' }} />
+                        <Image width={80} src={product?.image} style={{ borderRadius: '5px' }} />
                       </td>
 
                       <td className='py-2 text-start pl-10'>{product?.name}</td>
-                      <td className='px-4 py-2 text-start'>{product.ingredient}</td>
+                      <td className='px-4 py-2 text-start'>{product?.ingredient}</td>
                     </tr>
                   </>
                 </tbody>

@@ -49,6 +49,7 @@ export default function Payment({ checkedPurchases, totalCheckedPurchasePrice, o
     queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart })
   })
 
+  console.log(purchasesInCartData)
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setPayment((prevPayment) => ({
@@ -59,7 +60,7 @@ export default function Payment({ checkedPurchases, totalCheckedPurchasePrice, o
 
   const buyProductsMutation = useMutation({
     mutationFn: purchaseApi.buyProducts,
-    onSuccess: (data) => {
+    onSuccess: () => {
       refetch()
     }
   })

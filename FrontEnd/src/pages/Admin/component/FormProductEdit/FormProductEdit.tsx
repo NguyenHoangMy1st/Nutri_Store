@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Form, GetProp, Image, Input, message, Modal, Select, Upload, UploadProps } from 'antd'
+import { Form, GetProp,  Input, message, Modal, Select, Upload, UploadProps } from 'antd'
 
 import adminApi from 'src/apis/admin.api'
 import { toast } from 'react-toastify'
 import useQueryConfig from 'src/hooks/useQueryConfig'
-import { useMutation, useQuery } from 'react-query'
+import {  useQuery } from 'react-query'
 
-import { getAvatarUrl } from 'src/utils/utils'
 import axios from 'axios'
 
 const formItemLayout = {
@@ -40,7 +39,9 @@ const FormProductEdit: React.FC<CollectionCreateFormProps> = ({ productId, onClo
   // console.log(fileList1)
   const [previewImage, setPreviewImage] = useState('')
   const [previewOpen, setPreviewOpen] = useState(false)
-  // console.log(initialCategoryValue)
+  console.log(initialCategoryValue)
+  console.log(previewImage)
+  console.log(previewOpen)
   useEffect(() => {
     const fetchUserData = async () => {
       try {

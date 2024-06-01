@@ -1,18 +1,21 @@
 import { Rate } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 import productApi from 'src/apis/product.api'
-
-export default function Evaluate({ productId }) {
+interface EvaluateProps {
+  productId: string // Define the type of productId
+}
+export default function Evaluate({ productId }: EvaluateProps) {
   const [rating, setRating] = useState(0) // State for rating value
   const [comment, setComment] = useState('') // State for comment text
 
-  const handleRatingChange = (value) => setRating(value)
-  const handleCommentChange = (event) => setComment(event.target.value)
+  const handleRatingChange = (value: any) => setRating(value)
+  const handleCommentChange = (event: any) => setComment(event.target.value)
   const handleComment = async () => {
     if (!rating || !comment) {
       // Handle validation errors (optional: display error message to user)
-      console.error('Please provide both a rating and a comment.')
+      toast.error('Vui lòng nhập đánh giá hoặc chọn số sao bạn mong muốn.')
       return
     }
     const body = {
@@ -25,16 +28,16 @@ export default function Evaluate({ productId }) {
 
       if (response.status === 200) {
         // Handle successful submission (optional: show success message, clear form)
-        console.log('Evaluation submitted successfully!')
+        toast.success('Cảm ơn bạn đã đánh giá cho chúng tôi!!!')
         setRating(0)
         setComment('')
       } else {
         // Handle API errors (optional: display error message to user)
-        console.error('Error submitting evaluation:', response.statusText)
+        toast.error('Vui lòng thử lại')
       }
     } catch (error) {
       // Handle general errors (optional: display error message to user)
-      console.error('An error occurred:', error)
+      toast.error('Vui lòng thử lại')
     }
   }
   return (

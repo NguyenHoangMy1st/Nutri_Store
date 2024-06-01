@@ -6,30 +6,36 @@ import path from 'src/constants/path'
 export const data = [
   {
     id: 0,
+    title: 'Dashboard',
+    icon: <MdOutlineAccountCircle />,
+    link: path.dashboard
+  },
+  {
+    id: 1,
     title: 'Accounts',
     icon: <MdOutlineAccountCircle />,
     link: path.accounts
   },
   {
-    id: 1,
+    id: 2,
     title: 'Products',
     icon: <BiSolidPackage />,
     link: path.products
   },
   {
-    id: 2,
+    id: 3,
     title: 'Deteled Products',
     icon: <BiSolidPackage />,
     link: path.deteledProducts
   },
   {
-    id: 3,
+    id: 4,
     title: 'Brands',
     icon: <BiSolidPackage />,
     link: path.brands
   },
   {
-    id: 4,
+    id: 5,
     title: 'Orders',
     icon: <FaShoppingCart />,
     link: path.orders

@@ -87,17 +87,17 @@ export default function TableHistory() {
             color = 'geekblue' // blue
             break
           case 3:
-            statusText = 'Đợi vận chuyển'
+            statusText = 'Đang vận chuyển'
             icon = <CarOutlined />
             color = 'orange' // orange
             break
           case 4:
-            statusText = 'Đang giao'
+            statusText = 'Thành công'
             icon = <FaCarSide />
             color = 'gold' // yellow
             break
           case 5:
-            statusText = 'Thành công'
+            statusText = 'Đơn bị hủy'
             icon = <SmileOutlined />
             color = 'green' // green
             break
@@ -206,5 +206,7 @@ export default function TableHistory() {
         </Modal>
       </>
     )
+  } else {
+    return null
   }
 }

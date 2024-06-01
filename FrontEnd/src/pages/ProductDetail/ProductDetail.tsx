@@ -152,7 +152,6 @@ const ProductDetail: React.FC = () => {
   }
 
   if (!product) return null
-  console.log(product)
   return (
     <div className='bg-neutral-100 pt-10 pb-20'>
       <div className='container '>
@@ -445,7 +444,7 @@ const ProductDetail: React.FC = () => {
               className='flex flex-col gap-2 w-[90%] scrollable-container'
               style={{ maxHeight: '455px', overflowY: 'auto' }}
             >
-              {product.comment.map((commentIndex, index) => (
+              {product.comment.map((commentIndex) => (
                 <div className='flex flex-col text-[14px] border-white border-b-gray-100 border-2 pb-4 w-[91%] '>
                   <span>{commentIndex.user}</span>
                   <div className='flex gap-3 mt-2'>

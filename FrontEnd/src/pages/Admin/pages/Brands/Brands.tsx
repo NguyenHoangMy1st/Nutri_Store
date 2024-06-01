@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 
 import adminApi from 'src/apis/admin.api'
-import DOMPurify from 'dompurify'
 import TableBrand from '../../component/TableBrand'
-import { Button, Form } from 'antd'
+import { Button } from 'antd'
 import FormBrandAdd from '../../component/FormBrandAdd'
 
 export default function Brands() {
@@ -11,7 +10,7 @@ export default function Brands() {
   const [currentBrandId, setCurrentBrandId] = useState('')
   const [brandData, setBrandData] = useState<any>(null)
   const [open, setOpen] = useState(false)
-  const [form] = Form.useForm()
+  // const [form] = Form.useForm()
 
   const handleShowMore = () => {
     setShowAllContent(true)

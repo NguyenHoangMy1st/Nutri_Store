@@ -20,6 +20,7 @@ function TableHistory() {
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
   const [statuses, setStatuses] = useState<number[]>([]) // Mảng các trạng thái
+  console.log(statuses)
   const columns: TableProps<Order>['columns'] = [
     {
       title: 'Người Dùng',

@@ -26,7 +26,8 @@ const FormRestoreProduct: React.FC<CollectionCreateFormProps> = ({ productId, on
 
   const [productData, setProductData] = useState<any>(null)
   const [initialCategoryValue, setInitialCategoryValue] = useState([''])
-  // console.log(initialCategoryValue)
+
+  console.log(initialCategoryValue)
   useEffect(() => {
     const fetchUserData = async () => {
       try {

@@ -12,8 +12,7 @@ const getPayments = async (req: Request, res: Response) => {
   const user_id = req.jwtDecoded.id
 
   try {
-    let payments: any = await PaymentModel.find()
-
+    let payments: any = await PaymentModel.find({ user: user_id })
       .sort({
         createdAt: -1,
       })
@@ -272,74 +271,66 @@ const getTopSellingProductMonthly = async (req: Request, res: Response) => {
     })
   }
 }
-const getMonthlyRevenue = async (req: Request, res: Response) => {
+
+const getHourlyRevenueForDay = async (req: Request, res: Response) => {
   try {
-    const { month, year } = req.query
+    const { year, month, day } = req.query // Assume year, month, and day are passed as params
+    const startDate = moment(`${year}-${month}-${day}`).startOf('day')
+    const endDate = moment(startDate).endOf('day')
 
-    // Kiểm tra xem tháng và năm có được truyền vào không
-    if (!month || !year) {
-      return res.status(400).json({
-        message: 'Thiếu thông tin tháng và năm',
-      })
-    }
-    // Chuyển đổi tháng và năm sang kiểu số nguyên
-    const monthNumber = parseInt(month as string, 10)
-    const yearNumber = parseInt(year as string, 10)
+    const hourlyRevenues = []
 
-    // Kiểm tra xem tháng và năm có hợp lệ không
-    if (
-      isNaN(monthNumber) ||
-      isNaN(yearNumber) ||
-      monthNumber < 1 ||
-      monthNumber > 12 ||
-      yearNumber < 1970
+    for (
+      let date = startDate.clone();
+      date.isSameOrBefore(endDate, 'hour');
+      date.add(1, 'hour')
     ) {
-      return res.status(400).json({
-        message: 'Tháng hoặc năm không hợp lệ',
-      })
+      const startOfHour = date.startOf('hour').toDate()
+      const endOfHour = date.endOf('hour').toDate()
+
+      const payment = await PaymentModel.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: startOfHour, $lte: endOfHour },
+            status: { $eq: STATUS_ORDER.DELIVERED },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalRevenue: { $sum: '$totalMoney' },
+          },
+        },
+      ])
+
+      const hourlyRevenue = {
+        hour: date.format('HH'),
+        totalRevenue: payment.length > 0 ? payment[0].totalRevenue : 0,
+      }
+
+      hourlyRevenues.push(hourlyRevenue)
     }
-
-    // Tính toán khoảng thời gian từ đầu đến cuối của tháng được chọn
-    const startOfPeriod = moment(`${yearNumber}-${monthNumber}-01`)
-      .startOf('month')
-      .toDate()
-    const endOfPeriod = moment(`${yearNumber}-${monthNumber}-01`)
-      .endOf('month')
-      .toDate()
-
-    const payments = await PaymentModel.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: startOfPeriod, $lte: endOfPeriod },
-          status: { $eq: STATUS_ORDER.DELIVERED },
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          totalRevenue: { $sum: '$totalMoney' },
-        },
-      },
-    ])
 
     return res.status(200).json({
-      message: `Doanh thu trong tháng ${monthNumber} năm ${yearNumber}`,
-      data: payments,
-      period: 'monthly',
-      startOfPeriod: startOfPeriod,
-      endOfPeriod: endOfPeriod,
+      message: `Doanh thu theo giờ trong ngày ${day}/${month}/${year}`,
+      data: hourlyRevenues,
+      period: 'daily',
+      startOfPeriod: startDate.format('YYYY-MM-DD'), // Format date to exclude hours
+      endOfPeriod: endDate.format('YYYY-MM-DD'),
     })
   } catch (error) {
     return res.status(500).json({
-      message: 'Đã xảy ra lỗi khi lấy doanh thu trong tháng',
+      message: 'Đã xảy ra lỗi khi lấy doanh thu theo giờ trong ngày',
       error: error.message,
     })
   }
 }
-const getDailyRevenue = async (req: Request, res: Response) => {
+
+const getDailyRevenueForMonth = async (req: Request, res: Response) => {
   try {
-    const startDate = moment().subtract(30, 'days').startOf('day')
-    const endDate = moment().endOf('day')
+    const { year, month } = req.query // Assume year and month are passed as params
+    const startDate = moment(`${year}-${month}-01`).startOf('month')
+    const endDate = moment(startDate).endOf('month')
 
     const dailyRevenues = []
 
@@ -367,7 +358,7 @@ const getDailyRevenue = async (req: Request, res: Response) => {
       ])
 
       const dailyRevenue = {
-        date: startOfDay,
+        date: date.format('YYYY-MM-DD'),
         totalRevenue: payment.length > 0 ? payment[0].totalRevenue : 0,
       }
 
@@ -375,21 +366,19 @@ const getDailyRevenue = async (req: Request, res: Response) => {
     }
 
     return res.status(200).json({
-      message: 'Doanh thu từng ngày trong 30 ngày gần nhất',
+      message: `Doanh thu từng ngày trong tháng ${month}/${year}`,
       data: dailyRevenues,
-      period: '30_days',
-      startOfPeriod: startDate.toDate(),
-      endOfPeriod: endDate.toDate(),
+      period: 'monthly',
+      startOfPeriod: startDate.format('YYYY-MM-DD'), // Format date to exclude hours
+      endOfPeriod: endDate.format('YYYY-MM-DD'),
     })
   } catch (error) {
     return res.status(500).json({
-      message:
-        'Đã xảy ra lỗi khi lấy doanh thu từng ngày trong 30 ngày gần nhất',
+      message: 'Đã xảy ra lỗi khi lấy doanh thu từng ngày trong tháng',
       error: error.message,
     })
   }
 }
-
 const paymentController = {
   getPayments,
   getAllOrders,
@@ -399,8 +388,8 @@ const paymentController = {
   updateOrderCancel,
   getTopSellingProductWeekly,
   getTopSellingProductMonthly,
-  getMonthlyRevenue,
-  getDailyRevenue,
+  getHourlyRevenueForDay,
+  getDailyRevenueForMonth,
 }
 
 export default paymentController

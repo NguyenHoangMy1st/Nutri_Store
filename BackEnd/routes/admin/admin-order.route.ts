@@ -48,13 +48,13 @@ adminOrderRouter.get(
   '/revenue/daily',
   authMiddleware.verifyAccessToken,
   authMiddleware.verifyAdmin,
-  wrapAsync(paymentController.getDailyRevenue)
+  wrapAsync(paymentController.getHourlyRevenueForDay)
 )
 adminOrderRouter.get(
   '/revenue/monthly',
   authMiddleware.verifyAccessToken,
   authMiddleware.verifyAdmin,
-  wrapAsync(paymentController.getMonthlyRevenue)
+  wrapAsync(paymentController.getDailyRevenueForMonth)
 )
 
 adminOrderRouter.get(

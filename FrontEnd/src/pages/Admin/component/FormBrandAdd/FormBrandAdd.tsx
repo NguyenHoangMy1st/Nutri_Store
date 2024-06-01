@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Form, Input, Modal, Select } from 'antd'
+import React from 'react'
+import { Form, Input, Modal } from 'antd'
 import adminApi from 'src/apis/admin.api'
 import { toast } from 'react-toastify'
 

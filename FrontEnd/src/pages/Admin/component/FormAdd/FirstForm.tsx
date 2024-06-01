@@ -17,7 +17,6 @@ import {
 import adminApi from 'src/apis/admin.api'
 import { useQuery } from 'react-query'
 import useQueryConfig from 'src/hooks/useQueryConfig'
-import { Product } from 'src/types/product.type'
 import axios from 'axios'
 
 const formItemLayout = {
@@ -87,6 +86,8 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({ onFormInsta
   const [fileList1, setFileList1] = useState<any>([])
   const [previewImage, setPreviewImage] = useState('')
   const [previewOpen, setPreviewOpen] = useState(false)
+  console.log(previewImage)
+  console.log(previewOpen)
   const handleRemove = (e: any) => {
     const index = fileList?.findIndex((f: any) => f?.uid === e?.uid)
     const copyList = fileList.slice()
@@ -176,7 +177,7 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({ onFormInsta
     }
   }
 
-  const beforeUpload1 = async (file: any, list: any) => {
+  const beforeUpload1 = async (fileList1: any, list: any) => {
     const prevList = fileList1.length
     const maxCount = list.length
 
@@ -341,6 +342,7 @@ const CollectionCreateFormModal: React.FC<CollectionCreateFormModalProps> = ({
 
 const FristForm: React.FC<CollectionCreateFormProps> = ({ onCreated }) => {
   const [formValues, setFormValues] = useState<Values>()
+  console.log(formValues)
   const [open, setOpen] = useState(false)
 
   const onCreate = (values: Values) => {

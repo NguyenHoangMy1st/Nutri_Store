@@ -89,8 +89,6 @@ const adminApi = {
     return http.get<SuccessResponse<ProductList[]>>('/admin/products/deleteProduct')
   },
   updateDeteledProduct(body: any, id: string) {
-    console.log(body)
-    console.log(id)
     return http.post<SuccessResponse<Brand[]>>(`/admin/products/${id}`, body)
   },
   getDeleteProduct() {
@@ -101,6 +99,23 @@ const adminApi = {
   },
   getBrandsbyID(id: string) {
     return http.get<SuccessResponse<Brand[]>>(`/admin/brands/${id}`)
+  },
+  getDailyRevenueForMonth(month: string, year: string) {
+    return http.get<SuccessResponse<any>>('/admin/orders/revenue/monthly', {
+      params: {
+        month,
+        year
+      }
+    })
+  },
+  getHourlyRevenueForDay(day: string, month: string, year: string) {
+    return http.get<SuccessResponse<any>>('/admin/orders/revenue/daily', {
+      params: {
+        day,
+        month,
+        year
+      }
+    })
   }
 }
 

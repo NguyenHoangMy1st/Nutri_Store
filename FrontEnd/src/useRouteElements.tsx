@@ -162,10 +162,6 @@ export default function UseRouterElement() {
               path: path.dashboard,
               element: <Dashboard />
             },
-            // {
-            //   path: path.formAccountEdit,
-            //   element: <FormAccountEdit />
-            // },
             {
               path: path.accounts,
               element: <Accounts />
